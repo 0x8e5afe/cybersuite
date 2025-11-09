@@ -371,7 +371,7 @@
     // Register the tool
     window.registerCyberSuiteTool({
         id: 'lists-generator',
-        name: 'Attack Lists Generator',
+        name: 'Wordlists Generator',
         description: 'Generate custom wordlists for fuzzing, brute force, and penetration testing',
         icon: 'bi-list-ul',
         category: 'red',

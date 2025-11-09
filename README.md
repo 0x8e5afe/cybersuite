@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple.svg)](https://getbootstrap.com)
-[![Security Tools](https://img.shields.io/badge/Tools-13-red.svg)](https://github.com)
+[![Security Tools](https://img.shields.io/badge/Tools-16-red.svg)](https://github.com)
 
 
 
@@ -34,65 +34,6 @@ CyberSuite is a **modular, browser-based security toolkit** built with Bootstrap
 - **🧩 Modular Architecture**: Easy to extend with new tools
 - **📱 Mobile Friendly**: Works on desktop, tablet, and mobile
 
----
-
-## 🛠️ Tools Included (13 Tools)
-
-### ⚔️ Red Team Tools (Offensive Security)
-
-1. **🎯 Clickjacking PoC Generator**
-   - Generate ready-to-use clickjacking proof of concepts
-   - Adjustable iframe opacity for testing
-   
-2. **📝 CSRF PoC Generator**
-   - Create Cross-Site Request Forgery proof of concepts
-   - Support for GET, POST methods
-   
-3. **🐚 Reverse Shell Generator**
-   - Generate reverse shell payloads
-   - Multiple languages: Bash, Python, PHP, PowerShell, etc.
-   
-4. **📋 Attack Lists Generator**
-   - Generate custom wordlists for fuzzing
-   - Numeric, alphabetic, date-based, and custom lists
-
-### 💜 Purple Team Tools (Offensive + Defensive)
-
-5. **🔐 JWT Tool**
-   - Decode and analyze JWT tokens
-   - Generate custom JWTs with various algorithms
-   - Basic Security vulnerability detection
-   
-6. **🔄 Encoder/Decoder**
-   - Support for Base64, URL, Hex, HTML entities, Unicode
-   - Quick encode/decode for payload crafting
-   
-7. **#️⃣ Hash Generator**
-   - Generate SHA-1, SHA-256, SHA-384, SHA-512 hashes
-   
-8. **🔒 Encryption Tool**
-   - Encrypt/decrypt text using AES-256-GCM
-   - PBKDF2 key derivation
-   
-9. **🔑 HTTP Security Headers Checker**
-   - Analyze security headers (CSP, HSTS, X-Frame-Options, etc.)
-   - Detect misconfigurations and headers containing sensitive information
-   
-10. **🌐 CORS Misconfiguration Checker**
-    - Test for CORS vulnerabilities
-    - Detect origin reflection and wildcard configs
-    
-11. **🛡️ Password Generator**
-    - Generate cryptographically secure passwords
-    - Customizable length and character sets
-    
-12. **⚡ Password Cracking Complexity**
-    - Calculate time to crack passwords
-    - Keyspace and attack speed analysis
-    
-13. **⚠️ CVSS v3.1 Calculator**
-    - Calculate CVSS scores for vulnerabilities
-    - Generate vector strings
 
 ---
 

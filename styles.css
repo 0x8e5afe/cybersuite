@@ -268,3 +268,56 @@ body {
     background: #484f58;
 }
 
+/* Sysmon Event Cards */
+.sysmon-event-card {
+    border-left: 3px solid #6c757d;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.sysmon-event-card.danger {
+    border-left-color: #dc3545;
+}
+
+.sysmon-event-card.warning {
+    border-left-color: #ffc107;
+}
+
+.sysmon-event-card.info {
+    border-left-color: #0dcaf0;
+}
+
+.sysmon-event-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sysmon-event-card code {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+}
+
+/* Windows Event Cards */
+.win-event-card {
+    border-left: 3px solid #6c757d;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.win-event-card.danger {
+    border-left-color: #dc3545;
+}
+
+.win-event-card.warning {
+    border-left-color: #ffc107;
+}
+
+.win-event-card.info {
+    border-left-color: #0dcaf0;
+}
+
+.win-event-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

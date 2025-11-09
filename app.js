@@ -10,19 +10,19 @@ const CATEGORY_INFO = {
         class: 'red-team',
         color: 'danger'
     },
-    purple: {
-        name: 'Purple Team Tools',
-        icon: 'bi-layers-fill',
-        description: 'Tools for both offensive and defensive security',
-        class: 'purple-team',
-        color: 'purple'
-    },
     blue: {
         name: 'Blue Team Tools',
         icon: 'bi-shield-fill',
         description: 'Defensive security and monitoring',
         class: 'blue-team',
         color: 'primary'
+    },
+    purple: {
+        name: 'Purple Team Tools',
+        icon: 'bi-layers-fill',
+        description: 'Tools for both offensive and defensive security',
+        class: 'purple-team',
+        color: 'purple'
     }
 };
 
@@ -89,12 +89,16 @@ function loadAllTools() {
         'tools/encoder-decoder-tool.js',
         'tools/encryption-tool.js',
         'tools/hash-tool.js',
+        'tools/prompt-injection-tool.js',
         'tools/jwt-tool.js',
-        'tools/lists-generator-tool.js',
+        'tools/sysmon-tool.js',
+        'tools/windows-event-id-tool.js',
+        'tools/wordlists-generator-tool.js',
         'tools/password-cracker-tool.js',
         'tools/password-generator-tool.js',
         'tools/headers-analyzer-tool.js',
-        'tools/shells-generator-tool.js'
+        'tools/shells-generator-tool.js',
+
     ];
 
     let loadedCount = 0;
@@ -162,12 +166,13 @@ function renderToolsSections() {
         red: window.CYBERSUITE_TOOLS
             .filter(t => t.category === 'red')
             .sort((a, b) => a.name.localeCompare(b.name)),
-        purple: window.CYBERSUITE_TOOLS
-            .filter(t => t.category === 'purple')
-            .sort((a, b) => a.name.localeCompare(b.name)),
         blue: window.CYBERSUITE_TOOLS
             .filter(t => t.category === 'blue')
+            .sort((a, b) => a.name.localeCompare(b.name)),
+        purple: window.CYBERSUITE_TOOLS
+            .filter(t => t.category === 'purple')
             .sort((a, b) => a.name.localeCompare(b.name))
+        
     };
 
     // Render each category section
