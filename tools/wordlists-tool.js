@@ -59,10 +59,10 @@
                 },
                 {
                     name: 'john.txt',
-                    size: '3.4 MB',
-                    entries: '3,559',
+                    size: '21.4 KB',
+                    entries: '3,106',
                     description: 'John the Ripper default wordlist',
-                    url: 'https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Software/john.txt',
+                    url: 'https://raw.githubusercontent.com/danielmiessler/SecLists/refs/heads/master/Passwords/Software/john-the-ripper.txt',
                     source: 'John the Ripper',
                     type: 'direct'
                 },

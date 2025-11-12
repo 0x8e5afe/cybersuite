@@ -94,6 +94,7 @@ function loadAllTools() {
         'tools/wordlists-tool.js',
         'tools/pentest-report-tool.js',
         'tools/jwt-tool.js',
+        'tools/xss-tool.js',
         'tools/sysmon-tool.js',
         'tools/windows-event-id-tool.js',
         'tools/wordlists-generator-tool.js',
