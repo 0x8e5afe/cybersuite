@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple.svg)](https://getbootstrap.com)
-[![Security Tools](https://img.shields.io/badge/Tools-20-red.svg)](https://github.com)
+[![Security Tools](https://img.shields.io/badge/Tools-21-red.svg)](https://github.com)
 
 
 
