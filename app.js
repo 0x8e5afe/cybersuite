@@ -93,6 +93,7 @@ function loadAllTools() {
         'tools/hashcat-rule-generator-tool.js',
         'tools/wordlists-tool.js',
         'tools/pentest-report-tool.js',
+        'tools/steganography-tool.js',
         'tools/jwt-tool.js',
         'tools/xss-tool.js',
         'tools/sqli-tool.js',
