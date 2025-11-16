@@ -8,9 +8,15 @@
 
     function render() {
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-hash"></i> Hash Generator</h4>
-                <p class="text-secondary">Generate cryptographic hashes for security testing and verification</p>
+
+            <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class=""bi bi-hash"></i>
+                    <span>Hash Generator</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                    Generate cryptographic hashes for security testing and verification
+                </p>
             </div>
             
             <div class="mb-3">
@@ -417,25 +423,25 @@
             
             if (familySHA) {
                 algorithms.push(
-                    { name: 'SHA-1', id: 'SHA-1', bits: 160, color: 'warning', family: 'SHA', useCrypto: true },
+                    { name: 'SHA-1', id: 'SHA-1', bits: 160, color: 'success', family: 'SHA', useCrypto: true },
                     { name: 'SHA-256', id: 'SHA-256', bits: 256, color: 'success', family: 'SHA', useCrypto: true },
-                    { name: 'SHA-384', id: 'SHA-384', bits: 384, color: 'primary', family: 'SHA', useCrypto: true },
-                    { name: 'SHA-512', id: 'SHA-512', bits: 512, color: 'info', family: 'SHA', useCrypto: true }
+                    { name: 'SHA-384', id: 'SHA-384', bits: 384, color: 'success', family: 'SHA', useCrypto: true },
+                    { name: 'SHA-512', id: 'SHA-512', bits: 512, color: 'success', family: 'SHA', useCrypto: true }
                 );
             }
             
             if (familyMD) {
                 algorithms.push(
-                    { name: 'MD5', id: 'MD5', bits: 128, color: 'danger', family: 'MD', useCrypto: false }
+                    { name: 'MD5', id: 'MD5', bits: 128, color: 'success', family: 'MD', useCrypto: false }
                 );
             }
             
             if (familyOther) {
                 algorithms.push(
-                    { name: 'NTLM', id: 'NTLM', bits: 128, color: 'secondary', family: 'Other', useCrypto: false },
-                    { name: 'LM Hash', id: 'LM', bits: 128, color: 'danger', family: 'Other', useCrypto: false },
-                    { name: 'MySQL 4.1+', id: 'MySQL41', bits: 160, color: 'info', family: 'Other', useCrypto: false },
-                    { name: 'CRC32', id: 'CRC32', bits: 32, color: 'warning', family: 'Other', useCrypto: false }
+                    { name: 'NTLM', id: 'NTLM', bits: 128, color: 'success', family: 'Other', useCrypto: false },
+                    { name: 'LM Hash', id: 'LM', bits: 128, color: 'success', family: 'Other', useCrypto: false },
+                    { name: 'MySQL 4.1+', id: 'MySQL41', bits: 160, color: 'success', family: 'Other', useCrypto: false },
+                    { name: 'CRC32', id: 'CRC32', bits: 32, color: 'success', family: 'Other', useCrypto: false }
                 );
             }
             

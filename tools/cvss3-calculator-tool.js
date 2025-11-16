@@ -148,12 +148,16 @@
 
 function render() {
     let html = `
-        <div class="mb-3">
-            <h4 class="">
-                <i class="bi bi-exclamation-triangle-fill"></i> CVSS v3.1 Calculator
-            </h4>
-            <p class="text-secondary mb-0">Calculate Common Vulnerability Scoring System (CVSS) scores</p>
-        </div>
+
+        <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>CVSS v3.1 Calculator</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                    Calculate Common Vulnerability Scoring System (CVSS) scores.
+                </p>
+            </div>
         
         <div class="row">
             <!-- Left Column: Metrics -->

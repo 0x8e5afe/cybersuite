@@ -173,9 +173,14 @@
         ).join('');
 
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-arrow-left-right"></i> Encoder/Decoder</h4>
-                <p class="text-secondary">Encode and decode payloads in multiple formats for security testing</p>
+                    <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-arrow-left-right"></i>
+                    <span>Encoder/Decoder</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                    Encode and decode payloads in multiple formats for security testing
+                </p>
             </div>
             
             <div class="row g-3">

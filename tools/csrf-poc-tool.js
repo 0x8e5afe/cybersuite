@@ -9,16 +9,22 @@
 
     function render() {
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-shield-lock"></i> CSRF PoC Generator</h4>
-                <p class="text-secondary">Build a minimal HTML PoC to demonstrate Cross-Site Request Forgery</p>
+
+                        <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-shield-lock"></i>
+                    <span>CSRF PoC Generator</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                    Build a minimal HTML PoC to demonstrate Cross-Site Request Forgery.
+                </p>
             </div>
             
             <div class="card">
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="csrfUrl" class="form-label">Target URL</label>
+                            <label for="csrfUrl" class="form-label">Target URL <span class="text-success">*</span></label>
                             <input type="url" id="csrfUrl" class="form-control" placeholder="https://target.example.com/transfer">
                         </div>
                         <div class="col-md-3">
@@ -29,7 +35,7 @@
                             </select>
                         </div>
                         <div class="col-12">
-                            <label for="csrfParams" class="form-label">Parameters (JSON)</label>
+                            <label for="csrfParams" class="form-label">Parameters (JSON) <span class="text-success">*</span></label>
                             <textarea id="csrfParams" class="form-control font-monospace" rows="5" placeholder='{"amount": "1000", "to": "attacker"}'></textarea>
                         </div>
                     </div>

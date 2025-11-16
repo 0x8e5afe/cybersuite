@@ -8,9 +8,15 @@
 
     function render() {
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-key-fill"></i> JWT Tool</h4>
-                <p class="text-secondary">Decode, analyze, and generate JSON Web Tokens</p>
+
+            <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-key-fill"></i>
+                    <span>JWT Tool</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                   Decode, analyze, and generate JSON Web Tokens
+                </p>
             </div>
             
             <ul class="nav nav-tabs mb-3" id="jwtTabs" role="tablist">

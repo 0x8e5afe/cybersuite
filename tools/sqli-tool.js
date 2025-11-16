@@ -8,13 +8,17 @@
 
     function render() {
         return `
-        <div class="mb-4">
-            <h4><i class="bi bi-database-fill-exclamation"></i> SQL Injection Helper</h4>
-            <p class="text-secondary">
-                Generate SQL injection proof-of-concept and fingerprinting payloads for different DBMS.
+
+        <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-database-fill-exclamation"></i>
+                    <span>SQL Injection Helper</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                  Generate SQL injection proof-of-concept and fingerprinting payloads for different DBMS.
                 Use only in authorized penetration tests.
-            </p>
-        </div>
+                </p>
+            </div>
 
         <div class="alert alert-warning">
             <i class="bi bi-exclamation-triangle-fill"></i>

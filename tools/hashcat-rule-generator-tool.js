@@ -180,10 +180,16 @@
                     overflow-y: auto;
                 }
             </style>
-            
-            <div class="mb-3">
-                <h4><i class="bi bi-gear-fill"></i> Hashcat Rule Generator</h4>
-                <p class="text-secondary small mb-0">Build password mutation rules by combining operations</p>
+        
+
+                        <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-gear-fill"></i>
+                    <span> Hashcat Rule Generator</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                    Build password mutation rules by combining operations
+                </p>
             </div>
             
             <!-- New Rule Builder -->

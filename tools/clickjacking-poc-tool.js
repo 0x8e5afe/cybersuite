@@ -8,9 +8,14 @@
 
     function render() {
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-bullseye"></i> Clickjacking PoC Generator</h4>
-                <p class="text-secondary">Create a simple iframe-based PoC to demonstrate clickjacking</p>
+                    <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-bullseye"></i>
+                    <span>Clickjacking PoC Generator</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                    Create a simple iframe-based PoC to demonstrate clickjacking.
+                </p>
             </div>
             
             <div class="card">

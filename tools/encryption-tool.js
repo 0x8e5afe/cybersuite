@@ -8,9 +8,15 @@
 
     function render() {
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-lock-fill"></i> Enhanced Encryption Tool</h4>
-                <p class="text-secondary">Encrypt and decrypt text and files using multiple algorithms</p>
+
+            <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-lock-fill"></i>
+                    <span>Encryption Tool</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                    Encrypt and decrypt text and files using multiple algorithms
+                </p>
             </div>
             
             <ul class="nav nav-tabs mb-3" role="tablist">

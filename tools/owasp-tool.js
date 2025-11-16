@@ -273,16 +273,14 @@
     return `
         <div id="owaspTop10Root" class="owasp-top10-tool">
 
-            <!-- Title + subtitle, same spirit as Encoder/Decoder -->
-            <div class="d-flex flex-wrap justify-content-between align-items-baseline mb-4">
-                <div>
-                    <h2 class="mb-1 h5 fw-semibold">
-                        <i class="bi bi-shield-lock me-2"></i> OWASP Top 10 Explorer
-                    </h2>
-                    <div class="text-secondary small">
-                        Fetch and compare the latest OWASP Top 10-style risk lists directly from official sources.
-                    </div>
-                </div>
+                        <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-shield-lock"></i>
+                    <span>OWASP Top 10 Explorer</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                   Fetch and compare the latest OWASP Top 10-style risk lists directly from official sources.
+                </p>
             </div>
 
             <div class="row gx-4 gy-4">

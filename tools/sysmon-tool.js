@@ -274,9 +274,14 @@
 
     function render() {
         return `
-            <div class="mb-3">
-                <h4><i class="bi bi-windows"></i> Sysmon Event ID Reference</h4>
-                <p class="text-secondary small">Quick reference for Windows Sysmon event IDs and detection use cases</p>
+                        <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-windows"></i>
+                    <span>Sysmon Event ID Reference</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                  Quick reference for Windows Sysmon event IDs and detection use cases.
+                </p>
             </div>
             
             <div class="row g-3 mb-3">

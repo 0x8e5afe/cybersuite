@@ -421,9 +421,14 @@
 
     function render() {
         return `
-            <div class="mb-3">
-                <h4><i class="bi bi-shield-check"></i> Windows Event ID Reference</h4>
-                <p class="text-secondary small">Comprehensive reference for Windows Security and System event logs</p>
+            <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Windows Event ID Reference</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                  Comprehensive reference for Windows Security and System event logs.
+                </p>
             </div>
             
             <div class="row g-2 mb-3">

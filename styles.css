@@ -282,6 +282,12 @@ body::before {
     transition: all 0.3s ease;
 }
 
+.badge.bg-outline-warning {
+    background-color: transparent !important;
+    color: var(--terminal-yellow) !important;
+    border-radius: 999px;
+}
+
 .badge.bg-danger {
     background: rgba(255, 0, 110, 0.15) !important;
     color: var(--terminal-red) !important;
@@ -672,7 +678,7 @@ textarea.form-control {
 
 .form-check-input {
     background-color: var(--terminal-card);
-    border: 1px solid var(--terminal-border);
+    border: 1px solid var(--terminal-green);
 }
 
 .form-check-input:checked {
@@ -717,6 +723,29 @@ textarea.form-control {
     background: var(--terminal-accent) !important;
     color: var(--terminal-bg) !important;
     transform: translateY(-2px);
+    box-shadow: var(--glow-accent);
+}
+
+.btn-outline-primary {
+    border-color: var(--terminal-accent) !important;
+    color: var(--terminal-accent) !important;
+    background: transparent !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    background: rgba(0, 255, 136, 0.15) !important;
+    border-color: var(--terminal-accent) !important;
+    color: var(--terminal-accent) !important;
+    box-shadow: var(--glow-accent);
+}
+
+.btn-outline-primary.active,
+.btn-outline-primary:active,
+.btn-check:checked + .btn-outline-primary {
+    background: rgba(0, 255, 136, 0.15) !important;
+    border-color: var(--terminal-accent) !important;
+    color: var(--terminal-accent) !important;
     box-shadow: var(--glow-accent);
 }
 
@@ -784,18 +813,9 @@ textarea.form-control {
     transition: all 0.3s ease;
 }
 
-.btn-outline-primary {
-    border-color: var(--terminal-blue) !important;
-    color: var(--terminal-blue) !important;
-}
-
-.btn-outline-primary:hover {
-    background: rgba(0, 217, 255, 0.15) !important;
-    box-shadow: var(--terminal-blue);
-}
 
 .btn-outline-secondary {
-    border-color: var(--terminal-border) !important;
+    border-color: var(--terminal-text-dim) !important;
     color: var(--terminal-text) !important;
 }
 
@@ -962,6 +982,10 @@ code {
     box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
 }
 
+.badge.bg-warning.text-dark {
+    border-radius: 999px;
+}
+
 /* ========================================
    TABS
    ======================================== */
@@ -1040,6 +1064,10 @@ code {
     color: var(--terminal-accent) !important;
 }
 
+.text-blue {
+    color: var(--terminal-blue) !important;
+}
+
 .text-secondary {
     color: var(--terminal-text-dim) !important;
 }
@@ -1061,15 +1089,15 @@ code {
 }
 
 .border-purple {
-    border-color: var(--terminal-purple) !important;
+    border-color: var(--terminal-border) !important;
 }
 
 .border-blue {
-    border-color: var(--terminal-blue) !important;
+    border-color: var(--terminal-border) !important;
 }
 
 .border-red {
-    border-color: var(--terminal-red) !important;
+    border-color: var(--terminal-border) !important;
 }
 
 /* ========================================
@@ -2488,4 +2516,88 @@ body::after {
         border-left-color: var(--terminal-orange);
         background: rgba(255, 204, 0, 0.12);
     }
+}
+
+
+/* ========================================
+   SECURITY HEADERS TOOL - CSS ADDITIONS
+   ======================================== */
+
+/* Info disclosure tab color - GREEN instead of cyan */
+.nav-tabs .nav-link-info-disclosure.active {
+    color: var(--terminal-green) !important;
+    border-bottom-color: var(--terminal-green) !important;
+    text-shadow: var(--glow-green);
+}
+
+/* Dark-danger (critical) severity accordion header */
+.accordion-button.severity-header-dark-danger {
+    color: #ffffff;
+    border: none;
+    border-left-width: 3px;
+    border-left-style: solid;
+    border-left-color: #8b0000;
+    font-weight: 500;
+    box-shadow: none;
+    text-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
+}
+
+.accordion-button.severity-header-dark-danger:not(.collapsed) {
+    background-color: var(--terminal-card) !important;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+.accordion-button.severity-header-dark-danger::after {
+    filter: invert(0) brightness(1);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%238b0000'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.accordion-button.severity-header-dark-danger:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+/* Match accordion chevron colors to severity */
+.accordion-button.severity-header-danger::after {
+    filter: invert(0) brightness(1);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ff006e'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.accordion-button.severity-header-danger:not(.collapsed) {
+    background-color: var(--terminal-card) !important;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+.accordion-button.severity-header-warning::after {
+    filter: invert(0) brightness(1);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffcc00'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.accordion-button.severity-header-warning:not(.collapsed) {
+    background-color: var(--terminal-card) !important;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+.accordion-button.severity-header-success::after {
+    filter: invert(0) brightness(1);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%2300ff88'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.accordion-button.severity-header-success:not(.collapsed) {
+    background-color: var(--terminal-card) !important;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+/* Border color for critical accordion items */
+.accordion-item.border-dark-danger {
+    border-color: #8b0000 !important;
+}
+
+/* Text color for critical severity in accordion body */
+.text-dark-danger {
+    color: #ff0000 !important;
 }

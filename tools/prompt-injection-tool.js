@@ -411,9 +411,15 @@
 
     function render() {
         return `
-            <div class="mb-3">
-                <h4><i class="bi bi-shield-slash"></i> Prompt Injection & Guardrail Evasion</h4>
-                <p class="text-secondary small">Test AI safety mechanisms with various encoding and obfuscation techniques</p>
+
+            <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-shield-slash"></i>
+                    <span>Prompt Injection & Guardrail Evasion</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                  Test AI safety mechanisms with various encoding and obfuscation techniques.
+                </p>
             </div>
 
             <div class="row g-3 mb-3">

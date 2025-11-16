@@ -10,16 +10,22 @@
 
     function render() {
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-globe2"></i> CORS Misconfiguration Checker</h4>
-                <p class="text-secondary">Test endpoints for permissive or unsafe CORS responses</p>
+
+            <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-globe2"></i>
+                    <span>CORS Misconfiguration Checker</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                    Test endpoints for permissive or unsafe CORS responses.
+                </p>
             </div>
             
             <div class="card">
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-7">
-                            <label for="corsUrl" class="form-label">Target URL</label>
+                            <label for="corsUrl" class="form-label">Target URL <span class="text-success">*</span></label>
                             <input type="url" id="corsUrl" class="form-control" placeholder="https://api.example.com">
                         </div>
                         <div class="col-md-5">

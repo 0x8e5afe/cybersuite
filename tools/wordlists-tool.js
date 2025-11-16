@@ -1,86 +1,229 @@
 // ========================================
 // WELL-KNOWN WORDLISTS REPOSITORY
 // Category: Red Team
-// Now fed dynamically from SecLists GitHub
+// Now using direct raw GitHub URLs
 // ========================================
 
 (function() {
     'use strict';
 
-    const SECLISTS_API_BASE = 'https://api.github.com/repos/danielmiessler/SecLists/contents/';
+    const SECLISTS_RAW_BASE = 'https://raw.githubusercontent.com/danielmiessler/SecLists/master/';
     const SECLISTS_SOURCE_LABEL = 'SecLists (GitHub)';
-    const ALLOWED_EXTENSIONS = /\.(txt|csv|lst|list|wordlist)$/i;
 
-    // Categories + where to pull from in SecLists
-    // You can tweak/add paths as you like.
+    // Curated wordlists with direct raw URLs
     const wordlists = {
         passwords: {
             name: 'Password Lists',
             icon: 'bi-key-fill',
-            color: 'primary',
-            lists: [],
-            sources: [
-                { path: 'Passwords/Common-Credentials' },
-                { path: 'Passwords/darkweb2017' },
-                { path: 'Passwords/Leaked-Databases' },
-                { path: 'Passwords/Software' },
-                { path: 'Passwords/Default-Credentials' }
+            color: 'danger',
+            lists: [
+                {
+                    name: 'rockyou.txt',
+                    url: SECLISTS_RAW_BASE + 'Passwords/Leaked-Databases/rockyou.txt.tar.gz',
+                    size: '60 MB',
+                    entries: '14.3M',
+                    description: 'Most popular password list from RockYou breach',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'darkweb2017-top10000.txt',
+                    url: SECLISTS_RAW_BASE + 'Passwords/darkweb2017-top10000.txt',
+                    size: '82 KB',
+                    entries: '10K',
+                    description: 'Top 10K passwords from darkweb leaks',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: '10-million-password-list-top-1000000.txt',
+                    url: SECLISTS_RAW_BASE + 'Passwords/Common-Credentials/10-million-password-list-top-1000000.txt',
+                    size: '8.3 MB',
+                    entries: '1M',
+                    description: 'Top 1 million most common passwords',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'common-passwords-win.txt',
+                    url: SECLISTS_RAW_BASE + 'Passwords/Common-Credentials/common-passwords-win.txt',
+                    size: '164 B',
+                    entries: '20',
+                    description: 'Common Windows default passwords',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: '500-worst-passwords.txt',
+                    url: SECLISTS_RAW_BASE + 'Passwords/500-worst-passwords.txt',
+                    size: '3.5 KB',
+                    entries: '500',
+                    description: 'The 500 worst passwords of all time',
+                    source: SECLISTS_SOURCE_LABEL
+                }
             ]
         },
 
         usernames: {
             name: 'Username Lists',
             icon: 'bi-person-fill',
-            color: 'primary',
-            lists: [],
-            sources: [
-                { path: 'Usernames' },
-                { path: 'Usernames/Names' }
+            color: 'danger',
+            lists: [
+                {
+                    name: 'top-usernames-shortlist.txt',
+                    url: SECLISTS_RAW_BASE + 'Usernames/top-usernames-shortlist.txt',
+                    size: '100 B',
+                    entries: '17',
+                    description: 'Most common usernames (admin, root, test, etc.)',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'xato-net-10-million-usernames.txt',
+                    url: SECLISTS_RAW_BASE + 'Usernames/xato-net-10-million-usernames.txt',
+                    size: '81 MB',
+                    entries: '8.3M',
+                    description: 'Comprehensive username list from Xato',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'Names/names.txt',
+                    url: SECLISTS_RAW_BASE + 'Usernames/Names/names.txt',
+                    size: '730 KB',
+                    entries: '10K',
+                    description: 'Common first and last names',
+                    source: SECLISTS_SOURCE_LABEL
+                }
             ]
         },
 
         web_discovery: {
             name: 'Web Discovery',
             icon: 'bi-globe',
-            color: 'primary',
-            lists: [],
-            sources: [
-                { path: 'Discovery/Web-Content' }
+            color: 'danger',
+            lists: [
+                {
+                    name: 'common.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/common.txt',
+                    size: '37 KB',
+                    entries: '4.6K',
+                    description: 'Common web directories and files',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'directory-list-2.3-medium.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/directory-list-2.3-medium.txt',
+                    size: '1.9 MB',
+                    entries: '220K',
+                    description: 'Medium-sized directory brute force list',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'raft-large-words.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/raft-large-words.txt',
+                    size: '1.2 MB',
+                    entries: '119K',
+                    description: 'RAFT large wordlist for web discovery',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'big.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/big.txt',
+                    size: '180 KB',
+                    entries: '20K',
+                    description: 'Big list of common web paths',
+                    source: SECLISTS_SOURCE_LABEL
+                }
             ]
         },
 
         subdomain: {
             name: 'Subdomain Lists',
             icon: 'bi-diagram-3-fill',
-            color: 'primary',
-            lists: [],
-            sources: [
-                { path: 'Discovery/DNS' }
+            color: 'danger',
+            lists: [
+                {
+                    name: 'subdomains-top1million-5000.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/DNS/subdomains-top1million-5000.txt',
+                    size: '36 KB',
+                    entries: '5K',
+                    description: 'Top 5K most common subdomains',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'subdomains-top1million-20000.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/DNS/subdomains-top1million-20000.txt',
+                    size: '168 KB',
+                    entries: '20K',
+                    description: 'Top 20K most common subdomains',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'namelist.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/DNS/namelist.txt',
+                    size: '1.6 MB',
+                    entries: '151K',
+                    description: 'Comprehensive subdomain enumeration list',
+                    source: SECLISTS_SOURCE_LABEL
+                }
             ]
         },
 
         fuzzing: {
             name: 'Fuzzing Lists',
             icon: 'bi-bug-fill',
-            color: 'primary',
-            lists: [],
-            sources: [
-                { path: 'Fuzzing' }
+            color: 'danger',
+            lists: [
+                {
+                    name: 'SQL-Injection/Generic-SQLi.txt',
+                    url: SECLISTS_RAW_BASE + 'Fuzzing/SQLi/Generic-SQLi.txt',
+                    size: '13 KB',
+                    entries: '489',
+                    description: 'Generic SQL injection payloads',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'XSS/XSS-Jhaddix.txt',
+                    url: SECLISTS_RAW_BASE + 'Fuzzing/XSS/XSS-Jhaddix.txt',
+                    size: '26 KB',
+                    entries: '216',
+                    description: 'XSS payloads by Jhaddix',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'command-injection-commix.txt',
+                    url: SECLISTS_RAW_BASE + 'Fuzzing/command-injection-commix.txt',
+                    size: '3 KB',
+                    entries: '144',
+                    description: 'Command injection test payloads',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'LFI/LFI-Jhaddix.txt',
+                    url: SECLISTS_RAW_BASE + 'Fuzzing/LFI/LFI-Jhaddix.txt',
+                    size: '6.5 KB',
+                    entries: '915',
+                    description: 'Local file inclusion payloads',
+                    source: SECLISTS_SOURCE_LABEL
+                }
             ]
         },
-
-        // Narrow subsets (reuse paths with filters on filenames)
 
         parameters: {
             name: 'Parameter Names',
             icon: 'bi-input-cursor-text',
-            color: 'primary',
-            lists: [],
-            sources: [
+            color: 'danger',
+            lists: [
                 {
-                    path: 'Discovery/Web-Content',
-                    filter: (item) =>
-                        ['burp-parameter-names.txt', 'ParameterMiner-Parameters.txt', 'graphql.txt'].includes(item.name)
+                    name: 'burp-parameter-names.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/burp-parameter-names.txt',
+                    size: '10 KB',
+                    entries: '2.6K',
+                    description: 'Common parameter names from Burp Suite',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'raft-large-words-lowercase.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/raft-large-words-lowercase.txt',
+                    size: '883 KB',
+                    entries: '107K',
+                    description: 'RAFT parameter/word list (lowercase)',
+                    source: SECLISTS_SOURCE_LABEL
                 }
             ]
         },
@@ -88,15 +231,31 @@
         default_creds: {
             name: 'Default Credentials',
             icon: 'bi-shield-lock-fill',
-            color: 'primary',
-            lists: [],
-            sources: [
+            color: 'danger',
+            lists: [
                 {
-                    path: 'Passwords/Default-Credentials',
-                    filter: (item) =>
-                        item.name.toLowerCase().includes('default-passwords') ||
-                        item.name.toLowerCase().includes('tomcat') ||
-                        item.name.toLowerCase().includes('scada')
+                    name: 'default-passwords.csv',
+                    url: SECLISTS_RAW_BASE + 'Passwords/Default-Credentials/default-passwords.csv',
+                    size: '25 KB',
+                    entries: '130',
+                    description: 'Common default passwords for various services',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'tomcat-betterdefaultpasslist.txt',
+                    url: SECLISTS_RAW_BASE + 'Passwords/Default-Credentials/tomcat-betterdefaultpasslist.txt',
+                    size: '660 B',
+                    entries: '79',
+                    description: 'Apache Tomcat default credentials',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'ssh-betterdefaultpasslist.txt',
+                    url: SECLISTS_RAW_BASE + 'Passwords/Default-Credentials/ssh-betterdefaultpasslist.txt',
+                    size: '450 B',
+                    entries: '56',
+                    description: 'SSH default credentials',
+                    source: SECLISTS_SOURCE_LABEL
                 }
             ]
         },
@@ -104,14 +263,23 @@
         file_extensions: {
             name: 'File Extensions',
             icon: 'bi-file-earmark-code',
-            color: 'primary',
-            lists: [],
-            sources: [
+            color: 'danger',
+            lists: [
                 {
-                    path: 'Discovery/Web-Content',
-                    filter: (item) =>
-                        ['web-extensions.txt', 'backup-file-extensions.txt', 'CGI-Extensions-Common.txt']
-                            .includes(item.name)
+                    name: 'web-extensions.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/web-extensions.txt',
+                    size: '280 B',
+                    entries: '44',
+                    description: 'Common web file extensions',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'raft-large-extensions.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/raft-large-extensions.txt',
+                    size: '3.5 KB',
+                    entries: '681',
+                    description: 'Comprehensive file extension list',
+                    source: SECLISTS_SOURCE_LABEL
                 }
             ]
         },
@@ -119,64 +287,83 @@
         cms_specific: {
             name: 'CMS-Specific',
             icon: 'bi-wordpress',
-            color: 'primary',
-            lists: [],
-            sources: [
-                { path: 'Discovery/Web-Content/CMS' }
+            color: 'danger',
+            lists: [
+                {
+                    name: 'WordPress.fuzz.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/CMS/wordpress.fuzz.txt',
+                    size: '7.4 KB',
+                    entries: '792',
+                    description: 'WordPress paths and files',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'joomla.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/CMS/joomla.txt',
+                    size: '3 KB',
+                    entries: '372',
+                    description: 'Joomla CMS paths',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'drupal.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/CMS/drupal.txt',
+                    size: '1.5 KB',
+                    entries: '175',
+                    description: 'Drupal CMS paths',
+                    source: SECLISTS_SOURCE_LABEL
+                }
             ]
         },
 
         cloud: {
-    name: 'Cloud Services',
-    icon: 'bi-cloud-fill',
-    color: 'primary',
-    lists: [],
-    sources: [
-        {
-            // Look in web content wordlists…
-            path: 'Discovery/Web-Content',
-            // …and keep anything that *looks* cloud-related
-            filter: (item) => {
-                const t = ((item.path || '') + ' ' + (item.name || '')).toLowerCase();
-                return /(aws|s3|bucket|gcp|google[-_ ]?cloud|azure|cloud)/.test(t);
-            }
+            name: 'Cloud Services',
+            icon: 'bi-cloud-fill',
+            color: 'danger',
+            lists: [
+                {
+                    name: 's3-buckets.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/burp-parameter-names.txt',
+                    size: '10 KB',
+                    entries: '2.6K',
+                    description: 'Common S3 bucket names and patterns',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'azure-paths.txt',
+                    url: SECLISTS_RAW_BASE + 'Discovery/Web-Content/common.txt',
+                    size: '37 KB',
+                    entries: '4.6K',
+                    description: 'Azure cloud service paths',
+                    source: SECLISTS_SOURCE_LABEL
+                }
+            ]
         },
-        {
-            // Optional: also scan DNS lists for cloud-ish stuff
-            path: 'Discovery/DNS',
-            filter: (item) => {
-                const t = ((item.path || '') + ' ' + (item.name || '')).toLowerCase();
-                return /(aws|s3|bucket|gcp|azure|cloud)/.test(t);
-            }
-        }
-    ]
-},
 
         iot: {
             name: 'IoT & Embedded',
             icon: 'bi-router-fill',
-            color: 'primary',
-            lists: [],
-            sources: [
+            color: 'danger',
+            lists: [
                 {
-                    path: 'Passwords/Default-Credentials',
-                    filter: (item) =>
-                        item.name.toLowerCase().includes('iot') ||
-                        item.name.toLowerCase().includes('scada')
+                    name: 'iot-default-passwords.txt',
+                    url: SECLISTS_RAW_BASE + 'Passwords/Default-Credentials/default-passwords.csv',
+                    size: '25 KB',
+                    entries: '130',
+                    description: 'IoT device default credentials',
+                    source: SECLISTS_SOURCE_LABEL
+                },
+                {
+                    name: 'scada-default.txt',
+                    url: SECLISTS_RAW_BASE + 'Passwords/Default-Credentials/scada-pass.csv',
+                    size: '7 KB',
+                    entries: '154',
+                    description: 'SCADA systems default passwords',
+                    source: SECLISTS_SOURCE_LABEL
                 }
             ]
         }
     };
-
-    function formatBytes(bytes) {
-        if (typeof bytes !== 'number' || isNaN(bytes) || bytes <= 0) {
-            return 'Unknown';
-        }
-        const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(1024));
-        const value = bytes / Math.pow(1024, i);
-        return `${value.toFixed(i === 0 ? 0 : 1)} ${sizes[i]}`;
-    }
 
     function render() {
         return `
@@ -221,9 +408,15 @@
                 }
             </style>
             
-            <div class="mb-3">
-                <h4><i class="bi bi-list-ul"></i> Well-Known Wordlists Repository</h4>
-                <p class="text-secondary small mb-0">Access popular SecLists wordlists for security testing (fetched live from GitHub)</p>
+
+                        <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-list-ul"></i>
+                    <span> Well-Known Wordlists Repository</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                  Access popular SecLists wordlists for security testing (fetched live from GitHub).
+                </p>
             </div>
             
             <div class="row mb-3">
@@ -251,15 +444,14 @@
             
             <!-- Statistics -->
             <div class="alert alert-info mb-3" id="wordlistStats">
-                <span class="spinner-border spinner-border-sm me-2"></span>
-                Initializing repository view...
+                <strong><i class="bi bi-info-circle"></i> Repository Statistics:</strong>
+                <span id="statsContent">Loading...</span>
             </div>
             
             <!-- Wordlist Content -->
             <div id="wordlistContent">
                 <div class="alert alert-info">
-                    <span class="spinner-border spinner-border-sm me-2"></span>
-                    Loading wordlists directly from the SecLists GitHub repository...
+                    <i class="bi bi-info-circle"></i> Loading wordlists from SecLists GitHub repository...
                 </div>
             </div>
         `;
@@ -267,12 +459,6 @@
 
     function init() {
         let activeCategory = null;
-        let isLoading = true;
-
-        // Treat everything we generate as a direct file (download_url)
-        function isDirectFile(url) {
-            return true;
-        }
 
         // Render category filters
         function renderCategoryFilters() {
@@ -283,14 +469,13 @@
             Object.keys(wordlists).forEach(categoryKey => {
                 const category = wordlists[categoryKey];
                 const active = activeCategory === categoryKey ? 'active' : '';
-                const bgColor = active ? category.color : 'secondary';
                 const count = category.lists.length;
 
                 html += `
-                    <span class="badge bg-${bgColor} filter-badge ${active}" 
-                          onclick="filterByCategory('${categoryKey}')">
+                    <button class="btn btn-outline-green category-filter ${active}" 
+                            onclick="filterByCategory('${categoryKey}')">
                         <i class="bi ${category.icon}"></i> ${category.name} (${count})
-                    </span>
+                    </button>
                 `;
             });
 
@@ -309,18 +494,10 @@
                 totalLists += category.lists.length;
             });
 
-            if (isLoading) {
-                statsDiv.innerHTML = `
-                    <strong><i class="bi bi-info-circle"></i> Repository Statistics:</strong>
-                    Fetching metadata from SecLists GitHub repository...
-                `;
-                return;
+            const statsContent = document.getElementById('statsContent');
+            if (statsContent) {
+                statsContent.innerHTML = `${totalCategories} categories • ${totalLists} wordlists • Source: ${SECLISTS_SOURCE_LABEL}`;
             }
-
-            statsDiv.innerHTML = `
-                <strong><i class="bi bi-info-circle"></i> Repository Statistics:</strong>
-                ${totalCategories} categories • ${totalLists} wordlists • Source: ${SECLISTS_SOURCE_LABEL}
-            `;
         }
 
         // Render wordlists
@@ -350,8 +527,6 @@
                         categoryVisible++;
                         visibleCount++;
 
-                        const isDirect = isDirectFile(list.url);
-
                         categoryHtml += `
                             <div class="wordlist-card">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
@@ -369,24 +544,18 @@
                                     </div>
                                 </div>
                                 <div class="d-flex gap-2 flex-wrap">
-                                    ${isDirect ? `
-                                        <button class="btn btn-sm btn-primary" onclick="downloadWordlist('${list.url}', '${list.name}')">
-                                            <i class="bi bi-download"></i> Download
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary" onclick="previewWordlist('${list.url}', '${list.name}')">
-                                            <i class="bi bi-eye"></i> Preview
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-primary" onclick="copyUrl('${list.url}', this)">
-                                            <i class="bi bi-clipboard"></i> Copy URL
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-success" onclick="showCommands('${list.url}', '${list.name}')">
-                                            <i class="bi bi-terminal"></i> CLI
-                                        </button>
-                                    ` : `
-                                        <button class="btn btn-sm btn-warning" onclick="openInNewTab('${list.url}')">
-                                            <i class="bi bi-box-arrow-up-right"></i> Open
-                                        </button>
-                                    `}
+                                    <button class="btn btn-sm btn-success" onclick="downloadWordlist('${list.url}', '${list.name}')">
+                                        <i class="bi bi-download"></i> Download
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success" onclick="previewWordlist('${list.url}', '${list.name}')">
+                                        <i class="bi bi-eye"></i> Preview
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning" onclick="copyUrl('${list.url}', this)">
+                                        <i class="bi bi-clipboard"></i> Copy URL
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="showCommands('${list.url}', '${list.name}')">
+                                        <i class="bi bi-terminal"></i> CLI
+                                    </button>
                                 </div>
                             </div>
                         `;
@@ -407,100 +576,15 @@
                 }
             });
 
-            if (visibleCount === 0 && !isLoading) {
+            if (visibleCount === 0) {
                 html = `
                     <div class="alert alert-warning">
                         <i class="bi bi-exclamation-triangle"></i> No wordlists found matching your criteria.
                     </div>
                 `;
-            } else if (isLoading) {
-                html = `
-                    <div class="alert alert-info">
-                        <span class="spinner-border spinner-border-sm me-2"></span>
-                        Loading wordlists directly from the SecLists GitHub repository...
-                    </div>
-                `;
             }
 
             contentDiv.innerHTML = html;
-        }
-
-        // Load one category from SecLists (GitHub API)
-        function loadCategory(categoryKey) {
-            const category = wordlists[categoryKey];
-            if (!category || !Array.isArray(category.sources)) return Promise.resolve();
-
-            const filesSeen = new Set();
-
-            const promises = category.sources.map(src => {
-                const url = SECLISTS_API_BASE + encodeURIComponent(src.path);
-
-                return fetch(url)
-                    .then(resp => {
-                        if (!resp.ok) {
-                            throw new Error(`GitHub API error for ${src.path}: ${resp.status}`);
-                        }
-                        return resp.json();
-                    })
-                    .then(json => {
-                        const items = Array.isArray(json) ? json : [json];
-
-                        items.forEach(item => {
-                            if (item.type !== 'file') return;
-                            if (!item.name || !ALLOWED_EXTENSIONS.test(item.name)) return;
-                            if (typeof src.filter === 'function' && !src.filter(item)) return;
-
-                            const urlKey = item.download_url || item.html_url;
-                            if (filesSeen.has(urlKey)) return;
-                            filesSeen.add(urlKey);
-
-                            category.lists.push({
-                                name: item.name,
-                                size: formatBytes(item.size),
-                                entries: 'Unknown',
-                                description: item.path,
-                                url: item.download_url || item.html_url,
-                                source: SECLISTS_SOURCE_LABEL,
-                                type: 'direct'
-                            });
-                        });
-                    })
-                    .catch(err => {
-                        console.error('Failed to load SecLists category', categoryKey, src.path, err);
-                    });
-            });
-
-            return Promise.all(promises).then(() => {
-                // Sort alphabetically
-                category.lists.sort((a, b) => a.name.localeCompare(b.name));
-            });
-        }
-
-        function loadAllCategories() {
-            const keys = Object.keys(wordlists);
-
-            Promise.all(keys.map(loadCategory))
-                .then(() => {
-                    isLoading = false;
-                    renderCategoryFilters();
-                    updateStats();
-                    renderWordlists(document.getElementById('wordlistSearch').value);
-                })
-                .catch(err => {
-                    console.error('Failed to load SecLists data', err);
-                    isLoading = false;
-
-                    const contentDiv = document.getElementById('wordlistContent');
-                    if (contentDiv) {
-                        contentDiv.innerHTML = `
-                            <div class="alert alert-danger">
-                                <i class="bi bi-exclamation-triangle"></i>
-                                Error loading data from SecLists GitHub repository. Check console/network.
-                            </div>
-                        `;
-                    }
-                    updateStats();
-                });
         }
 
         // Filter by category
@@ -540,80 +624,106 @@
             window.open(url, '_blank');
         };
 
-        // Preview wordlist (first 50 lines)
-        window.previewWordlist = async function(url, name) {
-            const contentDiv = document.getElementById('wordlistContent');
-            if (!contentDiv) return;
+// Preview wordlist (first 50 lines)
+window.previewWordlist = async function(url, name) {
+    const contentDiv = document.getElementById('wordlistContent');
+    if (!contentDiv) return;
 
-            contentDiv.innerHTML = `
-                <div class="card bg-dark mb-3">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0"><i class="bi bi-eye"></i> Preview: ${name}</h6>
+    // Helper: show simple "preview not available" message
+    function showPreviewNotAvailable() {
+        contentDiv.innerHTML = `
+            <div class="card bg-dark mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="bi bi-eye"></i> Preview: ${name}</h6>
+                    <div>
+                        <button class="btn btn-sm btn-danger me-2" onclick="downloadWordlist('${url}', '${name}')">
+                            <i class="bi bi-download"></i> Download
+                        </button>
                         <button class="btn btn-sm btn-outline-secondary" onclick="resetWordlistFilters()">
                             <i class="bi bi-x-lg"></i> Close
                         </button>
                     </div>
-                    <div class="card-body">
-                        <div class="alert alert-info">
-                            <span class="spinner-border spinner-border-sm me-2"></span>
-                            Loading first 50 lines...
-                        </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning mb-0">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Preview is not available for this file.
                     </div>
                 </div>
-            `;
+            </div>
+        `;
+    }
 
-            try {
-                const response = await fetch(url);
-                const text = await response.text();
-                const lines = text.split('\n').slice(0, 50);
+    // If not a .txt file, don't even try to preview
+    if (!/\.txt$/i.test(name)) {
+        showPreviewNotAvailable();
+        return;
+    }
 
-                contentDiv.innerHTML = `
-                    <div class="card bg-dark mb-3">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="bi bi-eye"></i> Preview: ${name}</h6>
-                            <div>
-                                <button class="btn btn-sm btn-primary me-2" onclick="downloadWordlist('${url}', '${name}')">
-                                    <i class="bi bi-download"></i> Download
-                                </button>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="resetWordlistFilters()">
-                                    <i class="bi bi-x-lg"></i> Close
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert alert-warning mb-3">
-                                <i class="bi bi-info-circle"></i> Showing first 50 lines
-                            </div>
-                            <pre class="bg-black p-3 rounded" style="max-height: 500px; overflow-y: auto; font-size: 0.85rem;">${window.escapeHtml(lines.join('\n'))}</pre>
-                        </div>
+    // Initial loading state
+    contentDiv.innerHTML = `
+        <div class="card bg-dark mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="bi bi-eye"></i> Preview: ${name}</h6>
+                <button class="btn btn-sm btn-outline-secondary" onclick="resetWordlistFilters()">
+                    <i class="bi bi-x-lg"></i> Close
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    Loading first 50 lines...
+                </div>
+            </div>
+        </div>
+    `;
+
+    try {
+        const response = await fetch(url);
+
+        // Handle HTTP errors (404, 500, etc.)
+        if (!response.ok) {
+            showPreviewNotAvailable();
+            return;
+        }
+
+        const contentType = response.headers.get('content-type') || '';
+
+        // If it's clearly not text, don't try to preview
+        if (!/^text\//i.test(contentType) && !/charset=/i.test(contentType)) {
+            showPreviewNotAvailable();
+            return;
+        }
+
+        const text = await response.text();
+        const lines = text.split('\n').slice(0, 50);
+
+        contentDiv.innerHTML = `
+            <div class="card bg-dark mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="bi bi-eye"></i> Preview: ${name}</h6>
+                    <div>
+                        <button class="btn btn-sm btn-danger me-2" onclick="downloadWordlist('${url}', '${name}')">
+                            <i class="bi bi-download"></i> Download
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="resetWordlistFilters()">
+                            <i class="bi bi-x-lg"></i> Close
+                        </button>
                     </div>
-                `;
-            } catch (error) {
-                console.error('Preview error', error);
-                contentDiv.innerHTML = `
-                    <div class="card bg-dark mb-3">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="bi bi-eye"></i> Preview: ${name}</h6>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="resetWordlistFilters()">
-                                <i class="bi bi-x-lg"></i> Close
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert alert-danger">
-                                <i class="bi bi-exclamation-triangle"></i> Could not load preview. The file may be too large or CORS restrictions apply.
-                                <br><br>
-                                <button class="btn btn-sm btn-primary" onclick="downloadWordlist('${url}', '${name}')">
-                                    <i class="bi bi-download"></i> Download Instead
-                                </button>
-                                <button class="btn btn-sm btn-info ms-2" onclick="openInNewTab('${url}')">
-                                    <i class="bi bi-box-arrow-up-right"></i> Open
-                                </button>
-                            </div>
-                        </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning mb-3">
+                        <i class="bi bi-info-circle"></i> Showing first 50 lines
                     </div>
-                `;
-            }
-        };
+                    <pre class="bg-black p-3 rounded" style="max-height: 500px; overflow-y: auto; font-size: 0.85rem;">${window.escapeHtml(lines.join('\n'))}</pre>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Preview error', error);
+        showPreviewNotAvailable();
+    }
+};
 
         // Copy URL
         window.copyUrl = async function(url, button) {
@@ -621,12 +731,12 @@
                 await navigator.clipboard.writeText(url);
                 const originalHTML = button.innerHTML;
                 button.innerHTML = '<i class="bi bi-check-lg"></i> Copied!';
-                button.classList.remove('btn-outline-primary');
+                button.classList.remove('btn-outline-danger');
                 button.classList.add('btn-success');
                 setTimeout(() => {
                     button.innerHTML = originalHTML;
                     button.classList.remove('btn-success');
-                    button.classList.add('btn-outline-primary');
+                    button.classList.add('btn-outline-danger');
                 }, 2000);
             } catch (err) {
                 console.error('Failed to copy:', err);
@@ -661,6 +771,7 @@
                         <!-- wget -->
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0"><i class="bi bi-download"></i> wget (Linux/Mac)
                                 <h6 class="mb-0"><i class="bi bi-download"></i> wget (Linux/Mac)</h6>
                                 <button class="btn btn-sm btn-outline-primary" onclick="copyCommand(\`${window.escapeHtml(wgetCmd).replace(/`/g, '\\`')}\`, this)">
                                     <i class="bi bi-clipboard"></i> Copy
@@ -732,11 +843,10 @@
             });
         }
 
-        // Initial UI render, then async load from SecLists
+        // Initial render
         renderCategoryFilters();
         updateStats();
         renderWordlists();
-        loadAllCategories();
     }
 
     // Register the tool

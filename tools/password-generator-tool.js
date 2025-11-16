@@ -8,9 +8,15 @@
 
     function render() {
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-shield-lock-fill"></i> Password Generator</h4>
-                <p class="text-secondary">Generate strong, random passwords with custom character sets</p>
+
+                         <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <span>Password Generator</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                  Generate strong, random passwords with custom character sets.
+                </p>
             </div>
             
             <div class="row g-3">

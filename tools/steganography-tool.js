@@ -8,9 +8,15 @@
 
     function render() {
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-file-image"></i> LSB Steganography Tool</h4>
-                <p class="text-secondary">Hide and extract text in images using Least Significant Bit technique</p>
+
+            <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-file-image"></i>
+                    <span>LSB Steganography Tool</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                  Hide and extract text in images using Least Significant Bit technique.
+                </p>
             </div>
             
             <ul class="nav nav-tabs mb-3" role="tablist">

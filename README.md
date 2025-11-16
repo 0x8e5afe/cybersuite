@@ -20,7 +20,7 @@ Clone the repo, open `index.html` in a browser, and you immediately get a curate
 
 Everything runs **completely client-side**: no backend, no external dependency chain, and nothing is sent to a server. 
 
-![CyberSuite Screenshot](assets/screenshot_cybersuite.png) 
+![CyberSuite Screenshot](assets/cybersuite.png) 
 
 ---
 
@@ -42,78 +42,41 @@ Below is a brief overview (see the individual tool UIs for details and options).
 
 ### 🔴 Red Team Tools
 
-- **Clickjacking PoC Generator**  
-  Build and preview clickjacking proof-of-concept pages using iframes and visual overlays.
-
-- **CSRF PoC Generator**  
-  Generate ready-to-use CSRF PoC forms (GET/POST) to test anti-CSRF protections.
-
-- **Hashcat Rule Generator**  
-  Compose and reorder Hashcat rules interactively to create custom password mutation chains.
-
-- **Prompt Injection Evasion**  
-  Generate obfuscated / transformed prompt strings (Base64, hex, binary, Zalgo, etc.) for testing LLM prompt filters and injection defenses.
-
-- **Report Writing Assistant**  
-  Helper that helps pentester to write technical report sections (designed to work also with OpenAI / Anthropic or otherwise using internal knowledge base).
-
-- **Reverse Shell Generator**  
-  Generate reverse shell one-liners for many interpreters and platforms (bash, PowerShell, Python, PHP, Java, Node.js, Netcat, Socat, AWK, and more).
-
-- **SQLi Payloads Generator**  
-  Generate SQL injection payloads tailored for different DBMS engines and testing scenarios.
-
-- **Steganography Tool**  
-  Hide and extract messages inside images using LSB-based steganography.
-
-- **Wordlists Generator**  
-  Generate custom wordlists for fuzzing, brute force and targeted password attacks using patterns, mutations and combinations.
-
-- **Wordlist Repository**  
-  Browse and fetch wordlists directly from the **SecLists** project on GitHub (passwords, usernames, discovery, fuzzing, etc.).
-
-- **XSS Payloads Generator**  
-  Generate multiple XSS payloads (including filter-bypass variants) for web application testing and research.
+| Tool Name | Description |
+|-----------|-------------|
+| **Clickjacking PoC Generator** | Build and preview clickjacking proof-of-concept pages using iframes and visual overlays. |
+| **CSRF PoC Generator** | Generate ready-to-use CSRF PoC forms (GET/POST) to test anti-CSRF protections. |
+| **Hashcat Rule Generator** | Compose and reorder Hashcat rules interactively to create custom password mutation chains. |
+| **Prompt Injection Evasion** | Generate obfuscated / transformed prompt strings (Base64, hex, binary, Zalgo, etc.) for testing LLM prompt filters and injection defenses. |
+| **Report Writing Assistant** | Helper that helps pentester to write technical report sections (designed to work also with OpenAI / Anthropic or otherwise using internal knowledge base). |
+| **Reverse Shell Generator** | Generate reverse shell one-liners for many interpreters and platforms (bash, PowerShell, Python, PHP, Java, Node.js, Netcat, Socat, AWK, and more). |
+| **SQLi Payloads Generator** | Generate SQL injection payloads tailored for different DBMS engines and testing scenarios. |
+| **Steganography Tool** | Hide and extract messages inside images using LSB-based steganography. |
+| **Wordlists Generator** | Generate custom wordlists for fuzzing, brute force and targeted password attacks using patterns, mutations and combinations. |
+| **Wordlist Repository** | Browse and fetch wordlists directly from the **SecLists** project on GitHub (passwords, usernames, discovery, fuzzing, etc.). |
+| **XSS Payloads Generator** | Generate multiple XSS payloads (including filter-bypass variants) for web application testing and research. |
 
 ### 🟣 Purple Team Tools
 
-- **CORS Misconfiguration Checker**  
-  Test endpoints for permissive or unsafe CORS responses and highlight risky configurations.
-
-- **CVSS v3.1 Calculator**  
-  Calculate CVSS v3.1 base/temporal/environmental scores from vulnerability characteristics.
-
-- **Encoder/Decoder**  
-  Encode / decode using many formats: Base64, URL, HTML entities, Unicode, hex, ROT13, binary, Morse, and more.
-
-- **Encryption Tool**  
-  Encrypt/decrypt text and files with multiple algorithms and modes, plus HMAC helpers for integrity checks.
-
-- **Hash Generator**  
-  Compute and compare cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512, etc.) for files and text.
-
-- **HTTP Security Headers**  
-  Analyze HTTP response headers and detect missing or misconfigured security headers (CSP, HSTS, X-Frame-Options, etc.).
-
-- **JWT Tool**  
-  Decode and inspect JSON Web Tokens, view header/payload, and experiment with signing / verification scenarios.
-
-- **OWASP Top 10 Explorer**  
-  Explore OWASP Top 10 style categories (including Web, API, CI/CD, ML/LLM-related lists) with links to official material.
-
-- **Password Cracking Complexity**  
-  Estimate password cracking time based on charset, length, keyspace size and attack speed.
-
-- **Password Generator**  
-  Generate cryptographically-strong random passwords with configurable character sets and policies.
+| Tool Name | Description |
+|-----------|-------------|
+| **CORS Misconfiguration Checker** | Test endpoints for permissive or unsafe CORS responses and highlight risky configurations. |
+| **CVSS v3.1 Calculator** | Calculate CVSS v3.1 base/temporal/environmental scores from vulnerability characteristics. |
+| **Encoder/Decoder** | Encode / decode using many formats: Base64, URL, HTML entities, Unicode, hex, ROT13, binary, Morse, and more. |
+| **Encryption Tool** | Encrypt/decrypt text and files with multiple algorithms and modes, plus HMAC helpers for integrity checks. |
+| **Hash Generator** | Compute and compare cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512, etc.) for files and text. |
+| **HTTP Security Headers** | Analyze HTTP response headers and detect missing or misconfigured security headers (CSP, HSTS, X-Frame-Options, etc.). |
+| **JWT Tool** | Decode and inspect JSON Web Tokens, view header/payload, and experiment with signing / verification scenarios. |
+| **OWASP Top 10 Explorer** | Explore OWASP Top 10 style categories (including Web, API, CI/CD, ML/LLM-related lists) with links to official material. |
+| **Password Cracking Complexity** | Estimate password cracking time based on charset, length, keyspace size and attack speed. |
+| **Password Generator** | Generate cryptographically-strong random passwords with configurable character sets and policies. |
 
 ### 🔵 Blue Team Tools
 
-- **Sysmon Event ID Reference**  
-  Reference Sysmon event IDs with descriptions, typical use cases and important fields for detection engineering.
-
-- **Windows Event ID Reference**  
-  Reference Windows Security / System event IDs, including high-value events and mappings to MITRE ATT&CK where relevant.
+| Tool Name | Description |
+|-----------|-------------|
+| **Sysmon Event ID Reference** | Reference Sysmon event IDs with descriptions, typical use cases and important fields for detection engineering. |
+| **Windows Event ID Reference** | Reference Windows Security / System event IDs, including high-value events and mappings to MITRE ATT&CK where relevant. |
 
 ---
 
@@ -225,9 +188,12 @@ Create a new file: **`tools/hello-world-tool.js`**:
     // 1. UI renderer
     function render() {
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-emoji-smile"></i> Hello World</h4>
-                <p class="text-secondary">
+            <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-emoji-smile"></i>
+                    <span>Hello World</span>
+                </h3>
+                <p class="text-secondary mb-0">
                     Minimal example of a CyberSuite tool. Click the button to print a message.
                 </p>
             </div>
@@ -276,11 +242,11 @@ Create a new file: **`tools/hello-world-tool.js`**:
 
 ### 3. Add the Tool to `app.js`
 
-Open **`app.js`** and locate the `const toolFiles = [...]` array.  
+Open **`app.js`** and locate the `const toolPaths = [...]` array.  
 Add your new file to the list:
 
 ```js
-const toolFiles = [
+const toolPaths = [
     'tools/clickjacking-poc-tool.js',
     'tools/cors-checker-tool.js',
     // ...

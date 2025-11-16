@@ -118,9 +118,15 @@
             .join('');
 
         return `
-            <div class="mb-4">
-                <h4><i class="bi bi-terminal-fill"></i> Reverse Shell Generator</h4>
-                <p class="text-secondary">Generate reverse shell payloads for penetration testing</p>
+
+            <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-terminal-fill"></i>
+                    <span>Reverse Shell Generator</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                  Generate reverse shell payloads for penetration testing.
+                </p>
             </div>
             
             <div class="row g-3">

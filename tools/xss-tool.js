@@ -9,14 +9,18 @@
 
     function render() {
         return `
-        <div class="mb-4">
-            <h4><i class="bi bi-bug-fill"></i> XSS Payload Generator</h4>
-            <p class="text-secondary">
-                Generate XSS proof-of-concept payloads for authorized security testing.
+
+        <div class="section-header">
+                <h3 class="mb-1 d-flex align-items-center gap-2">
+                    <i class="bi bi-bug-fill"></i>
+                    <span>XSS Payload Generator</span>
+                </h3>
+                <p class="text-secondary mb-0">
+                   Generate XSS proof-of-concept payloads for authorized security testing.
                 JavaScript is taken from the field below and inserted into each payload
                 <em>where applicable</em>.
-            </p>
-        </div>
+                </p>
+            </div>
         
         <div class="alert alert-warning">
             <i class="bi bi-exclamation-triangle-fill"></i> 

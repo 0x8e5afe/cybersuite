@@ -1,4 +1,141 @@
+// =====================
+// Dynamic tools ticker with typing + deleting
+// =====================
+
+const toolPaths = [
+    'tools/clickjacking-poc-tool.js',
+    'tools/cors-checker-tool.js',
+    'tools/csrf-poc-tool.js',
+    'tools/cvss3-calculator-tool.js',
+    'tools/encoder-decoder-tool.js',
+    'tools/encryption-tool.js',
+    'tools/hash-tool.js',
+    'tools/prompt-injection-tool.js',
+    'tools/hashcat-rule-generator-tool.js',
+    'tools/wordlists-tool.js',
+    'tools/pentest-report-tool.js',
+    'tools/steganography-tool.js',
+    'tools/jwt-tool.js',
+    'tools/xss-tool.js',
+    'tools/owasp-tool.js',
+    'tools/sqli-tool.js',
+    'tools/sysmon-tool.js',
+    'tools/windows-event-id-tool.js',
+    'tools/wordlists-generator-tool.js',
+    'tools/password-cracker-tool.js',
+    'tools/password-generator-tool.js',
+    'tools/headers-analyzer-tool.js',
+    'tools/shells-generator-tool.js'
+];
+
+const toolPrettyNames = {
+    'clickjacking-poc':          'Clickjacking PoC',
+    'cors-checker':              'CORS Checker',
+    'csrf-poc':                  'CSRF PoC',
+    'cvss3-calculator':          'CVSS v3 Calculator',
+    'encoder-decoder':           'Encoder / Decoder',
+    'encryption':                'Encryption Utilities',
+    'hash':                      'Hash Utilities',
+    'prompt-injection':          'Prompt Injection Helper',
+    'hashcat-rule-generator':    'Hashcat Rule Generator',
+    'wordlists':                 'Wordlists Manager',
+    'pentest-report':            'Pentest Report Helper',
+    'steganography':             'Steganography Toolkit',
+    'jwt':                       'JWT Analyzer',
+    'xss':                       'XSS Payload Generator',
+    'owasp':                     'OWASP Helper',
+    'sqli':                      'SQLi Helper',
+    'sysmon':                    'Sysmon Hunt Helper',
+    'windows-event-id':          'Windows Event ID Explorer',
+    'wordlists-generator':       'Wordlists Generator',
+    'password-cracker':          'Password Cracker Helper',
+    'password-generator':        'Password Generator',
+    'headers-analyzer':          'HTTP Headers Analyzer',
+    'shells-generator':          'Shells Generator'
+};
+
+function pathToKey(path) {
+    const file = path.split('/').pop();
+    return file
+        .replace('.js', '')
+        .replace(/-tool$/, '')
+        .toLowerCase();
+}
+
+function toHumanReadableTool(path) {
+    const key = pathToKey(path);
+    if (toolPrettyNames[key]) {
+        return toolPrettyNames[key];
+    }
+
+    return key
+        .split('-')
+        .map(word => word.length <= 3 ? word.toUpperCase()
+            : word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+(function initToolTickerTypewriter() {
+    const container = document.getElementById('activeToolContainer');
+    if (!container) return;
+
+    let lastIndex = -1;
+    let currentText = '';
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function render(visibleText) {
+        // caret is rendered right after the current visible text
+        container.innerHTML = `${visibleText}<span class="typing-cursor">▌</span>`;
+    }
+
+    function pickNextToolText() {
+        if (toolPaths.length === 0) return '';
+        if (toolPaths.length === 1) return toHumanReadableTool(toolPaths[0]);
+
+        let idx;
+        do {
+            idx = Math.floor(Math.random() * toolPaths.length);
+        } while (idx === lastIndex);
+
+        lastIndex = idx;
+        return toHumanReadableTool(toolPaths[idx]);
+    }
+
+    currentText = pickNextToolText();
+
+    function typeLoop() {
+        let delay;
+
+        if (!isDeleting && charIndex < currentText.length) {
+            // Typing
+            charIndex++;
+            render(currentText.slice(0, charIndex));
+            delay = 90;
+        } else if (!isDeleting && charIndex === currentText.length) {
+            // Pause at full text
+            isDeleting = true;
+            delay = 1200;
+        } else if (isDeleting && charIndex > 0) {
+            // Deleting
+            charIndex--;
+            render(currentText.slice(0, charIndex));
+            delay = 40;
+        } else {
+            // Finished deleting, choose new tool
+            isDeleting = false;
+            currentText = pickNextToolText();
+            delay = 400;
+        }
+
+        setTimeout(typeLoop, delay);
+    }
+
+    typeLoop();
+})();
+
 // Scroll to Top Button Functionality
+
 const scrollToTopBtn = document.getElementById('scrollToTopBtn');
 
 window.addEventListener('scroll', () => {
@@ -99,32 +236,7 @@ window.registerCyberSuiteTool = function(toolConfig) {
  * Dynamically load all tools from the tools directory
  */
 function loadAllTools() {
-    const toolFiles = [
-        'tools/clickjacking-poc-tool.js',
-        'tools/cors-checker-tool.js',
-        'tools/csrf-poc-tool.js',
-        'tools/cvss3-calculator-tool.js',
-        'tools/encoder-decoder-tool.js',
-        'tools/encryption-tool.js',
-        'tools/hash-tool.js',
-        'tools/prompt-injection-tool.js',
-        'tools/hashcat-rule-generator-tool.js',
-        'tools/wordlists-tool.js',
-        'tools/pentest-report-tool.js',
-        'tools/steganography-tool.js',
-        'tools/jwt-tool.js',
-        'tools/xss-tool.js',
-        'tools/owasp-tool.js',
-        'tools/sqli-tool.js',
-        'tools/sysmon-tool.js',
-        'tools/windows-event-id-tool.js',
-        'tools/wordlists-generator-tool.js',
-        'tools/password-cracker-tool.js',
-        'tools/password-generator-tool.js',
-        'tools/headers-analyzer-tool.js',
-        'tools/shells-generator-tool.js',
-
-    ];
+    const toolFiles = toolPaths;
 
     let loadedCount = 0;
     const totalTools = toolFiles.length;
@@ -235,7 +347,7 @@ function renderToolsSections() {
                             <h6 class="card-title mb-0">
                                 <i class="bi ${tool.icon}"></i> ${tool.name}
                             </h6>
-                            <span class="badge bg-${info.color} badge-sm">${category}</span>
+                            <!--<span class="badge bg-${info.color} badge-sm">${category}</span>-->
                         </div>
                         <p class="card-text text-secondary small">${tool.description}</p>
                     </div>
