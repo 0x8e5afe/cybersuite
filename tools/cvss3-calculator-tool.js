@@ -87,7 +87,7 @@
         } else if (score < 4.0) {
             return { class: 'success', textClass: 'text-white' };
         } else if (score < 7.0) {
-            return { class: 'warning', textClass: 'text-dark' };
+            return { class: 'warning', textClass: 'text-white' };
         } else if (score < 9.0) {
             return { class: 'danger', textClass: 'text-white' };
         } else {
@@ -95,42 +95,90 @@
         }
     }
 
-    function render() {
-        let html = `
-            <style>
-                .cvss-btn-check:checked + .btn-outline-secondary {
-                    background-color: #0d6efd !important;
-                    border-color: #0d6efd !important;
-                    color: white !important;
-                }
-                .bg-dark-danger {
-                    background-color: #8b0000 !important;
-                }
-                .border-dark-danger {
-                    border-color: #8b0000 !important;
-                }
-                .hint-icon {
-                    cursor: help;
-                    color: #6c757d;
-                    margin-left: 4px;
-                    font-size: 0.9rem;
-                }
-                .hint-icon:hover {
-                    color: #0d6efd;
-                }
-            </style>
-            
-            <div class="mb-3">
-                <h4><i class="bi bi-exclamation-triangle-fill"></i> CVSS v3.1 Calculator</h4>
-                <p class="text-secondary mb-0">Calculate Common Vulnerability Scoring System (CVSS) scores</p>
-            </div>
-            
-            <div class="row">
-                <!-- Left Column: Metrics -->
-                <div class="col-md-5">
-                    <div class="card bg-dark border-secondary mb-3">
-                        <div class="card-body">
-        `;
+    // Parse CVSS vector string
+    function parseVector(vectorString) {
+        const cleanVector = vectorString.trim();
+        
+        // Try full format first: CVSS:3.1/AV:N/AC:L/...
+        let regex = /CVSS:3\.[01]\/AV:([NALP])\/AC:([LH])\/PR:([NLH])\/UI:([NR])\/S:([UC])\/C:([NLH])\/I:([NLH])\/A:([NLH])/;
+        let match = cleanVector.match(regex);
+        
+        if (match) {
+            return {
+                AV: match[1],
+                AC: match[2],
+                PR: match[3],
+                UI: match[4],
+                S: match[5],
+                C: match[6],
+                I: match[7],
+                A: match[8]
+            };
+        }
+        
+        // Try short format: AV:N/AC:L/...
+        regex = /^AV:([NALP])\/AC:([LH])\/PR:([NLH])\/UI:([NR])\/S:([UC])\/C:([NLH])\/I:([NLH])\/A:([NLH])$/;
+        match = cleanVector.match(regex);
+        
+        if (match) {
+            return {
+                AV: match[1],
+                AC: match[2],
+                PR: match[3],
+                UI: match[4],
+                S: match[5],
+                C: match[6],
+                I: match[7],
+                A: match[8]
+            };
+        }
+        
+        return null;
+    }
+
+    // Apply parsed values to form
+    function applyVectorToForm(values) {
+        Object.entries(values).forEach(([key, value]) => {
+            const radio = document.querySelector(`input[name="cvss_${key}"][value="${value}"]`);
+            if (radio) {
+                radio.checked = true;
+            }
+        });
+    }
+
+function render() {
+    let html = `
+        <div class="mb-3">
+            <h4 class="">
+                <i class="bi bi-exclamation-triangle-fill"></i> CVSS v3.1 Calculator
+            </h4>
+            <p class="text-secondary mb-0">Calculate Common Vulnerability Scoring System (CVSS) scores</p>
+        </div>
+        
+        <div class="row">
+            <!-- Left Column: Metrics -->
+            <div class="col-md-5">
+                <!-- Vector String Input -->
+                <div class="card bg-dark mb-3">
+                    <div class="card-body">
+                        <label class="form-label small mb-2">
+                            <i class="bi bi-code-slash"></i> Import CVSS Vector String
+                        </label>
+                        <div class="input-group input-group-sm mb-2">
+                            <input type="text" class="form-control font-monospace" id="vectorInput" 
+                                   placeholder="CVSS:3.1/AV:N/AC:L/... or AV:N/AC:L/...">
+                        </div>
+                        <div id="vectorError" class="small text-danger"></div>
+                    </div>
+                </div>
+                
+                <!-- Manual Selection -->
+                <div class="card bg-dark mb-3">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <small class="fw-bold">Manual Selection</small>
+                    </div>
+                    <div class="card-body">
+    `;
 
         // Generate form for each metric
         Object.entries(cvssMetrics).forEach(([key, metric]) => {
@@ -148,8 +196,8 @@
             
             Object.entries(metric.values).forEach(([valueKey, value]) => {
                 html += `
-                    <input type="radio" class="btn-check cvss-btn-check" name="cvss_${key}" id="cvss_${key}_${valueKey}" value="${valueKey}">
-                    <label class="btn btn-outline-secondary btn-sm" for="cvss_${key}_${valueKey}">
+                    <input type="radio" class="btn-check cvss-btn-check" name="cvss_${key}" id="cvss_${key}_${valueKey}" value="${valueKey}" autocomplete="off">
+                    <label class="btn btn-outline-secondary btn-sm" for="cvss_${key}_${valueKey}" style="cursor: pointer;">
                         ${value.label}
                     </label>
                 `;
@@ -212,7 +260,42 @@
                     }
                 });
             });
+
+            // Real-time vector parsing
+            const vectorInput = document.getElementById('vectorInput');
+            if (vectorInput) {
+                vectorInput.addEventListener('input', () => {
+                    parseVectorString();
+                });
+            }
         }, 100);
+        
+        window.parseVectorString = function() {
+            const input = document.getElementById('vectorInput');
+            const errorDiv = document.getElementById('vectorError');
+            const vectorString = input.value.trim();
+            
+            if (!vectorString) {
+                errorDiv.textContent = '';
+                return;
+            }
+            
+            const parsed = parseVector(vectorString);
+            
+            if (!parsed) {
+                errorDiv.textContent = 'Invalid format';
+                input.classList.remove('is-valid');
+                return;
+            }
+            
+            // Valid vector - clear error and apply to form
+            errorDiv.textContent = '';
+            input.classList.add('is-valid');
+            applyVectorToForm(parsed);
+            
+            // Auto-calculate
+            calculateCVSS();
+        };
         
         window.calculateCVSS = function() {
             const resultsDiv = document.getElementById('cvssResults');
@@ -231,7 +314,7 @@
             });
             
             if (!allSelected) {
-                resultsDiv.innerHTML = '<div class="alert alert-warning">Please select a value for all metrics</div>';
+                resultsDiv.innerHTML = '<div class="alert alert-warning">Please select a value for all metrics or load a CVSS vector string</div>';
                 return;
             }
             
@@ -308,31 +391,31 @@
             // Display results
             resultsDiv.innerHTML = `
                 <div class="card bg-dark border-${overallSeverityClass}">
-                    <div class="card-header bg-${overallSeverityClass === 'dark-danger' ? 'dark-danger' : overallSeverityClass} ${overallSeverityClass === 'dark-danger' ? 'text-white' : overallSeverityClass === 'warning' ? 'text-dark' : 'text-white'}">
-                        <h5 class="mb-0">
-                            <i class="bi bi-shield-exclamation"></i> 
-                            Score: ${baseScore} - ${overallSeverity}
-                        </h5>
-                    </div>
+    <div class="card-header bg-${overallSeverityClass}">
+        <h5 class="mb-0">
+            <i class="bi bi-shield-exclamation"></i> 
+            Score: ${baseScore} - ${overallSeverity}
+        </h5>
+    </div>
                     <div class="card-body p-3">
                         <!-- Visualizations -->
                         <div class="mb-3">
                             <h6 class="small mb-2">Base Scores</h6>
                             <div class="d-flex gap-2 align-items-end">
-                                <div class="flex-fill text-center">
-                                    <div class="bg-${baseSeverity.class} rounded" style="height: ${baseScore * 10}%; min-height: 20px; display: flex; align-items: center; justify-content: center;">
+                                <div class="flex-fill text-center d-flex flex-column justify-content-end">
+                                    <div class="bg-${baseSeverity.class} rounded p-2" style="height: ${baseScore * 10}%; min-height: 30px;">
                                         <small class="${baseSeverity.textClass} fw-bold">${baseScore}</small>
                                     </div>
                                     <small class="d-block mt-1">Base</small>
                                 </div>
-                                <div class="flex-fill text-center">
-                                    <div class="bg-${impactSeverity.class} rounded" style="height: ${(impact/10) * 100}%; min-height: 20px; display: flex; align-items: center; justify-content: center;">
+                                <div class="flex-fill text-center d-flex flex-column justify-content-end">
+                                    <div class="bg-${impactSeverity.class} rounded p-2" style="height: ${(impact/10) * 100}%; min-height: 30px;">
                                         <small class="${impactSeverity.textClass} fw-bold">${impact.toFixed(1)}</small>
                                     </div>
                                     <small class="d-block mt-1">Impact</small>
                                 </div>
-                                <div class="flex-fill text-center">
-                                    <div class="bg-${exploitSeverity.class} rounded" style="height: ${(exploitability/10) * 100}%; min-height: 20px; display: flex; align-items: center; justify-content: center;">
+                                <div class="flex-fill text-center d-flex flex-column justify-content-end">
+                                    <div class="bg-${exploitSeverity.class} rounded p-2" style="height: ${(exploitability/10) * 100}%; min-height: 30px;">
                                         <small class="${exploitSeverity.textClass} fw-bold">${exploitability.toFixed(1)}</small>
                                     </div>
                                     <small class="d-block mt-1">Exploit</small>
@@ -346,7 +429,7 @@
                         <div class="mb-3">
                             <h6 class="small mb-2">Overall Score</h6>
                             <div class="progress" style="height: 30px;">
-                                <div class="progress-bar ${overallSeverityClass === 'dark-danger' ? 'bg-dark-danger' : 'bg-' + overallSeverityClass}" role="progressbar" 
+                                <div class="progress-bar bg-${overallSeverityClass}" role="progressbar" 
                                      style="width: ${baseScore * 10}%"
                                      aria-valuenow="${baseScore}" aria-valuemin="0" aria-valuemax="10">
                                     ${baseScore} / 10
@@ -362,7 +445,7 @@
                                 <strong>Base Score:</strong> ${baseScore}
                             </div>
                             <div class="col-6">
-                                <strong>Severity:</strong> <span class="badge ${overallSeverityClass === 'dark-danger' ? 'bg-dark-danger' : 'bg-' + overallSeverityClass}">${overallSeverity}</span>
+                                <strong>Severity:</strong> <span class="badge bg-${overallSeverityClass}">${overallSeverity}</span>
                             </div>
                             <div class="col-6">
                                 <strong>Impact:</strong> ${impact.toFixed(2)}
@@ -418,6 +501,8 @@
                 radio.checked = false;
             });
             document.getElementById('cvssResults').innerHTML = '';
+            document.getElementById('vectorInput').value = '';
+            document.getElementById('vectorError').textContent = '';
         };
     }
 

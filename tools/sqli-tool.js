@@ -95,19 +95,19 @@
             </small>
         </div>
 
-        <button class="btn btn-primary" id="sqliGenerateBtn">
-            <i class="bi bi-hammer"></i> Generate payloads
-        </button>
+<button class="btn btn-success" id="sqliGenerateBtn">
+    <i class="bi bi-hammer"></i> Generate payloads
+</button>
 
-        <button class="btn btn-primary ms-2" id="sqliCopyAllBtn">
-            <i class="bi bi-clipboard"></i> Copy all
-        </button>
+<button class="btn btn-outline-info ms-2 d-none" id="sqliCopyAllBtn">
+    <i class="bi bi-clipboard"></i> Copy all
+</button>
 
-        <button class="btn btn-primary ms-2" id="sqliDownloadBtn">
-            <i class="bi bi-download"></i> Download wordlist
-        </button>
+<button class="btn btn-outline-warning ms-2 d-none" id="sqliDownloadBtn">
+    <i class="bi bi-download"></i> Download wordlist
+</button>
 
-        <div id="sqliResults" class="mt-4"></div>
+<div id="sqliResults" class="mt-4"></div>
     `;
     }
 
@@ -116,6 +116,8 @@
 
         function generatePayloads() {
             const resultsDiv = document.getElementById('sqliResults');
+            const copyAllBtn = document.getElementById('sqliCopyAllBtn');
+const downloadBtn = document.getElementById('sqliDownloadBtn');
 
             const dbs = {
                 generic: document.getElementById('dbGeneric').checked,
@@ -134,16 +136,33 @@
                 error: document.getElementById('techError').checked
             };
 
-            if (!Object.values(dbs).some(Boolean)) {
-                resultsDiv.innerHTML = `
-                    <div class="alert alert-warning">
-                        <i class="bi bi-exclamation-circle-fill"></i>
-                        Please select at least one DBMS.
-                    </div>
-                `;
-                currentPayloads = [];
-                return;
-            }
+if (!Object.values(dbs).some(Boolean)) {
+    resultsDiv.innerHTML = `
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            Please select at least one DBMS.
+        </div>
+    `;
+    currentPayloads = [];
+    copyAllBtn.classList.add('d-none');
+    downloadBtn.classList.add('d-none');
+    return;
+}
+
+if (!Object.values(tech).some(Boolean)) {
+    resultsDiv.innerHTML = `
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            Please select at least one technique category.
+        </div>
+    `;
+    currentPayloads = [];
+    copyAllBtn.classList.add('d-none');
+    downloadBtn.classList.add('d-none');
+    return;
+}
+
+
 
             if (!Object.values(tech).some(Boolean)) {
                 resultsDiv.innerHTML = `
@@ -539,7 +558,7 @@
                 if (tech.auth) {
                     payloads.push({
                         category: 'Oracle – Auth / Logic Bypass',
-                        hint: 'Remember Oracle’s “-- ” (space after comment).',
+                        hint: 'Remember Oracle\'s "-- " (space after comment).',
                         items: [
                             `' OR '1'='1'-- `,
                             `' OR 1=1-- `,
@@ -683,6 +702,17 @@
             currentPayloads = payloads;
 
             if (!payloads.length) {
+    resultsDiv.innerHTML = `
+        <div class="alert alert-info">
+            No payloads generated. Check your DBMS / technique selections.
+        </div>
+    `;
+    copyAllBtn.classList.add('d-none');
+    downloadBtn.classList.add('d-none');
+    return;
+}
+
+            if (!payloads.length) {
                 resultsDiv.innerHTML = `
                     <div class="alert alert-info">
                         No payloads generated. Check your DBMS / technique selections.
@@ -701,23 +731,23 @@
                 const isFirst = idx === 0;
 
                 html += `
-                <div class="accordion-item" style="background-color: #1a1d29; border-color: #2d3748;">
+                <div class="accordion-item" style="background-color: var(--terminal-card); border-color: var(--terminal-border);">
                     <h2 class="accordion-header">
-                        <button class="accordion-button ${isFirst ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" style="background-color: #2563eb; color: white;">
+                        <button class="accordion-button ${isFirst ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" style="background-color: rgba(0, 255, 136, 0.15); color: var(--terminal-accent); border-color: var(--terminal-accent);">
                             <i class="bi bi-folder-fill me-2"></i> ${category.category} (${category.items.length} payloads)
                         </button>
                     </h2>
                     <div id="${collapseId}" class="accordion-collapse collapse ${isFirst ? 'show' : ''}" data-bs-parent="#sqliAccordion">
-                        <div class="accordion-body" style="background-color: #1a1d29;">
+                        <div class="accordion-body" style="background-color: var(--terminal-card);">
                             <p class="text-secondary small mb-3">${category.hint}</p>
                 `;
 
                 category.items.forEach(payload => {
                     html += `
-                    <div class="mb-2">
-                        <div class="code-block position-relative" style="background-color: #0f1419; padding: 12px; border-radius: 6px; border: 1px solid #2d3748;">
-                            <code class="text-break" style="color: #e2e8f0;">${window.escapeHtml(payload)}</code>
-                            <button class="btn btn-sm btn-outline-primary position-absolute top-0 end-0 m-1 sqli-copy-payload-btn" data-payload-text="${window.escapeHtml(payload)}">
+                <div class="mb-2">
+                        <div class="code-block position-relative" style="background-color: var(--terminal-surface); padding: 12px; border-radius: 6px; border: 1px solid var(--terminal-border);">
+                            <code class="text-break" style="color: var(--terminal-accent);">${window.escapeHtml(payload)}</code>
+                            <button class="btn btn-sm btn-outline-success position-absolute top-0 end-0 m-1 sqli-copy-payload-btn" data-payload-text="${window.escapeHtml(payload)}">
                                 <i class="bi bi-clipboard"></i>
                             </button>
                         </div>
@@ -740,7 +770,10 @@
             </div>
             ` + html;
 
-            resultsDiv.innerHTML = html;
+            copyAllBtn.classList.remove('d-none');
+downloadBtn.classList.remove('d-none');
+
+resultsDiv.innerHTML = html;
 
             // Copy single payload
             document.querySelectorAll('.sqli-copy-payload-btn').forEach(btn => {
@@ -756,11 +789,11 @@
                     const originalHtml = this.innerHTML;
                     this.innerHTML = '<i class="bi bi-check-fill"></i>';
                     this.classList.add('btn-success');
-                    this.classList.remove('btn-outline-primary');
+                    this.classList.remove('btn-outline-success');
                     setTimeout(() => {
                         this.innerHTML = originalHtml;
                         this.classList.remove('btn-success');
-                        this.classList.add('btn-outline-primary');
+                        this.classList.add('btn-outline-success');
                     }, 2000);
                 });
             });
@@ -787,12 +820,12 @@
             const btn = document.getElementById('sqliCopyAllBtn');
             const originalHtml = btn.innerHTML;
             btn.innerHTML = '<i class="bi bi-check-fill"></i> Copied!';
-            btn.classList.remove('btn-primary');
+            btn.classList.remove('btn-info');
             btn.classList.add('btn-success');
             setTimeout(() => {
                 btn.innerHTML = originalHtml;
                 btn.classList.remove('btn-success');
-                btn.classList.add('btn-primary');
+                btn.classList.add('btn-info');
             }, 2000);
         }
 
@@ -821,12 +854,12 @@
             const btn = document.getElementById('sqliDownloadBtn');
             const originalHtml = btn.innerHTML;
             btn.innerHTML = '<i class="bi bi-check-fill"></i> Downloaded!';
-            btn.classList.remove('btn-primary');
+            btn.classList.remove('btn-warning');
             btn.classList.add('btn-success');
             setTimeout(() => {
                 btn.innerHTML = originalHtml;
                 btn.classList.remove('btn-success');
-                btn.classList.add('btn-primary');
+                btn.classList.add('btn-warning');
             }, 2000);
         }
 

@@ -1,3 +1,21 @@
+// Scroll to Top Button Functionality
+const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        scrollToTopBtn.classList.add('show');
+    } else {
+        scrollToTopBtn.classList.remove('show');
+    }
+});
+
+scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
 // ========================================
 // CYBERSUITE - MODULAR CORE APPLICATION
 // ========================================
@@ -15,7 +33,7 @@ const CATEGORY_INFO = {
         icon: 'bi-shield-fill',
         description: 'Defensive security and monitoring',
         class: 'blue-team',
-        color: 'primary'
+        color: 'blue'
     },
     purple: {
         name: 'Purple Team Tools',
@@ -96,6 +114,7 @@ function loadAllTools() {
         'tools/steganography-tool.js',
         'tools/jwt-tool.js',
         'tools/xss-tool.js',
+        'tools/owasp-tool.js',
         'tools/sqli-tool.js',
         'tools/sysmon-tool.js',
         'tools/windows-event-id-tool.js',
@@ -290,6 +309,20 @@ function loadTool(toolId) {
     }
     
     activeToolId = toolId;
+
+    // 🔹 NEW: choose border class based on category
+    let borderClass = '';
+    switch (tool.category) {
+        case 'red':
+            borderClass = 'border-red';
+            break;
+        case 'blue':
+            borderClass = 'border-blue';
+            break;
+        case 'purple':
+            borderClass = 'border-purple';
+            break;
+    }
     
     // Render tool workspace
     const workspace = document.getElementById('workspace');
@@ -297,7 +330,7 @@ function loadTool(toolId) {
         workspace.innerHTML = `
             <div class="row mt-4">
                 <div class="col-12">
-                    <div class="card tool-workspace">
+                    <div class="card tool-workspace ${borderClass}">
                         <div class="card-body">
                             ${tool.render()}
                         </div>

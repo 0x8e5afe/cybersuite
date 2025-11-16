@@ -294,20 +294,28 @@
             </div>
 
             <div class="mb-3">
-                <div class="btn-group btn-group-sm" role="group">
-                    <button class="btn btn-outline-danger" onclick="filterBySeverity('danger')">
-                        <i class="bi bi-exclamation-triangle-fill"></i> Critical
-                    </button>
-                    <button class="btn btn-outline-warning" onclick="filterBySeverity('warning')">
-                        <i class="bi bi-exclamation-circle-fill"></i> Warning
-                    </button>
-                    <button class="btn btn-outline-info" onclick="filterBySeverity('info')">
-                        <i class="bi bi-info-circle-fill"></i> Info
-                    </button>
-                    <button class="btn btn-outline-secondary" onclick="showAllEvents()">
-                        <i class="bi bi-arrow-counterclockwise"></i> Show All
-                    </button>
-                </div>
+               <div class="btn-group btn-group-sm" role="group">
+    <button class="btn btn-outline-danger sysmon-filter-btn"
+            type="button"
+            onclick="filterSysmonBySeverity('danger', this)">
+        <i class="bi bi-exclamation-triangle-fill"></i> Critical
+    </button>
+    <button class="btn btn-outline-warning sysmon-filter-btn"
+            type="button"
+            onclick="filterSysmonBySeverity('warning', this)">
+        <i class="bi bi-exclamation-circle-fill"></i> Warning
+    </button>
+    <button class="btn btn-outline-info sysmon-filter-btn"
+            type="button"
+            onclick="filterSysmonBySeverity('info', this)">
+        <i class="bi bi-info-circle-fill"></i> Info
+    </button>
+    <button class="btn btn-outline-secondary"
+            type="button"
+            onclick="showAllEvents()">
+        <i class="bi bi-arrow-counterclockwise"></i> Show All
+    </button>
+</div>
             </div>
             
             <div id="sysmonEventsContainer"></div>
@@ -330,17 +338,28 @@
             filterEvents(query, this.value);
         });
 
-        window.filterBySeverity = function(severity) {
-            const container = document.getElementById('sysmonEventsContainer');
-            const filtered = Object.entries(sysmonEvents).filter(([_, event]) => event.severity === severity);
-            renderEvents(filtered);
-        };
+function setSysmonFilterActive(btn) {
+    document.querySelectorAll('.sysmon-filter-btn')
+        .forEach(b => b.classList.remove('active'));
+    if (btn) {
+        btn.classList.add('active');
+    }
+}
 
-        window.showAllEvents = function() {
-            document.getElementById('eventIdSearch').value = '';
-            document.getElementById('categoryFilter').value = 'all';
-            renderAllEvents();
-        };
+
+window.filterSysmonBySeverity = function (severity, btn) {
+    const filtered = Object.entries(sysmonEvents)
+        .filter(([_, event]) => event.severity === severity);
+    renderEvents(filtered);
+    setSysmonFilterActive(btn);
+};
+
+window.showAllEvents = function () {
+    document.getElementById('eventIdSearch').value = '';
+    document.getElementById('categoryFilter').value = 'all';
+    renderAllEvents();
+    setSysmonFilterActive(null); // clear glow when showing all
+};
 
         window.copyEventQuery = function(eventId) {
             const query = `Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-Sysmon/Operational'; ID=${eventId}} -MaxEvents 100`;

@@ -17,12 +17,12 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="clickjackUrl" class="form-label">Target URL</label>
-                            <input type="url" id="clickjackUrl" class="form-control" placeholder="https://target.example.com">
+                            <label for="clickjackUrl" class="form-label">Target URL <span class="text-success">*</span></label>
+                            <input type="url" id="clickjackUrl" class="form-control" placeholder="https://target.example.com" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="decoyText" class="form-label">Decoy Button/Text</label>
-                            <input type="text" id="decoyText" class="form-control" placeholder="Claim your prize!">
+                            <label for="decoyText" class="form-label">Decoy Button/Text <span class="text-success">*</span></label>
+                            <input type="text" id="decoyText" class="form-control" placeholder="Claim your prize!" required>
                         </div>
                         <div class="col-md-4">
                             <label for="iframeOpacity" class="form-label">Iframe Opacity (0–1)</label>
@@ -61,6 +61,11 @@
             
             if (!url) {
                 resultsDiv.innerHTML = `<div class="alert alert-danger" role="alert">Enter a URL.</div>`;
+                return;
+            }
+
+            if (!decoyText || decoyText.trim() === '') {
+                resultsDiv.innerHTML = `<div class="alert alert-danger" role="alert"><strong>Error:</strong> Decoy Button/Text is required!</div>`;
                 return;
             }
 
@@ -150,7 +155,7 @@
                     <strong>PoC Preview Ready!</strong> The clickjacking demonstration is loaded below.
                 </div>
                 
-                <div class="card">
+                <div class="card clickjacking-preview-glow">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>Live Preview</span>
                         <small class="text-muted">Users see the button but interact with the hidden page</small>

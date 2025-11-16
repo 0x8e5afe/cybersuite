@@ -6,6 +6,8 @@
 (function() {
     'use strict';
 
+    let currentMode = 'encode'; // 'encode' or 'decode'
+
     const encodingMethods = {
         base64: {
             name: 'Base64',
@@ -39,13 +41,37 @@
             name: 'Hexadecimal',
             description: 'Convert to hex representation',
             encode: (str) => Array.from(str).map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(''),
-            decode: (str) => str.match(/.{2}/g).map(h => String.fromCharCode(parseInt(h, 16))).join('')
+            decode: (str) => {
+                if (!str || str.length % 2 !== 0) {
+                    throw new Error('Invalid hex input length');
+                }
+                const pairs = str.match(/.{2}/g);
+                if (!pairs) {
+                    throw new Error('Invalid hex input');
+                }
+                return pairs.map(h => String.fromCharCode(parseInt(h, 16))).join('');
+            }
         },
         hexWithPrefix: {
             name: 'Hex (\\x format)',
             description: 'Hex with \\x prefix',
             encode: (str) => Array.from(str).map(c => '\\x' + c.charCodeAt(0).toString(16).padStart(2, '0')).join(''),
-            decode: (str) => str.split('\\x').slice(1).map(h => String.fromCharCode(parseInt(h, 16))).join('')
+            decode: (str) => {
+                if (!str.includes('\\x')) {
+                    throw new Error('Expected \\x-prefixed hex');
+                }
+                return str
+                    .split('\\x')
+                    .slice(1)
+                    .map(h => {
+                        const part = h.slice(0, 2);
+                        if (!/^[0-9a-fA-F]{2}$/.test(part)) {
+                            throw new Error('Invalid \\x sequence');
+                        }
+                        return String.fromCharCode(parseInt(part, 16));
+                    })
+                    .join('');
+            }
         },
         html: {
             name: 'HTML Entities',
@@ -73,7 +99,13 @@
             name: 'Unicode Escape',
             description: 'JavaScript unicode escape',
             encode: (str) => Array.from(str).map(c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')).join(''),
-            decode: (str) => str.replace(/\\u([0-9a-fA-F]{4})/g, (m, p) => String.fromCharCode(parseInt(p, 16)))
+            decode: (str) => {
+                // basic strictness so auto-decode isn't silent garbage
+                if (!/\\u[0-9a-fA-F]{4}/.test(str)) {
+                    throw new Error('No valid \\uXXXX sequences found');
+                }
+                return str.replace(/\\u([0-9a-fA-F]{4})/g, (m, p) => String.fromCharCode(parseInt(p, 16)));
+            }
         },
         rot13: {
             name: 'ROT13',
@@ -93,7 +125,16 @@
             name: 'Binary',
             description: 'Convert to binary representation',
             encode: (str) => Array.from(str).map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' '),
-            decode: (str) => str.split(' ').map(b => String.fromCharCode(parseInt(b, 2))).join('')
+            decode: (str) => {
+                if (!str.trim()) return '';
+                const chunks = str.trim().split(/\s+/);
+                chunks.forEach(b => {
+                    if (!/^[01]{8}$/.test(b)) {
+                        throw new Error('Invalid binary byte: ' + b);
+                    }
+                });
+                return chunks.map(b => String.fromCharCode(parseInt(b, 2))).join('');
+            }
         },
         morse: {
             name: 'Morse Code',
@@ -120,7 +161,8 @@
                     '...--': '3', '....-': '4', '.....': '5', '-....': '6', '--...': '7',
                     '---..': '8', '----.': '9', '/': ' '
                 };
-                return str.split(' ').map(c => morse[c] || c).join('');
+                if (!str.trim()) return '';
+                return str.trim().split(/\s+/).map(c => morse[c] || '?').join('');
             }
         }
     };
@@ -137,45 +179,41 @@
             </div>
             
             <div class="row g-3">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <label for="encodingType" class="form-label">Encoding Type</label>
                     <select class="form-select" id="encodingType" onchange="updateEncodingInfo()">
                         ${methodOptions}
                     </select>
-                    <small id="encodingInfo" class="text-secondary"></small>
-                </div>
-                
-                <div class="col-md-6">
-                    <label class="form-label">Operations</label>
-                    <div class="btn-group w-100" role="group">
-                        <button class="btn btn-outline-primary" onclick="encodeText()">
-                            <i class="bi bi-lock-fill"></i> Encode
-                        </button>
-                        <button class="btn btn-outline-warning" onclick="decodeText()">
-                            <i class="bi bi-unlock-fill"></i> Decode
-                        </button>
+                    <div class="d-flex justify-content-between align-items-center mt-1">
+                        <small id="encodingInfo" class="text-secondary"></small>
+                        <span id="encoderModeBadge" class="badge bg-success">Mode: Encode</span>
                     </div>
                 </div>
             </div>
             
             <div class="row g-3 mt-2">
-                <div class="col-lg-6">
+                <div class="col-lg-5">
                     <label for="encoderInput" class="form-label">Input Text</label>
-                    <textarea class="form-control font-monospace" id="encoderInput" rows="10" placeholder="Enter text to encode/decode..."></textarea>
-                    <button class="btn btn-sm btn-outline-secondary mt-2" onclick="clearInput()">
-                        <i class="bi bi-x-circle"></i> Clear
+                    <textarea class="form-control font-monospace" id="encoderInput" rows="10" placeholder="Start typing to auto-encode/decode..."></textarea>
+                    <div class="mt-2 d-flex justify-content-end">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="clearInput()">
+                            <i class="bi bi-x-circle"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 d-flex align-items-center justify-content-center">
+                    <button class="btn btn-outline-secondary btn-lg" onclick="swapInputOutput()" title="Swap Input and Output (and toggle mode)">
+                        <i class="bi bi-arrow-left-right"></i>
                     </button>
                 </div>
                 
-                <div class="col-lg-6">
+                <div class="col-lg-5">
                     <label for="encoderOutput" class="form-label">Output</label>
-                    <textarea class="form-control font-monospace" id="encoderOutput" rows="10" readonly></textarea>
+                    <textarea class="form-control font-monospace encoder-output-glow" id="encoderOutput" rows="10" readonly></textarea>
                     <div class="mt-2">
-                        <button class="btn btn-sm btn-outline-primary" onclick="copyOutput()">
+                        <button class="btn btn-outline-primary w-100" onclick="copyOutput()">
                             <i class="bi bi-clipboard"></i> Copy
-                        </button>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="swapInputOutput()">
-                            <i class="bi bi-arrow-down-up"></i> Swap
                         </button>
                     </div>
                 </div>
@@ -218,31 +256,55 @@
             const type = document.getElementById('encodingType').value;
             const method = encodingMethods[type];
             document.getElementById('encodingInfo').textContent = method.description;
+            // re-run transformation when method changes
+            window.autoProcessText();
         };
-        
-        // Initialize with first method info
-        window.updateEncodingInfo();
 
-        window.encodeText = function() {
-            const input = document.getElementById('encoderInput').value;
-            const type = document.getElementById('encodingType').value;
+        window.updateModeUI = function() {
+            const badge = document.getElementById('encoderModeBadge');
+            if (!badge) return;
+
+            if (currentMode === 'encode') {
+                badge.textContent = 'Mode: Encode';
+                badge.classList.remove('bg-danger');
+                badge.classList.add('bg-success');
+            } else {
+                badge.textContent = 'Mode: Decode';
+                badge.classList.remove('bg-success');
+                badge.classList.add('bg-danger');
+            }
+        };
+
+        window.autoProcessText = function() {
+            const inputField = document.getElementById('encoderInput');
             const outputField = document.getElementById('encoderOutput');
             const resultsDiv = document.getElementById('encoderResults');
-            
+            const typeSelect = document.getElementById('encodingType');
+
+            if (!inputField || !outputField || !resultsDiv || !typeSelect) return;
+
+            const input = inputField.value;
+            const type = typeSelect.value;
+
             if (!input) {
-                resultsDiv.innerHTML = '<div class="alert alert-warning">Please enter text to encode</div>';
                 outputField.value = '';
+                outputField.classList.remove('output-active');
+                resultsDiv.innerHTML = '';
                 return;
             }
 
             try {
                 const method = encodingMethods[type];
-                const output = method.encode(input);
+                const fn = currentMode === 'encode' ? method.encode : method.decode;
+                const output = fn(input);
                 outputField.value = output;
-                
+                outputField.classList.add('output-active');
+
+                const actionTitle = currentMode === 'encode' ? 'Encoding' : 'Decoding';
+
                 resultsDiv.innerHTML = `
-                    <div class="alert alert-success">
-                        <h6 class="alert-heading"><i class="bi bi-check-circle-fill"></i> Encoding Successful</h6>
+                    <div class="alert alert-success mb-0">
+                        <h6 class="alert-heading"><i class="bi bi-check-circle-fill"></i> ${actionTitle} Successful</h6>
                         <div class="row small">
                             <div class="col-md-4">
                                 <strong>Method:</strong> ${method.name}
@@ -258,61 +320,22 @@
                 `;
             } catch (error) {
                 outputField.value = '';
+                outputField.classList.remove('output-active');
+
+                const actionTitle = currentMode === 'encode' ? 'Encoding' : 'Decoding';
+
                 resultsDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        <strong><i class="bi bi-exclamation-triangle-fill"></i> Encoding Error:</strong> ${window.escapeHtml(error.message)}
+                    <div class="alert alert-danger mb-0">
+                        <strong><i class="bi bi-exclamation-triangle-fill"></i> ${actionTitle} Error:</strong> ${window.escapeHtml(error.message)}
                     </div>
                 `;
             }
         };
 
-        window.decodeText = function() {
-            const input = document.getElementById('encoderInput').value;
-            const type = document.getElementById('encodingType').value;
-            const outputField = document.getElementById('encoderOutput');
-            const resultsDiv = document.getElementById('encoderResults');
-            
-            if (!input) {
-                resultsDiv.innerHTML = '<div class="alert alert-warning">Please enter text to decode</div>';
-                outputField.value = '';
-                return;
-            }
-
-            try {
-                const method = encodingMethods[type];
-                const output = method.decode(input);
-                outputField.value = output;
-                
-                resultsDiv.innerHTML = `
-                    <div class="alert alert-success">
-                        <h6 class="alert-heading"><i class="bi bi-check-circle-fill"></i> Decoding Successful</h6>
-                        <div class="row small">
-                            <div class="col-md-4">
-                                <strong>Method:</strong> ${method.name}
-                            </div>
-                            <div class="col-md-4">
-                                <strong>Input Length:</strong> ${input.length} chars
-                            </div>
-                            <div class="col-md-4">
-                                <strong>Output Length:</strong> ${output.length} chars
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } catch (error) {
-                outputField.value = '';
-                resultsDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        <strong><i class="bi bi-exclamation-triangle-fill"></i> Decoding Error:</strong> ${window.escapeHtml(error.message)}
-                        <p class="mb-0 small mt-2">Make sure the input is properly encoded with the selected method.</p>
-                    </div>
-                `;
-            }
-        };
-        
         window.clearInput = function() {
             document.getElementById('encoderInput').value = '';
             document.getElementById('encoderOutput').value = '';
+            document.getElementById('encoderOutput').classList.remove('output-active');
             document.getElementById('encoderResults').innerHTML = '';
         };
         
@@ -320,12 +343,12 @@
             const output = document.getElementById('encoderOutput').value;
             if (!output) {
                 document.getElementById('encoderResults').innerHTML = 
-                    '<div class="alert alert-warning">No output to copy</div>';
+                    '<div class="alert alert-warning mb-0">No output to copy</div>';
                 return;
             }
             navigator.clipboard.writeText(output).then(() => {
                 document.getElementById('encoderResults').innerHTML = 
-                    '<div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> Copied to clipboard!</div>';
+                    '<div class="alert alert-success mb-0"><i class="bi bi-check-circle-fill"></i> Copied to clipboard!</div>';
                 setTimeout(() => {
                     document.getElementById('encoderResults').innerHTML = '';
                 }, 2000);
@@ -335,10 +358,32 @@
         window.swapInputOutput = function() {
             const input = document.getElementById('encoderInput');
             const output = document.getElementById('encoderOutput');
+            const resultsDiv = document.getElementById('encoderResults');
+
             const temp = input.value;
             input.value = output.value;
             output.value = temp;
+            
+            output.classList.remove('output-active');
+
+            // Toggle mode: if we just moved encoded → input, we now want the opposite action
+            currentMode = (currentMode === 'encode') ? 'decode' : 'encode';
+            window.updateModeUI();
+
+            // Status now refers to a previous state; clear and recompute
+            resultsDiv.innerHTML = '';
+            window.autoProcessText();
         };
+
+        // hook auto-processing on input changes
+        const inputField = document.getElementById('encoderInput');
+        if (inputField) {
+            inputField.addEventListener('input', window.autoProcessText);
+        }
+
+        // Initialize description + mode UI
+        window.updateEncodingInfo();
+        window.updateModeUI();
     }
 
     // Register the tool

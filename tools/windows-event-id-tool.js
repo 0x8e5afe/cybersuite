@@ -449,22 +449,36 @@
 
             <div class="mb-3">
                 <div class="btn-group btn-group-sm flex-wrap" role="group">
-                    <button class="btn btn-outline-danger" onclick="filterWinBySeverity('danger')">
-                        <i class="bi bi-exclamation-octagon-fill"></i> Critical
-                    </button>
-                    <button class="btn btn-outline-warning" onclick="filterWinBySeverity('warning')">
-                        <i class="bi bi-exclamation-triangle-fill"></i> Warning
-                    </button>
-                    <button class="btn btn-outline-info" onclick="filterWinBySeverity('info')">
-                        <i class="bi bi-info-circle-fill"></i> Info
-                    </button>
-                    <button class="btn btn-outline-primary" onclick="showMitreEvents()">
-                        <i class="bi bi-diagram-3"></i> MITRE ATT&CK
-                    </button>
-                    <button class="btn btn-outline-secondary" onclick="showAllWinEvents()">
-                        <i class="bi bi-arrow-counterclockwise"></i> Reset
-                    </button>
-                </div>
+    <button class="btn btn-outline-danger win-filter-btn"
+            type="button"
+            onclick="filterWinBySeverity('danger', this)">
+        <i class="bi bi-exclamation-octagon-fill"></i> Critical
+    </button>
+
+    <button class="btn btn-outline-warning win-filter-btn"
+            type="button"
+            onclick="filterWinBySeverity('warning', this)">
+        <i class="bi bi-exclamation-triangle-fill"></i> Warning
+    </button>
+
+    <button class="btn btn-outline-info win-filter-btn"
+            type="button"
+            onclick="filterWinBySeverity('info', this)">
+        <i class="bi bi-info-circle-fill"></i> Info
+    </button>
+
+    <button class="btn btn-outline-purple win-filter-btn"
+            type="button"
+            onclick="showMitreEvents(this)">
+        <i class="bi bi-diagram-3"></i> MITRE ATT&CK
+    </button>
+
+    <button class="btn btn-outline-secondary"
+            type="button"
+            onclick="showAllWinEvents()">
+        <i class="bi bi-arrow-counterclockwise"></i> Reset
+    </button>
+</div>
             </div>
             
             <div id="winEventsContainer"></div>
@@ -570,6 +584,66 @@
 
             renderWinEvents(filtered);
         }
+
+        
+
+        function setWinFilterActive(btn) {
+    // remove active from all filter buttons
+    document.querySelectorAll('.win-filter-btn')
+        .forEach(b => b.classList.remove('active'));
+
+    // set active only on the clicked one (if provided)
+    if (btn) {
+        btn.classList.add('active');
+    }
+}
+
+window.filterWinBySeverity = function (severity, btn) {
+    const filtered = Object.entries(windowsEvents)
+        .filter(([_, event]) => event.severity === severity);
+
+    renderWinEvents(filtered);
+    setWinFilterActive(btn);
+};
+
+window.showMitreEvents = function (btn) {
+    const filtered = Object.entries(windowsEvents)
+        .filter(([_, event]) => event.mitre.length > 0);
+
+    renderWinEvents(filtered);
+    setWinFilterActive(btn);
+};
+
+window.showAllWinEvents = function () {
+    document.getElementById('winEventSearch').value = '';
+    document.getElementById('winCategoryFilter').value = 'all';
+    document.getElementById('winLogFilter').value = 'all';
+
+    renderAllWinEvents();
+    setWinFilterActive(null); // clear glow on all
+};
+
+window.filterWinBySeverity = function (severity, btn) {
+    const filtered = Object.entries(windowsEvents)
+        .filter(([_, event]) => event.severity === severity);
+    renderWinEvents(filtered);
+    setWinFilterActive(btn);
+};
+
+window.showMitreEvents = function (btn) {
+    const filtered = Object.entries(windowsEvents)
+        .filter(([_, event]) => event.mitre.length > 0);
+    renderWinEvents(filtered);
+    setWinFilterActive(btn);
+};
+
+window.showAllWinEvents = function () {
+    document.getElementById('winEventSearch').value = '';
+    document.getElementById('winCategoryFilter').value = 'all';
+    document.getElementById('winLogFilter').value = 'all';
+    renderAllWinEvents();
+    setWinFilterActive(null); // clear glow on all filters
+};
 
         function renderAllWinEvents() {
             renderWinEvents(Object.entries(windowsEvents));

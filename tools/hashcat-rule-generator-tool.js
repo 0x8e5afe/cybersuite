@@ -10,7 +10,7 @@
         basic: {
             name: 'Basic Mutations',
             icon: 'bi-pencil',
-            color: 'primary',
+            color: 'success',
             rules: [
                 { rule: ':', description: 'Do nothing (pass through)', example: 'password → password' },
                 { rule: 'l', description: 'Lowercase all', example: 'PassWord → password' },
@@ -44,7 +44,7 @@
         prepend: {
             name: 'Prepend Operations',
             icon: 'bi-arrow-left-circle',
-            color: 'info',
+            color: 'success',
             rules: [
                 { rule: '^1', description: 'Prepend "1"', example: 'password → 1password' },
                 { rule: '^!', description: 'Prepend "!"', example: 'password → !password' },
@@ -56,7 +56,7 @@
         substitute: {
             name: 'Character Substitution',
             icon: 'bi-arrow-left-right',
-            color: 'warning',
+            color: 'success',
             rules: [
                 { rule: 'sa@', description: 'Replace "a" with "@"', example: 'password → p@ssword' },
                 { rule: 'se3', description: 'Replace "e" with "3"', example: 'hello → h3llo' },
@@ -71,7 +71,7 @@
         delete: {
             name: 'Delete Operations',
             icon: 'bi-trash',
-            color: 'danger',
+            color: 'success',
             rules: [
                 { rule: '[', description: 'Delete first character', example: 'password → assword' },
                 { rule: ']', description: 'Delete last character', example: 'password → passwor' },
@@ -83,7 +83,7 @@
         years: {
             name: 'Year Patterns',
             icon: 'bi-calendar',
-            color: 'purple',
+            color: 'success',
             rules: [
                 { rule: '$2 $0 $2 $0', description: 'Append "2020"', example: 'password → password2020' },
                 { rule: '$2 $0 $2 $1', description: 'Append "2021"', example: 'password → password2021' },
@@ -108,7 +108,7 @@
                     cursor: pointer;
                 }
                 .rule-card:hover {
-                    border-color: #58a6ff;
+                    border-color: #00ff88;
                     background: #1c2128;
                 }
                 .rule-syntax {
@@ -117,7 +117,7 @@
                     padding: 0.3rem 0.6rem;
                     border-radius: 3px;
                     font-size: 0.9rem;
-                    color: #58a6ff;
+                    color: #00ff88;
                 }
                 .rule-example {
                     font-family: 'Courier New', monospace;
@@ -136,7 +136,7 @@
                     transition: all 0.2s;
                 }
                 .new-rule-area.drag-over {
-                    border-color: #58a6ff;
+                    border-color: #00ff88;
                     background: #1c2128;
                 }
                 .rule-item {
@@ -152,7 +152,7 @@
                     user-select: none;
                 }
                 .rule-item:hover {
-                    border-color: #58a6ff;
+                    border-color: #00ff88;
                 }
                 .rule-item.dragging {
                     opacity: 0.5;
@@ -369,7 +369,7 @@
                                         <div class="small mb-1">${ruleItem.description}</div>
                                         <div class="rule-example">${window.escapeHtml(ruleItem.example)}</div>
                                     </div>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToNew('${ruleItem.rule.replace(/'/g, "\\'")}')">
+                                    <button class="btn btn-sm btn-outline-success" onclick="addToNew('${ruleItem.rule.replace(/'/g, "\\'")}')">
                                         <i class="bi bi-plus-lg"></i>
                                     </button>
                                 </div>
