@@ -148,20 +148,19 @@
 
 function render() {
     let html = `
-
-        <div class="section-header">
-                <h3 class="mb-1 d-flex align-items-center gap-2">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    <span>CVSS v3.1 Calculator</span>
-                </h3>
-                <p class="text-secondary mb-0">
-                    Calculate Common Vulnerability Scoring System (CVSS) scores.
-                </p>
-            </div>
+        <div class="section-header purple-team">
+            <h3 class="mb-1 d-flex align-items-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>CVSS v3.1 Calculator</span>
+            </h3>
+            <p class="text-secondary mb-0">
+                Calculate Common Vulnerability Scoring System (CVSS) scores.
+            </p>
+        </div>
         
-        <div class="row">
+        <div class="row g-3">
             <!-- Left Column: Metrics -->
-            <div class="col-md-5">
+            <div class="col-12 col-lg-5">
                 <!-- Vector String Input -->
                 <div class="card bg-dark mb-3">
                     <div class="card-body">
@@ -184,57 +183,57 @@ function render() {
                     <div class="card-body">
     `;
 
-        // Generate form for each metric
-        Object.entries(cvssMetrics).forEach(([key, metric]) => {
+    // Generate form for each metric
+    Object.entries(cvssMetrics).forEach(([key, metric]) => {
+        html += `
+            <div class="mb-3">
+                <label class="form-label fw-bold small d-flex align-items-center justify-content-between">
+                    <span>${metric.name}</span>
+                    <i class="bi bi-question-circle hint-icon" 
+                       data-bs-toggle="tooltip" 
+                       data-bs-placement="right" 
+                       title="${metric.hint}"></i>
+                </label>
+                <div class="btn-group btn-group-sm w-100 cvss-metric-group" role="group" aria-label="${metric.name}">
+        `;
+        
+        Object.entries(metric.values).forEach(([valueKey, value]) => {
             html += `
-                <div class="mb-2">
-                    <label class="form-label fw-bold small">
-                        ${metric.name}
-                        <i class="bi bi-question-circle hint-icon" 
-                           data-bs-toggle="tooltip" 
-                           data-bs-placement="right" 
-                           title="${metric.hint}"></i>
-                    </label>
-                    <div class="btn-group btn-group-sm w-100" role="group">
-            `;
-            
-            Object.entries(metric.values).forEach(([valueKey, value]) => {
-                html += `
-                    <input type="radio" class="btn-check cvss-btn-check" name="cvss_${key}" id="cvss_${key}_${valueKey}" value="${valueKey}" autocomplete="off">
-                    <label class="btn btn-outline-secondary btn-sm" for="cvss_${key}_${valueKey}" style="cursor: pointer;">
-                        ${value.label}
-                    </label>
-                `;
-            });
-            
-            html += `
-                    </div>
-                </div>
+                <input type="radio" class="btn-check cvss-btn-check" name="cvss_${key}" id="cvss_${key}_${valueKey}" value="${valueKey}" autocomplete="off">
+                <label class="btn btn-outline-secondary btn-sm" for="cvss_${key}_${valueKey}" style="cursor: pointer;">
+                    ${value.label}
+                </label>
             `;
         });
-
+        
         html += `
-                            <div class="mt-3 d-flex gap-2">
-                                <button class="btn btn-primary btn-sm flex-fill" onclick="calculateCVSS()">
-                                    <i class="bi bi-calculator"></i> Calculate
-                                </button>
-                                <button class="btn btn-outline-secondary btn-sm" onclick="resetCVSS()">
-                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Right Column: Results & Graphs -->
-                <div class="col-md-7">
-                    <div id="cvssResults"></div>
                 </div>
             </div>
         `;
+    });
 
-        return html;
-    }
+    html += `
+                        <div class="mt-3 d-flex gap-2">
+                            <button class="btn btn-primary btn-sm flex-fill" onclick="calculateCVSS()">
+                                <i class="bi bi-calculator"></i> Calculate
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="resetCVSS()">
+                                <i class="bi bi-arrow-counterclockwise"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column: Results & Graphs -->
+            <div class="col-12 col-lg-7">
+                <div id="cvssResults"></div>
+            </div>
+        </div>
+    `;
+
+    return html;
+}
 
     function init() {
         // Initialize Bootstrap tooltips

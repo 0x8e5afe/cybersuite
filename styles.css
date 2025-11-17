@@ -1881,6 +1881,39 @@ select.form-control:disabled {
     background: rgba(0, 255, 136, 0.08) !important;
 }
 
+/* ========================================
+   CVSS METRIC GROUP – RESPONSIVE BUTTONS
+   ======================================== */
+
+.cvss-metric-group {
+    display: flex;              /* override Bootstrap's inline-flex */
+    flex-wrap: wrap;            /* allow wrapping on small screens */
+    width: 100%;
+    gap: 0.25rem;               /* small gap between buttons */
+}
+
+.cvss-metric-group .btn {
+    flex: 1 0 24%;              /* up to 4 per row on wide screens */
+    margin: 0;                  /* override global .btn-group .btn margin */
+    white-space: nowrap;        /* keep labels on one line where possible */
+}
+
+/* Phones / small tablets: 2 buttons per row (AV becomes a 2x2 grid) */
+@media (max-width: 768px) {
+    .cvss-metric-group .btn {
+        flex: 1 0 48%;
+        font-size: 0.8rem;
+        padding-inline: 0.4rem;
+    }
+}
+
+/* Very small devices: stack vertically to avoid any overflow */
+@media (max-width: 400px) {
+    .cvss-metric-group .btn {
+        flex: 1 0 100%;
+    }
+}
+
 /* Generic active state for all outline severity buttons
    (applies everywhere, not just the Windows events tool) */
 
@@ -2600,4 +2633,29 @@ body::after {
 /* Text color for critical severity in accordion body */
 .text-dark-danger {
     color: #ff0000 !important;
+}
+
+/* ========================================
+   Category filters – mobile layout
+   ======================================== */
+
+@media (max-width: 576px) {
+    /* Make sure the button group can wrap (you already have flex-wrap in HTML) */
+    .btn-group .category-filter {
+        flex: 1 0 auto;
+    }
+
+    /* First button: "All Tools" -> full row */
+    .btn-group .category-filter[data-category="all"] {
+        flex-basis: 100%;
+        text-align: center;
+    }
+
+    /* Other three: Red / Blue / Purple -> three on one row */
+    .btn-group .category-filter:not([data-category="all"]) {
+        flex-basis: calc(33.333% - 0.5rem); /* leave room for gap */
+        font-size: 0.8rem;                   /* a bit smaller text on phones */
+        padding-inline: 0.4rem;
+        white-space: nowrap;                 /* keep labels on one line */
+    }
 }

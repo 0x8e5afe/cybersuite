@@ -636,7 +636,7 @@ window.previewWordlist = async function(url, name) {
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="mb-0"><i class="bi bi-eye"></i> Preview: ${name}</h6>
                     <div>
-                        <button class="btn btn-sm btn-danger me-2" onclick="downloadWordlist('${url}', '${name}')">
+                        <button class="btn btn-sm btn-success me-2" onclick="downloadWordlist('${url}', '${name}')">
                             <i class="bi bi-download"></i> Download
                         </button>
                         <button class="btn btn-sm btn-outline-secondary" onclick="resetWordlistFilters()">
@@ -703,7 +703,7 @@ window.previewWordlist = async function(url, name) {
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="mb-0"><i class="bi bi-eye"></i> Preview: ${name}</h6>
                     <div>
-                        <button class="btn btn-sm btn-danger me-2" onclick="downloadWordlist('${url}', '${name}')">
+                        <button class="btn btn-sm btn-success me-2" onclick="downloadWordlist('${url}', '${name}')">
                             <i class="bi bi-download"></i> Download
                         </button>
                         <button class="btn btn-sm btn-outline-secondary" onclick="resetWordlistFilters()">
