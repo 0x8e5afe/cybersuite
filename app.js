@@ -12,7 +12,6 @@ const toolPaths = [
     'tools/hash-tool.js',
     'tools/prompt-injection-tool.js',
     'tools/hashcat-rule-generator-tool.js',
-    'tools/wordlists-tool.js',
     'tools/pentest-report-tool.js',
     'tools/steganography-tool.js',
     'tools/jwt-tool.js',
@@ -75,9 +74,10 @@ function toHumanReadableTool(path) {
         .join(' ');
 }
 
+// Typewriter effect now on the search input placeholder instead of navbar
 (function initToolTickerTypewriter() {
-    const container = document.getElementById('activeToolContainer');
-    if (!container) return;
+    const input = document.getElementById('toolSearch');
+    if (!input) return;
 
     let lastIndex = -1;
     let currentText = '';
@@ -85,8 +85,18 @@ function toHumanReadableTool(path) {
     let isDeleting = false;
 
     function render(visibleText) {
-        // caret is rendered right after the current visible text
-        container.innerHTML = `${visibleText}<span class="typing-cursor">▌</span>`;
+        // Do not touch placeholder if user is interacting/typing
+        if (document.activeElement === input) return;
+        if (input.value && input.value.length > 0) return;
+
+        // When no visible text, keep placeholder completely empty
+        if (!visibleText) {
+            input.setAttribute('placeholder', '');
+            return;
+        }
+
+        const cursor = '▌';
+        input.setAttribute('placeholder', visibleText + cursor);
     }
 
     function pickNextToolText() {
@@ -125,11 +135,18 @@ function toHumanReadableTool(path) {
             // Finished deleting, choose new tool
             isDeleting = false;
             currentText = pickNextToolText();
+            // Keep placeholder empty between suggestions
+            render('');
             delay = 400;
         }
 
         setTimeout(typeLoop, delay);
     }
+
+    // Clear placeholder when the user focuses the input
+    input.addEventListener('focus', () => {
+        input.setAttribute('placeholder', '');
+    });
 
     typeLoop();
 })();
@@ -422,7 +439,7 @@ function loadTool(toolId) {
     
     activeToolId = toolId;
 
-    // 🔹 NEW: choose border class based on category
+    // 🔹 Choose border class based on category
     let borderClass = '';
     switch (tool.category) {
         case 'red':
@@ -521,100 +538,111 @@ function performSearch(query) {
     let visibleCount = 0;
     
     if (!query) {
-        // Show all cards
+        // Reset category filter view
+        if (currentCategory === 'all') {
+            document.querySelectorAll('.tools-section').forEach(section => {
+                section.classList.remove('d-none');
+            });
+        } else {
+            filterToolsByCategory(currentCategory);
+        }
+        
+        // Show all card wrappers (so grid is full again)
         allCards.forEach(card => {
-            card.parentElement.classList.remove('d-none');
+            const wrapper = card.parentElement;
+            if (wrapper) {
+                wrapper.classList.remove('d-none');
+            }
         });
+        
         searchResults.textContent = '';
         return;
     }
-    
-    // Filter cards
+
+    // When searching, show all sections (so matches are visible)
+    document.querySelectorAll('.tools-section').forEach(section => {
+        section.classList.remove('d-none');
+    });
+
     allCards.forEach(card => {
+        const wrapper = card.parentElement;
         const name = card.getAttribute('data-tool-name') || '';
         const desc = card.getAttribute('data-tool-desc') || '';
-        const matches = name.includes(query) || desc.includes(query);
         
-        if (matches) {
-            card.parentElement.classList.remove('d-none');
+        if (name.includes(query) || desc.includes(query)) {
+            if (wrapper) wrapper.classList.remove('d-none');
             visibleCount++;
         } else {
-            card.parentElement.classList.add('d-none');
+            if (wrapper) wrapper.classList.add('d-none');
         }
     });
-    
-    // Update search results text
+
     if (visibleCount === 0) {
-        searchResults.innerHTML = '<span class="text-warning">No tools found matching your search</span>';
+        searchResults.textContent = 'No tools match your search. Try different keywords.';
+    } else if (visibleCount === 1) {
+        searchResults.textContent = '1 tool found.';
     } else {
-        searchResults.textContent = `Found ${visibleCount} tool${visibleCount !== 1 ? 's' : ''}`;
+        searchResults.textContent = `${visibleCount} tools found.`;
     }
 }
 
 // ========================================
-// UTILITY FUNCTIONS FOR TOOLS
+// UTILITY FUNCTIONS
 // ========================================
 
 /**
- * Display results using Bootstrap alerts
- * @param {string} containerId - ID of the results container
- * @param {Array} results - Array of result objects {type, title, desc}
+ * Copy text to clipboard with a tooltip-style feedback
+ * @param {string} text - Text to copy
+ * @param {HTMLElement} [triggerElement] - Element to show tooltip near
  */
-window.displayResults = function(containerId, results) {
-    const container = document.getElementById(containerId);
-    if (!container) {
-        console.error(`Results container not found: ${containerId}`);
+window.copyToClipboard = function(text, triggerElement) {
+    if (!navigator.clipboard) {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.top = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        
+        try {
+            document.execCommand('copy');
+            showCopyFeedback(triggerElement);
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+        }
+        
+        document.body.removeChild(textarea);
         return;
     }
-    
-    const html = results.map(r => {
-        const alertType = r.type === 'success' ? 'success' : 
-                         r.type === 'warning' ? 'warning' : 
-                         r.type === 'danger' ? 'danger' : 'info';
-        
-        return `
-            <div class="alert alert-${alertType}" role="alert">
-                <h6 class="alert-heading mb-1">${r.title}</h6>
-                ${r.desc ? `<p class="mb-0 small">${r.desc}</p>` : ''}
-            </div>
-        `;
-    }).join('');
-    
-    container.innerHTML = html;
+
+    navigator.clipboard.writeText(text)
+        .then(() => showCopyFeedback(triggerElement))
+        .catch(err => console.error('Async: Could not copy text: ', err));
 };
 
 /**
- * Copy text to clipboard
- * @param {string} text - Text to copy
- * @param {HTMLElement} button - Button element to show feedback
+ * Show visual feedback after copying
+ * @param {HTMLElement} triggerElement
  */
-window.copyToClipboard = async function(text, button = null) {
-    try {
-        await navigator.clipboard.writeText(text);
-        if (button) {
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="bi bi-check-lg"></i> Copied!';
-            button.classList.remove('btn-outline-primary');
-            button.classList.add('btn-success');
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.classList.remove('btn-success');
-                button.classList.add('btn-outline-primary');
-            }, 2000);
-        }
-    } catch (err) {
-        console.error('Failed to copy:', err);
-        if (button) {
-            button.innerHTML = '<i class="bi bi-x-lg"></i> Failed';
-            button.classList.add('btn-danger');
-        }
-    }
-};
+function showCopyFeedback(triggerElement) {
+    if (!triggerElement) return;
+    
+    const originalHtml = triggerElement.innerHTML;
+    triggerElement.innerHTML = '<i class="bi bi-check2"></i>';
+    triggerElement.classList.add('text-success');
+    
+    setTimeout(() => {
+        triggerElement.innerHTML = originalHtml;
+        triggerElement.classList.remove('text-success');
+    }, 800);
+}
 
 /**
- * Download content as a file
+ * Download a text file
  * @param {string} filename - Name of the file
- * @param {string} content - File content
+ * @param {string|Blob} content - File content
  * @param {string} mimeType - MIME type (default: text/plain)
  */
 window.downloadFile = function(filename, content, mimeType = 'text/plain') {

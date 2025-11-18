@@ -20,7 +20,7 @@ Clone the repo, open `index.html` in a browser, and you immediately get a curate
 
 Everything runs **completely client-side**: no backend, no external dependency chain, and nothing is sent to a server. 
 
-![CyberSuite Screenshot](assets/cybersuite.png) 
+![CyberSuite Screenshot](assets/screenshot.png) 
 
 ---
 

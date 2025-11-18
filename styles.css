@@ -955,14 +955,21 @@ code {
 }
 
 .card-header.bg-info {
-    background: rgba(0, 255, 136, 0.15) !important;
-    border-color: var(--terminal-accent) !important;
-    color: var(--terminal-accent) !important;
+    background: rgba(0, 170, 255, 0.15) !important;
+    border-color: var(--terminal-blue) !important;
+    color: var(--terminal-blue) !important;
     box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
 }
 
 .card-header.bg-danger {
     background: rgba(255, 0, 110, 0.15) !important;
+    border-color: var(--terminal-red) !important;
+    color: var(--terminal-red) !important;
+    box-shadow: 0 0 15px rgba(255, 0, 110, 0.2);
+}
+
+.card-header.bg-dark-danger {
+    background: rgba(139, 0, 0, 0.3) !important;
     border-color: var(--terminal-red) !important;
     color: var(--terminal-red) !important;
     box-shadow: 0 0 15px rgba(255, 0, 110, 0.2);
@@ -1086,6 +1093,10 @@ code {
 
 .border-success {
     border-color: var(--terminal-green) !important;
+}
+
+.border-warning {
+    border-color: var(--terminal-yellow) !important;
 }
 
 .border-purple {
@@ -1758,160 +1769,329 @@ select.form-control:disabled {
 }
 
 /* ========================================
-   CVSS CALCULATOR SPECIFIC STYLES
+   CVSS v3.1 CALCULATOR - ENHANCED STYLES
    ======================================== */
 
-/* Critical/Dark Danger color */
-.bg-dark-danger {
-    background-color: #8b0000 !important;
+   /* CVSS Accordion – match XSS style */
+.cvss-accordion .accordion-item {
+    background-color: var(--terminal-bg);
+    border: 1px solid var(--terminal-border);
 }
 
-.card-header.bg-dark-danger {
-    background-color: rgba(139, 0, 0, 0.3) !important;
-    border-color: #8b0000 !important;
-    color: #ff0000 !important;
+.cvss-accordion .accordion-button {
+    background-color: var(--terminal-bg); /* same green tint as Base metrics */
+    color: var(--terminal-text);
+    font-weight: 600;
 }
 
-/* Override Bootstrap severity colors for CVSS to match terminal theme */
-.card .bg-info {
-    background: rgba(0, 217, 255, 0.2) !important;
-    border: 1px solid var(--terminal-blue);
+.cvss-accordion .accordion-button:not(.collapsed) {
+    background-color: var(--terminal-bg);
+    color: var(--terminal-text);
 }
 
-.card .bg-success {
-    background: rgba(0, 255, 136, 0.2) !important;
-    border: 1px solid var(--terminal-accent);
+/* white chevron arrow */
+.cvss-accordion .accordion-button::after {
+    filter: invert(1); /* makes arrow white */
+    opacity: 0.85;
 }
 
-.card .bg-warning {
-    background: rgba(255, 204, 0, 0.2) !important;
-    border: 1px solid var(--terminal-yellow);
+/* Base metrics - normal size, clear hierarchy */
+.cvss-base-group .cvss-option-btn {
+    font-size: 0.8rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 0.4rem;
+    font-weight: 500;
 }
 
-.card .bg-danger {
-    background: rgba(255, 0, 110, 0.2) !important;
-    border: 1px solid var(--terminal-red);
+/* Temporal metrics - slightly smaller to differentiate */
+.cvss-temporal-group .cvss-option-btn {
+    font-size: 0.72rem;
+    padding: 0.38rem 0.65rem;
+    border-radius: 0.35rem;
 }
 
-.card .bg-dark-danger {
-    background: rgba(139, 0, 0, 0.3) !important;
-    border: 1px solid #8b0000;
+/* Environmental metrics - smallest to show hierarchy */
+.cvss-env-group .cvss-option-btn {
+    font-size: 0.68rem;
+    padding: 0.32rem 0.55rem;
+    border-radius: 0.3rem;
 }
 
-/* CVSS Card Borders */
-.card.border-info {
-    border-color: var(--terminal-blue) !important;
-    box-shadow: var(--glow-blue);
+/* Metric group layout */
+.cvss-metric-group {
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    display: flex;
 }
 
-.card.border-success {
-    border-color: var(--terminal-accent) !important;
-    box-shadow: var(--glow-accent);
+/* Default "Not Defined" option styling */
+.cvss-default-option {
+    opacity: 0.6;
+    font-style: italic;
 }
 
-.card.border-warning {
-    border-color: var(--terminal-yellow) !important;
-    box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+.cvss-default-option:hover {
+    opacity: 0.8;
 }
 
-.card.border-danger {
-    border-color: var(--terminal-red) !important;
-    box-shadow: var(--glow-red);
-}
-
-/* CVSS Card Headers with proper colors */
-.card-header.bg-info {
-    background: rgba(0, 217, 255, 0.15) !important;
-    border-color: var(--terminal-blue) !important;
-    color: var(--terminal-blue) !important;
-    box-shadow: 0 0 15px rgba(0, 217, 255, 0.2);
-    text-shadow: var(--glow-blue);
-}
-
-.card-header.bg-success {
-    background: rgba(0, 255, 136, 0.15) !important;
-    border-color: var(--terminal-accent) !important;
-    color: var(--terminal-accent) !important;
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-    text-shadow: var(--glow-accent);
-}
-
-.card-header.bg-warning {
-    background: rgba(255, 204, 0, 0.15) !important;
-    border-color: var(--terminal-yellow) !important;
-    color: var(--terminal-yellow) !important;
-    box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
-    text-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
-}
-
-.card-header.bg-danger {
-    background: rgba(255, 0, 110, 0.15) !important;
-    border-color: var(--terminal-red) !important;
-    color: var(--terminal-red) !important;
-    box-shadow: 0 0 15px rgba(255, 0, 110, 0.2);
-    text-shadow: var(--glow-red);
-}
-
-.card-header.bg-dark-danger {
-    background: rgba(139, 0, 0, 0.3) !important;
-    border-color: #8b0000 !important;
-    color: #ff0000 !important;
-    box-shadow: 0 0 15px rgba(139, 0, 0, 0.3);
-    text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-}
-
-/* CVSS Button Groups */
-.cvss-btn-check + .btn-outline-secondary {
+/* Section cards with better visual hierarchy */
+.cvss-section-card {
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease;
     background: var(--terminal-card) !important;
-    border-color: var(--terminal-border) !important;
-    color: var(--terminal-text) !important;
+}
+
+/* Highlight active/expanded sections */
+.cvss-section-card:has(.show) {
+    border-left-color: var(--terminal-accent);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
+    background: rgba(0, 255, 136, 0.03) !important;
+}
+
+/* Base metrics card always highlighted */
+.cvss-section-card:first-of-type {
+    border-left-color: var(--terminal-green);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+}
+
+/* Collapse button styling */
+.cvss-section-card .btn-link {
+    font-size: 0.95rem;
     transition: all 0.3s ease;
 }
 
-.cvss-btn-check:checked + .btn-outline-secondary {
-    background: rgba(0, 255, 136, 0.15) !important;
+.cvss-section-card .btn-link:hover {
+    color: var(--terminal-accent) !important;
+    text-shadow: var(--glow-accent);
+}
+
+.cvss-section-card .btn-link:hover i {
+    transform: scale(1.1);
+}
+
+/* Card header badges */
+.cvss-section-card .card-header .badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+}
+
+/* Better spacing for metric labels */
+.cvss-section-card .form-label {
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+}
+
+/* Results card enhancements */
+#cvssResults .card {
+    animation: slideInUp 0.5s ease;
+}
+
+#cvssResults .card-header {
+    padding: 1.25rem 1.5rem;
+}
+
+#cvssResults .card-body {
+    padding: 1.5rem;
+}
+
+/* Progress bars in results */
+#cvssResults .progress {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#cvssResults .progress-bar {
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width 0.8s ease;
+}
+
+/* Score breakdown bars animation */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Selected metrics display */
+#cvssResults .border-success {
+    border-width: 2px !important;
+    border-color: var(--terminal-green) !important;
+}
+
+#cvssResults .border-warning {
+    border-width: 2px !important;
+    border-color: var(--terminal-yellow) !important;
+}
+
+#cvssResults .border-info {
+    border-width: 2px !important;
+    border-color: var(--terminal-blue) !important;
+}
+
+/* CVSS option buttons – highlight selection */
+.cvss-option-btn {
+    border-color: var(--terminal-border);
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--terminal-text);
+    transition: all 0.2s ease;
+}
+
+
+
+/* when the radio is checked, light it up like the rest of the UI */
+/* Strong highlight when a CVSS metric is selected */
+.cvss-btn-check:checked + .cvss-option-btn {
+    background: rgba(0, 255, 136, 0.25) !important;
     border-color: var(--terminal-accent) !important;
     color: var(--terminal-accent) !important;
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.45);
+    font-weight: 600;
 }
 
-.cvss-btn-check + .btn-outline-secondary:hover {
+/* Normal (unselected) button look */
+.cvss-option-btn {
+    transition: all 0.2s ease-in-out;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--terminal-border);
+    color: var(--terminal-text);
+}
+
+/* “Not Defined” default option styling */
+.cvss-default-option {
+    opacity: 0.55;
+    font-style: italic;
+}
+
+/* When a default option is selected, it should look like a normal selected option */
+.cvss-btn-check:checked + .cvss-option-btn.cvss-default-option {
+    opacity: 1;
+    font-style: normal;
+}
+
+/* Vector string input in results */
+#cvssVector {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+    border: 1px solid var(--terminal-border) !important;
+}
+
+#cvssVector:focus {
     border-color: var(--terminal-accent) !important;
-    color: var(--terminal-accent) !important;
-    background: rgba(0, 255, 136, 0.08) !important;
+    box-shadow: var(--glow-accent) !important;
 }
 
-/* ========================================
-   CVSS METRIC GROUP – RESPONSIVE BUTTONS
-   ======================================== */
-
-.cvss-metric-group {
-    display: flex;              /* override Bootstrap's inline-flex */
-    flex-wrap: wrap;            /* allow wrapping on small screens */
-    width: 100%;
-    gap: 0.25rem;               /* small gap between buttons */
+/* Copy button for vector */
+#cvssResults .btn-outline-success {
+    border-color: var(--terminal-green);
+    color: var(--terminal-green);
 }
 
-.cvss-metric-group .btn {
-    flex: 1 0 24%;              /* up to 4 per row on wide screens */
-    margin: 0;                  /* override global .btn-group .btn margin */
-    white-space: nowrap;        /* keep labels on one line where possible */
+#cvssResults .btn-outline-success:hover {
+    background: rgba(0, 255, 136, 0.15);
+    border-color: var(--terminal-green);
+    color: var(--terminal-green);
+    box-shadow: var(--glow-green);
 }
 
-/* Phones / small tablets: 2 buttons per row (AV becomes a 2x2 grid) */
+/* Component bars styling */
+#cvssResults .d-flex.gap-2.align-items-end > div {
+    transition: transform 0.3s ease;
+}
+
+#cvssResults .d-flex.gap-2.align-items-end > div:hover {
+    transform: translateY(-5px);
+}
+
+/* Severity reference badges */
+#cvssResults .alert-dark .badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .cvss-base-group .cvss-option-btn {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .cvss-temporal-group .cvss-option-btn {
+        font-size: 0.68rem;
+        padding: 0.35rem 0.55rem;
+    }
+    
+    .cvss-env-group .cvss-option-btn {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.5rem;
+    }
+}
+
 @media (max-width: 768px) {
+    /* Stack metric buttons vertically on very small screens */
+    .cvss-metric-group {
+        flex-direction: column;
+    }
+    
     .cvss-metric-group .btn {
-        flex: 1 0 48%;
-        font-size: 0.8rem;
-        padding-inline: 0.4rem;
+        width: 100%;
+    }
+    
+    #cvssResults .card-body {
+        padding: 1rem;
     }
 }
 
-/* Very small devices: stack vertically to avoid any overflow */
-@media (max-width: 400px) {
-    .cvss-metric-group .btn {
-        flex: 1 0 100%;
-    }
+/* Tooltip enhancements for hint icons */
+.hint-icon {
+    cursor: help;
+    color: var(--terminal-accent);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.hint-icon:hover {
+    opacity: 1;
+    text-shadow: var(--glow-accent);
+    transform: scale(1.15);
+}
+
+/* Input group for vector import */
+#vectorInput {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+}
+
+#vectorInput.is-valid {
+    border-color: var(--terminal-green) !important;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3) !important;
+}
+
+#vectorInput:focus {
+    border-color: var(--terminal-accent) !important;
+    box-shadow: var(--glow-accent) !important;
+}
+
+#vectorError {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+}
+
+/* Calculate and Reset buttons */
+.btn-primary i,
+.btn-outline-secondary i {
+    margin-right: 0.35rem;
 }
 
 /* Generic active state for all outline severity buttons
@@ -2142,6 +2322,8 @@ body::after {
     border-color: var(--terminal-red) !important;
     box-shadow: var(--glow-red);
 }
+
+
 
 /* add this block */
 .card.border-dark-danger {
@@ -2658,4 +2840,177 @@ body::after {
         padding-inline: 0.4rem;
         white-space: nowrap;                 /* keep labels on one line */
     }
+}
+
+/* Accordion arrow: pure white chevron */
+.accordion-button::after {
+    filter: none !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+}
+
+/* Keep arrow white when expanded */
+.accordion-button:not(.collapsed)::after {
+    filter: none !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+}
+
+/* Wrapper */
+.headers-editor {
+    position: relative;
+}
+
+/* Both layers use the same metrics */
+.headers-editor .headers-highlight,
+.headers-editor .headers-textarea {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: var(--bs-font-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+}
+
+/* ========================================
+   Security Headers Analyzer – Headers Editor
+   ======================================== */
+
+.headers-editor {
+    position: relative;
+}
+
+/* Both layers share metrics & font */
+.headers-editor .headers-highlight,
+.headers-editor .headers-textarea {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: var(--bs-font-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-size: 0.85rem;
+}
+
+/* Highlight layer (read-only, below the textarea) */
+.headers-editor .headers-highlight {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: auto;
+    border-radius: 12px;
+    border: 1px solid var(--terminal-border, #222);
+    background: var(--terminal-card, #050608);
+    padding: 0.75rem 0.9rem;
+}
+
+/* Textarea layer (transparent text, only caret visible) */
+.headers-editor .headers-textarea {
+    position: relative;
+    background: transparent !important;
+    border-radius: 12px;
+    border: 1px solid transparent !important;
+    color: transparent !important;         /* hide raw text */
+    caret-color: var(--terminal-accent, #00ff88);
+    resize: vertical;
+    padding: 0.75rem 0.9rem;
+}
+
+/* Keep selection visible */
+.headers-editor .headers-textarea::selection {
+    background: rgba(0, 255, 136, 0.35);
+}
+
+/* Base per-line layout */
+.headers-editor .headers-highlight .hdr-line,
+.headers-editor .headers-highlight .hdr-line-plain {
+    display: block;
+}
+
+/* Plain lines (no colon, e.g. wrapped CSP value) */
+.headers-editor .headers-highlight .hdr-line-plain {
+    color: #adb5bd;
+}
+
+/* Default name/value coloring */
+.headers-editor .headers-highlight .hdr-name {
+    color: #00ff88;                  /* neon green name */
+    font-weight: 600;
+}
+
+.headers-editor .headers-highlight .hdr-sep {
+    color: #6c757d;                  /* separator ":" */
+}
+
+.headers-editor .headers-highlight .hdr-value {
+    color: #c0c4cf;                  /* dim grey value */
+}
+
+/* ===== Issue severity styling ===== */
+
+/* Subtle background tint per severity */
+.headers-editor .headers-highlight .hdr-issue-danger {
+    background-color: rgba(220, 53, 69, 0.16);
+}
+
+.headers-editor .headers-highlight .hdr-issue-warning {
+    background-color: rgba(255, 193, 7, 0.16);
+}
+
+.headers-editor .headers-highlight .hdr-issue-success {
+    background-color: rgba(25, 135, 84, 0.16);
+}
+
+.headers-editor .headers-highlight .hdr-issue-info {
+    background-color: rgba(13, 202, 240, 0.16);
+}
+
+/* Left neon border to visually mark the problem line */
+.headers-editor .headers-highlight .hdr-issue-danger,
+.headers-editor .headers-highlight .hdr-issue-warning,
+.headers-editor .headers-highlight .hdr-issue-success,
+.headers-editor .headers-highlight .hdr-issue-info {
+    border-left: 3px solid transparent;
+    padding-left: 0.4rem;
+}
+
+/* Map severity -> same colors used by the issue cards */
+.headers-editor .headers-highlight .hdr-issue-danger {
+    border-left-color: var(--bs-danger, #dc3545);
+}
+.headers-editor .headers-highlight .hdr-issue-warning {
+    border-left-color: var(--bs-warning, #ffc107);
+}
+.headers-editor .headers-highlight .hdr-issue-success {
+    border-left-color: var(--bs-success, #198754);
+}
+.headers-editor .headers-highlight .hdr-issue-info {
+    border-left-color: var(--bs-info, #0dcaf0);
+}
+
+/* When there's an issue, color name + value + ":" with the same severity color */
+
+.headers-editor .headers-highlight .hdr-issue-danger .hdr-name,
+.headers-editor .headers-highlight .hdr-issue-danger .hdr-value,
+.headers-editor .headers-highlight .hdr-issue-danger .hdr-sep {
+    color: var(--bs-danger, #ff4b6b);
+    font-weight: 600;
+}
+
+.headers-editor .headers-highlight .hdr-issue-warning .hdr-name,
+.headers-editor .headers-highlight .hdr-issue-warning .hdr-value,
+.headers-editor .headers-highlight .hdr-issue-warning .hdr-sep {
+    color: var(--bs-warning, #ffc107);
+    font-weight: 600;
+}
+
+.headers-editor .headers-highlight .hdr-issue-success .hdr-name,
+.headers-editor .headers-highlight .hdr-issue-success .hdr-value,
+.headers-editor .headers-highlight .hdr-issue-success .hdr-sep {
+    color: var(--bs-success, #00ff88);
+    font-weight: 600;
+}
+
+.headers-editor .headers-highlight .hdr-issue-info .hdr-name,
+.headers-editor .headers-highlight .hdr-issue-info .hdr-value,
+.headers-editor .headers-highlight .hdr-issue-info .hdr-sep {
+    color: var(--bs-info, #0dcaf0);
+    font-weight: 600;
+}
+
+/* indentation before header name (kept visually, but not colored specially) */
+.headers-editor .headers-highlight .hdr-indent {
+    color: inherit;
 }

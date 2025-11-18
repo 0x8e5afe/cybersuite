@@ -779,28 +779,31 @@ downloadBtn.classList.remove('d-none');
 
 resultsDiv.innerHTML = html;
 
-            // Copy single payload
-            document.querySelectorAll('.sqli-copy-payload-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const payload = this.getAttribute('data-payload-text');
-                    const textarea = document.createElement('textarea');
-                    textarea.value = payload;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
+            // Copy single SQLi payload
+document.querySelectorAll('.sqli-copy-payload-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const codeEl = this.closest('.code-block')?.querySelector('code');
+        const payload = codeEl ? codeEl.textContent : '';
 
-                    const originalHtml = this.innerHTML;
-                    this.innerHTML = '<i class="bi bi-check-fill"></i>';
-                    this.classList.add('btn-success');
-                    this.classList.remove('btn-outline-success');
-                    setTimeout(() => {
-                        this.innerHTML = originalHtml;
-                        this.classList.remove('btn-success');
-                        this.classList.add('btn-outline-success');
-                    }, 2000);
-                });
-            });
+        const textarea = document.createElement('textarea');
+        textarea.value = payload;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        const originalHtml = this.innerHTML;
+        this.innerHTML = '<i class="bi bi-check-circle-fill"></i>';
+        this.classList.remove('btn-outline-success');
+        this.classList.add('btn-success');
+
+        setTimeout(() => {
+            this.innerHTML = originalHtml;
+            this.classList.remove('btn-success');
+            this.classList.add('btn-outline-success');
+        }, 2000);
+    });
+});
         }
 
         function copyAllPayloads() {

@@ -172,11 +172,12 @@
         'info': 1
     };
 
-    const severityConfig = {
+     const severityConfig = {
         'critical': { class: 'dark-danger', color: '#8b0000', icon: 'bi-exclamation-octagon-fill', score: -20 },
-        'high': { class: 'danger', color: '#ff0000', icon: 'bi-exclamation-triangle-fill', score: -15 },
-        'medium': { class: 'warning', color: '#ffcc00', icon: 'bi-exclamation-diamond-fill', score: -10 },
-        'low': { class: 'success', color: '#00ff88', icon: 'bi-info-circle-fill', score: -5 }
+        'high':     { class: 'danger',      color: '#ff0000', icon: 'bi-exclamation-triangle-fill', score: -15 },
+        'medium':   { class: 'warning',     color: '#ffcc00', icon: 'bi-exclamation-diamond-fill', score: -10 },
+        'low':      { class: 'success',     color: '#00ff88', icon: 'bi-info-circle-fill',         score: -5 },
+        'info':     { class: 'info',        color: '#0dcaf0', icon: 'bi-info-circle',              score: -1 }
     };
 
     function parseHeaders(input) {
@@ -234,35 +235,25 @@
         return issues;
     }
 
-    function calculateScore(issues) {
-        let score = 100;
-        
-        issues.missing.forEach(issue => {
-            score += severityConfig[issue.severity].score;
-        });
-        
-        issues.misconfigured.forEach(issue => {
-            score += severityConfig[issue.severity].score;
-        });
-        
-        issues.infoDisclosure.forEach(issue => {
-            score += severityConfig[issue.severity].score;
-        });
-        
-        return Math.max(0, Math.min(100, score));
-    }
+function calculateScore(issues) {
+    let score = 100;
 
-    function getScoreGrade(score) {
-        if (score >= 90) return { grade: 'A', class: 'success', text: 'Excellent' };
-        if (score >= 80) return { grade: 'B', class: 'info', text: 'Good' };
-        if (score >= 70) return { grade: 'C', class: 'warning', text: 'Fair' };
-        if (score >= 60) return { grade: 'D', class: 'danger', text: 'Poor' };
-        return { grade: 'F', class: 'dark-danger', text: 'Critical' };
-    }
+    const applyIssue = (issue) => {
+        const s = severityConfig[issue.severity];
+        if (!s) return; // ignore unknown severities
+        score += s.score;
+    };
 
-    function renderIssueCard(issue, index, category) {
-        const severityInfo = severityConfig[issue.severity];
-        const cardId = `issue-${category}-${index}`;
+    issues.missing.forEach(applyIssue);
+    issues.misconfigured.forEach(applyIssue);
+    issues.infoDisclosure.forEach(applyIssue);
+
+    return Math.max(0, Math.min(100, score));
+}
+
+function renderIssueCard(issue, index, category) {
+    const severityInfo = severityConfig[issue.severity] || severityConfig['low'];
+    const cardId = `issue-${category}-${index}`;
         
         return `
             <div class="accordion-item bg-dark border-${severityInfo.class}">
@@ -462,6 +453,15 @@ X-Frame-Options: DENY
             document.getElementById('headersInput').value = '';
             document.getElementById('analysisResults').innerHTML = '';
         };
+
+            function getScoreGrade(score) {
+        if (score >= 90) return { grade: 'A', class: 'success',      text: 'Excellent' };
+        if (score >= 80) return { grade: 'B', class: 'info',         text: 'Good' };
+        if (score >= 70) return { grade: 'C', class: 'warning',      text: 'Fair' };
+        if (score >= 60) return { grade: 'D', class: 'danger',       text: 'Poor' };
+        return               { grade: 'F', class: 'dark-danger',     text: 'Critical' };
+    }
+
 
         function displayResults(headers) {
             const issues = analyzeHeaders(headers);
