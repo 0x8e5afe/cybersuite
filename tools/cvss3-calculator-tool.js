@@ -296,7 +296,7 @@ function getSeverityName(score) {
 
     function render() {
         let html = `
-        <div class="section-header purple-team">
+        <div class="section-header">
             <h3 class="mb-1 d-flex align-items-center gap-2">
                 <i class="bi bi-exclamation-triangle-fill"></i>
                 <span>CVSS v3.1 Calculator</span>

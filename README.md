@@ -60,6 +60,7 @@ Below is a brief overview (see the individual tool UIs for details and options).
 
 | Tool Name | Description |
 |-----------|-------------|
+| **Comparer** | Compare strings, hashes, HTTP requests, snippets of code, etc.. |
 | **CORS Misconfiguration Checker** | Test endpoints for permissive or unsafe CORS responses and highlight risky configurations. |
 | **CVSS v3.1 Calculator** | Calculate CVSS v3.1 base/temporal/environmental scores from vulnerability characteristics. |
 | **Encoder/Decoder** | Encode / decode using many formats: Base64, URL, HTML entities, Unicode, hex, ROT13, binary, Morse, and more. |
@@ -285,7 +286,7 @@ with this interface:
 - render(): returns HTML string for the tool's UI
 - init(): wires up event handlers and behavior
 
-I will paste three files as CONTEXT:
+I will paste four files as CONTEXT:
 1) index.html
 2) styles.css
 2) app.js
@@ -328,7 +329,7 @@ YOUR TASK:
 
 4. Output ONLY the JavaScript code for tools/my-new-tool.js inside a single code block.
 
-Do NOT modify index.html or styles.css.
+Do NOT modify index.html.
 Do NOT change the registerCyberSuiteTool API.
 Make sure render() and init() work together and there are no missing element IDs.
 

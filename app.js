@@ -12,6 +12,7 @@ const toolPaths = [
     'tools/hash-tool.js',
     'tools/prompt-injection-tool.js',
     'tools/hashcat-rule-generator-tool.js',
+    'tools/comparer-tool.js',
     'tools/pentest-report-tool.js',
     'tools/steganography-tool.js',
     'tools/jwt-tool.js',
