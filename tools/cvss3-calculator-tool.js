@@ -699,18 +699,23 @@ html += `
                 ? cvssEnvironmentalMetrics.MA.values[envSelected.MA].value
                 : Abase;
 
-            const Cenv = MC * CR;
-            const Ienv = MI * IR;
-            const Aenv = MA * AR;
+            const Cenv = Math.min(MC * CR, 1);
+            const Ienv = Math.min(MI * IR, 1);
+            const Aenv = Math.min(MA * AR, 1);
 
-            const ISSenv = Math.min(1 - ((1 - Cenv) * (1 - Ienv) * (1 - Aenv)), 1);
+            const ISSenvRaw = 1 - ((1 - Cenv) * (1 - Ienv) * (1 - Aenv));
+            const MISS = Math.min(ISSenvRaw, 0.915);
 
             let impactEnv;
             if (envScopeChanged) {
-                impactEnv = 7.52 * (ISSenv - 0.029) - 3.25 * Math.pow(ISSenv - 0.02, 15);
+                impactEnv = 7.52 * (MISS - 0.029) 
+                        - 3.25 * Math.pow(MISS * 0.9731 - 0.02, 13);
             } else {
-                impactEnv = 6.42 * ISSenv;
+                impactEnv = 6.42 * MISS;
             }
+
+
+
 
             const exploitEnv = 8.22 * AVenv * ACenv * PRenv * UIenv;
 
@@ -718,13 +723,15 @@ html += `
             if (impactEnv <= 0) {
                 envBaseScore = 0;
             } else {
-                if (envScopeChanged) {
-                    envBaseScore = Math.min(1.08 * (impactEnv + exploitEnv), 10);
-                } else {
-                    envBaseScore = Math.min(impactEnv + exploitEnv, 10);
-                }
+                // prima min(...,10) e poi Roundup interno
+                const envBaseRaw = envScopeChanged
+                    ? Math.min(1.08 * (impactEnv + exploitEnv), 10)
+                    : Math.min(impactEnv + exploitEnv, 10);
+
+                envBaseScore = roundUp1(envBaseRaw);  // <-- Roundup interno
             }
 
+            // Environmental finale: secondo Roundup
             const environmentalScore = roundUp1(envBaseScore * E * RL * RC);
 
             const baseSeverity = getSeverityClass(baseScore);
@@ -832,7 +839,7 @@ if (hasEnvDefined) {
             const baseMetricsHtml = Object.entries(baseSelected).map(([key, val]) =>
     `<div class="mb-1">
         <span class="text-muted small">${cvssMetrics[key].name}:</span>
-        <span class="${baseMetricsTextClass} fw-semibold ms-1">${cvssMetrics[key].values[val].label}</span>
+        <span class="${baseMetricsTextClass} fw-semibold ms-1">${cvssMetrics[key].values[val].label[0]}</span>
     </div>`
 ).join('');
 
@@ -843,7 +850,7 @@ if (hasTemporalDefined) {
         .map(([key, val]) =>
             `<div class="mb-1">
                 <span class="text-muted small">${cvssTemporalMetrics[key].name}:</span>
-                <span class="${temporalMetricsTextClass} fw-semibold ms-1">${cvssTemporalMetrics[key].values[val].label}</span>
+                <span class="${temporalMetricsTextClass} fw-semibold ms-1">${cvssTemporalMetrics[key].values[val].label[0]}</span>
             </div>`
         ).join('');
 }
@@ -855,7 +862,7 @@ if (hasEnvDefined) {
         .map(([key, val]) =>
             `<div class="mb-1">
                 <span class="text-muted small">${cvssEnvironmentalMetrics[key].name}:</span>
-                <span class="${environmentalMetricsTextClass} fw-semibold ms-1">${cvssEnvironmentalMetrics[key].values[val].label}</span>
+                <span class="${environmentalMetricsTextClass} fw-semibold ms-1">${cvssEnvironmentalMetrics[key].values[val].label[0]}</span>
             </div>`
         ).join('');
 }
@@ -930,37 +937,52 @@ if (hasEnvDefined) {
             // Score detail lines – hide temporal/env when unused
             let scoreDetailsHtml = `
                 <div class="col-md-6">
-                    <strong class="text-muted">Base Score:</strong> <span class="text-white">${baseScore}</span> <span class="badge bg-${baseSeverity.class}">${getSeverityName(baseScore)}</span>
-                </div>
-                <div class="col-md-3">
-                    <strong class="text-muted">Impact:</strong> <span class="text-white">${impact.toFixed(2)}</span>
-                </div>
-                <div class="col-md-3">
-                    <strong class="text-muted">Exploitability:</strong> <span class="text-white">${exploitability.toFixed(2)}</span>
-                </div>
+                    <div class="mb-1">
+                        <strong class="text-muted">Base Score:</strong> 
+                        <span class="text-white">${baseScore}</span>
+                    </div>
             `;
 
+            // Temporal (stessa colonna della Base)
             if (hasTemporalDefined) {
                 scoreDetailsHtml += `
-                    <div class="col-md-6">
-                        <strong class="text-muted">Temporal Score:</strong> <span class="text-white">${temporalScore}</span> <span class="badge bg-${temporalSeverity.class}">${getSeverityName(temporalScore)}</span>
+                    <div class="mb-1">
+                        <strong class="text-muted">Temporal Score:</strong> 
+                        <span class="text-white">${temporalScore}</span>
                     </div>
                 `;
             }
 
+            // Environmental (stessa colonna della Base)
             if (hasEnvDefined) {
                 scoreDetailsHtml += `
-                    <div class="col-md-6">
-                        <strong class="text-muted">Environmental Score:</strong> <span class="text-white">${environmentalScore}</span> <span class="badge bg-${environmentalSeverity.class}">${getSeverityName(environmentalScore)}</span>
+                    <div class="mb-1">
+                        <strong class="text-muted">Environmental Score:</strong> 
+                        <span class="text-white">${environmentalScore}</span>
                     </div>
                 `;
             }
+
+            // chiudo la prima colonna e apro la seconda con Impact/Exploitability
+            scoreDetailsHtml += `
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-1">
+                        <strong class="text-muted">Impact:</strong> 
+                        <span class="text-white">${impact.toFixed(2)}</span>
+                    </div>
+                    <div class="mb-1">
+                        <strong class="text-muted">Exploitability:</strong> 
+                        <span class="text-white">${exploitability.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
 
             // Selected Metrics columns – show only groups with defined values
             let selectedMetricsColumns = `
     <div class="${hasTemporalDefined || hasEnvDefined ? 'col-md-4' : 'col-12'}">
         <div class="rounded p-3 h-100">
-            <div class="fw-bold ${baseMetricsTextClass} mb-2 d-flex align-items-center">
+            <div class="fw-bold mb-2 d-flex align-items-center">
                 <i class="bi bi-shield-fill me-2"></i> Base Metrics
             </div>
             ${baseMetricsHtml}
@@ -972,7 +994,7 @@ if (hasTemporalDefined) {
     selectedMetricsColumns += `
         <div class="col-md-4">
             <div class="rounded p-3 h-100">
-                <div class="fw-bold ${temporalMetricsTextClass} mb-2 d-flex align-items-center">
+                <div class="fw-bold mb-2 d-flex align-items-center">
                     <i class="bi bi-clock-history me-2"></i> Temporal Metrics
                 </div>
                 ${temporalMetricsHtml}
@@ -985,7 +1007,7 @@ if (hasEnvDefined) {
     selectedMetricsColumns += `
         <div class="col-md-4">
             <div class="rounded p-3 h-100">
-                <div class="fw-bold ${environmentalMetricsTextClass} mb-2 d-flex align-items-center">
+                <div class="fw-bold mb-2 d-flex align-items-center">
                     <i class="bi bi-globe2 me-2"></i> Environmental Metrics
                 </div>
                 ${envMetricsHtml}
@@ -1006,7 +1028,7 @@ if (hasEnvDefined) {
                                 <i class="bi bi-shield-exclamation"></i> 
                                 CVSS v3.1 Score: ${overallScore}
                             </span>
-                            <span class="badge bg-light text-dark">${overallSeverityName}</span>
+                            <span class="badge bg-${overallSeverityClass} text-dark">${overallSeverityName}</span>
                         </h5>
                     </div>
                     <div class="card-body p-3">
@@ -1079,21 +1101,43 @@ if (hasEnvDefined) {
                                 <i class="bi bi-info-circle me-1"></i> ${vectorHint}
                             </small>
                         </div>
+
+                       <hr class="border-secondary">
                         
-                        <div class="alert alert-dark border border-secondary mb-0 p-3">
-                            <div class="small">
-                                <strong class="d-block mb-2 text-uppercase">
-                                    <i class="bi bi-speedometer2 me-1"></i> Severity Ratings Reference
-                                </strong>
-                                <div class="d-flex flex-wrap gap-2">
-                                    <span class="badge bg-info">None: 0.0</span>
-                                    <span class="badge bg-success">Low: 0.1-3.9</span>
-                                    <span class="badge bg-warning text-dark">Medium: 4.0-6.9</span>
-                                    <span class="badge bg-danger">High: 7.0-8.9</span>
-                                    <span class="badge bg-dark-danger">Critical: 9.0-10.0</span>
-                                </div>
-                            </div>
-                        </div>
+    <div class="border border-secondary rounded p-3 mb-0">
+        <div class="small text-muted">
+            <strong class="d-block mb-2 text-uppercase">
+                <i class="bi bi-speedometer2 me-1"></i> Severity Ratings
+            </strong>
+            <div class="d-flex flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="d-inline-block rounded-1"
+                          style="width:10px;height:10px;background-color:var(--bs-info);"></span>
+                    <span class="text-muted">None (0.0)</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="d-inline-block rounded-1"
+                          style="width:10px;height:10px;background-color:var(--bs-success);"></span>
+                    <span class="text-muted">Low (0.1–3.9)</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="d-inline-block rounded-1"
+                          style="width:10px;height:10px;background-color:var(--bs-warning);"></span>
+                    <span class="text-muted">Medium (4.0–6.9)</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="d-inline-block rounded-1"
+                          style="width:10px;height:10px;background-color:var(--bs-danger);"></span>
+                    <span class="text-muted">High (7.0–8.9)</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="d-inline-block rounded-1"
+                          style="width:10px;height:10px;background-color:#8b0000;"></span>
+                    <span class="text-muted">Critical (9.0–10.0)</span>
+                </div>
+            </div>
+        </div>
+    </div>
                     </div>
                 </div>
             `;

@@ -215,7 +215,6 @@ body::before {
     background: var(--terminal-card);
     border: 1px solid var(--terminal-border);
     border-radius: 8px;
-    overflow: hidden;
     transition: all 0.3s ease;
 }
 
@@ -641,7 +640,6 @@ body::before {
 
 .form-label {
     color: var(--terminal-accent);
-    text-shadow: var(--glow-accent);
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
@@ -3013,4 +3011,8 @@ body::after {
 /* indentation before header name (kept visually, but not colored specially) */
 .headers-editor .headers-highlight .hdr-indent {
     color: inherit;
+}
+
+.bg-dark-danger{
+    background-color: rgb(255, 0, 110);
 }
