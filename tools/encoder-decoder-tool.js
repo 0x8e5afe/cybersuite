@@ -212,7 +212,7 @@
                             </div>
 
                             <div class="d-flex gap-2">
-    <button class="btn btn-outline-secondary" onclick="swapInputOutput()">
+                                <button class="btn btn-outline-secondary" onclick="swapInputOutput()">
                                     <i class="bi bi-arrow-left-right"></i> Swap & Toggle Mode
                                 </button>
                                 <button class="btn btn-outline-secondary" onclick="clearInput()">
@@ -326,79 +326,79 @@
             }
         };
 
-       window.processTextWithoutHistory = function() {
-    const inputField = document.getElementById('encoderInput');
-    const resultsDiv = document.getElementById('encoderResults');
-    const typeSelect = document.getElementById('encodingType');
+        window.processTextWithoutHistory = function() {
+            const inputField = document.getElementById('encoderInput');
+            const resultsDiv = document.getElementById('encoderResults');
+            const typeSelect = document.getElementById('encodingType');
 
-    if (!inputField || !resultsDiv || !typeSelect) return;
+            if (!inputField || !resultsDiv || !typeSelect) return;
 
-    const input = inputField.value.trim();
-    const type = typeSelect.value;
+            const input = inputField.value.trim();
+            const type = typeSelect.value;
 
-    if (!input) {
-        resultsDiv.innerHTML = '';
-        return;
-    }
+            if (!input) {
+                resultsDiv.innerHTML = '';
+                return;
+            }
 
-    try {
-        const method = encodingMethods[type];
-        const fn = currentMode === 'encode' ? method.encode : method.decode;
-        const output = fn(input);
-        const actionTitle = currentMode === 'encode' ? 'Encoded' : 'Decoded';
+            try {
+                const method = encodingMethods[type];
+                const fn = currentMode === 'encode' ? method.encode : method.decode;
+                const output = fn(input);
+                const actionTitle = currentMode === 'encode' ? 'Encoded' : 'Decoded';
 
-        displayResult(true, method, input, output, actionTitle);
-    } catch (error) {
-        const actionTitle = currentMode === 'encode' ? 'Encoding' : 'Decoding';
-        displayResult(false, encodingMethods[type], input, null, actionTitle, error.message);
-    }
-};
+                displayResult(true, method, input, output, actionTitle);
+            } catch (error) {
+                const actionTitle = currentMode === 'encode' ? 'Encoding' : 'Decoding';
+                displayResult(false, encodingMethods[type], input, null, actionTitle, error.message);
+            }
+        };
 
         window.processText = function() {
-    processTextWithoutHistory();
-    
-    const inputField = document.getElementById('encoderInput');
-    const resultsDiv = document.getElementById('encoderResults');
-    const typeSelect = document.getElementById('encodingType');
-    const output = resultsDiv.querySelector('.alert-success strong.user-select-all')?.textContent;
-    
-    if (output) {
-        const type = typeSelect.value;
-        const method = encodingMethods[type];
-        addToHistory({
-            mode: currentMode,
-            method: method.name,
-            methodKey: type,
-            input: inputField.value.trim(),
-            output: output,
-            timestamp: new Date().toISOString()
-        });
-    }
-};
+            processTextWithoutHistory();
+            
+            const inputField = document.getElementById('encoderInput');
+            const resultsDiv = document.getElementById('encoderResults');
+            const typeSelect = document.getElementById('encodingType');
+            const output = resultsDiv.querySelector('.alert-success strong.user-select-all')?.textContent;
+            
+            if (output) {
+                const type = typeSelect.value;
+                const method = encodingMethods[type];
+                addToHistory({
+                    mode: currentMode,
+                    method: method.name,
+                    methodKey: type,
+                    input: inputField.value.trim(),
+                    output: output,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        };
 
-         const inputField = document.getElementById('encoderInput');
-if (inputField) {
-    inputField.addEventListener('input', () => {
-        // Process without saving to history
-        processTextWithoutHistory();
-    });
-    inputField.addEventListener('blur', () => {
-        // Save to history when leaving input field
-        const output = document.getElementById('encoderResults').querySelector('.alert-success strong.user-select-all')?.textContent;
-        if (output) {
-            const type = document.getElementById('encodingType').value;
-            const method = encodingMethods[type];
-            addToHistory({
-                mode: currentMode,
-                method: method.name,
-                methodKey: type,
-                input: inputField.value.trim(),
-                output: output,
-                timestamp: new Date().toISOString()
+        const inputField = document.getElementById('encoderInput');
+        if (inputField) {
+            inputField.addEventListener('input', () => {
+                // Process without saving to history
+                processTextWithoutHistory();
+            });
+            inputField.addEventListener('blur', () => {
+                // Save to history when leaving input field
+                const output = document.getElementById('encoderResults').querySelector('.alert-success strong.user-select-all')?.textContent;
+                if (output) {
+                    const type = document.getElementById('encodingType').value;
+                    const method = encodingMethods[type];
+                    addToHistory({
+                        mode: currentMode,
+                        method: method.name,
+                        methodKey: type,
+                        input: inputField.value.trim(),
+                        output: output,
+                        timestamp: new Date().toISOString()
+                    });
+                }
             });
         }
-    });
-}
 
         window.clearInput = function() {
             document.getElementById('encoderInput').value = '';
@@ -420,52 +420,52 @@ if (inputField) {
             document.getElementById('encoderInput').value = samples[currentType] || 'Sample Text';
         };
 
-window.swapInputOutput = function() {
-    const input = document.getElementById('encoderInput');
-    const resultsDiv = document.getElementById('encoderResults');
-    
-    // Check if there's output to swap
-    const outputElement = resultsDiv.querySelector('.alert-success');
-    if (!outputElement) {
-        // Just toggle mode without saving to history
-        currentMode = (currentMode === 'encode') ? 'decode' : 'encode';
-        window.updateModeUI();
-        
-        // If there's input, process it with new mode
-        if (input.value.trim()) {
-            processTextWithoutHistory();
-        }
-        return;
-    }
+        window.swapInputOutput = function() {
+            const input = document.getElementById('encoderInput');
+            const resultsDiv = document.getElementById('encoderResults');
+            
+            // Check if there's output to swap
+            const outputElement = resultsDiv.querySelector('.alert-success');
+            if (!outputElement) {
+                // Just toggle mode without saving to history
+                currentMode = (currentMode === 'encode') ? 'decode' : 'encode';
+                window.updateModeUI();
+                
+                // If there's input, process it with new mode
+                if (input.value.trim()) {
+                    processTextWithoutHistory();
+                }
+                return;
+            }
 
-    const outputText = outputElement.querySelector('strong.user-select-all')?.textContent;
-    
-    if (outputText) {
-        input.value = outputText;
-        
-        // Toggle mode
-        currentMode = (currentMode === 'encode') ? 'decode' : 'encode';
-        window.updateModeUI();
-        
-        // Automatically process the swapped content
-        processTextWithoutHistory();
-        
-        // Save to history after swap
-        const newOutput = document.getElementById('encoderResults').querySelector('.alert-success strong.user-select-all')?.textContent;
-        if (newOutput) {
-            const type = document.getElementById('encodingType').value;
-            const method = encodingMethods[type];
-            addToHistory({
-                mode: currentMode,
-                method: method.name,
-                methodKey: type,
-                input: outputText,
-                output: newOutput,
-                timestamp: new Date().toISOString()
-            });
-        }
-    }
-};
+            const outputText = outputElement.querySelector('strong.user-select-all')?.textContent;
+            
+            if (outputText) {
+                input.value = outputText;
+                
+                // Toggle mode
+                currentMode = (currentMode === 'encode') ? 'decode' : 'encode';
+                window.updateModeUI();
+                
+                // Automatically process the swapped content
+                processTextWithoutHistory();
+                
+                // Save to history after swap
+                const newOutput = document.getElementById('encoderResults').querySelector('.alert-success strong.user-select-all')?.textContent;
+                if (newOutput) {
+                    const type = document.getElementById('encodingType').value;
+                    const method = encodingMethods[type];
+                    addToHistory({
+                        mode: currentMode,
+                        method: method.name,
+                        methodKey: type,
+                        input: outputText,
+                        output: newOutput,
+                        timestamp: new Date().toISOString()
+                    });
+                }
+            }
+        };
 
         window.clearHistory = function() {
             conversionHistory = [];
