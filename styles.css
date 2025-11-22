@@ -38,6 +38,95 @@
 }
 
 /* ========================================
+   PIPELINE STYLES
+   ======================================== */
+
+/* Available Tools Panel */
+.available-tool-card {
+    background: var(--terminal-card);
+    border: 1px solid var(--terminal-border);
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.available-tool-card:hover {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: var(--terminal-accent);
+    box-shadow: var(--glow-accent);
+    transform: translateX(5px);
+}
+
+/* Pipeline Chain */
+.pipeline-chain {
+    min-height: 200px;
+}
+
+.pipeline-tool-card {
+    background: var(--terminal-card);
+    border: 2px solid var(--terminal-border);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+    padding:20px;
+}
+
+.pipeline-tool-card:hover {
+    border-color: var(--terminal-accent);
+    box-shadow: var(--glow-accent);
+}
+
+.pipeline-tool-header {
+    padding: 1rem;
+}
+
+.pipeline-tool-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--terminal-accent);
+    color: var(--terminal-bg);
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.pipeline-arrow {
+    text-align: center;
+    color: var(--terminal-accent);
+    font-size: 1.5rem;
+    padding: 0.5rem 0;
+    animation: arrowPulse 2s ease-in-out infinite;
+}
+
+.pipeline-io-badges .badge-io {
+    font-size: 0.7rem;
+    border: 1px solid var(--terminal-border);
+    background: var(--terminal-card);
+}
+
+.pipeline-io-badges .badge-io i {
+    margin-right: 4px;
+}
+
+.pipeline-embed .section-header {
+    display: none;
+}
+
+@keyframes arrowPulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(3px);
+    }
+}
+
+/* ========================================
    BASE STYLES
    ======================================== */
 
@@ -614,6 +703,33 @@ body::before {
 .tool-card .badge-sm {
     font-size: 0.65rem;
     padding: 0.25rem 0.5rem;
+}
+
+.pipeline-support {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    color: var(--terminal-accent);
+    font-size: 1rem;
+}
+
+.pipeline-add-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 0.3rem 0.6rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.pipeline-add-btn-workspace {
+    z-index: 2;
+}
+
+.tool-workspace {
+    position: relative;
 }
 
 /* ========================================
@@ -3015,4 +3131,212 @@ body::after {
 
 .bg-dark-danger{
     background-color: rgb(255, 0, 110);
+}
+
+/* ========================================
+   BEAUTIFIER TOOL - TREE VIEW & STATS
+   ======================================== */
+
+/* Tree visualization */
+.beautifier-tree-view {
+    background: var(--terminal-bg);
+    border: 1px solid var(--terminal-border);
+    border-radius: 8px;
+    padding: 1rem;
+    max-height: 600px;
+    overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+}
+
+/* Output preview for non-tree formats (JS/SQL) */
+.beautifier-output-preview {
+    background: var(--terminal-bg);
+    border: 1px solid var(--terminal-border);
+    border-radius: 8px;
+    padding: 0.75rem;
+    max-height: 600px;
+    overflow: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    white-space: pre;
+}
+
+/* HTML render preview */
+.beautifier-html-preview {
+    background: var(--terminal-bg);
+    border: 1px solid var(--terminal-border);
+    border-radius: 8px;
+    overflow: hidden;
+    max-height: 600px;
+}
+
+.beautifier-html-preview iframe {
+    width: 100%;
+    min-height: 300px;
+    border: none;
+    background: #ffffff;
+}
+
+.tree-node {
+    margin-left: 1.5rem;
+}
+
+.tree-toggle {
+    cursor: pointer;
+    color: var(--terminal-accent);
+    margin-right: 0.25rem;
+    user-select: none;
+    display: inline-block;
+    width: 16px;
+    transition: transform 0.2s ease;
+}
+
+.tree-toggle:hover {
+    color: var(--terminal-green);
+    text-shadow: var(--glow-green);
+}
+
+.tree-children {
+    margin-left: 1rem;
+    border-left: 1px solid var(--terminal-border);
+    padding-left: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.tree-item {
+    padding: 0.25rem 0;
+    line-height: 1.6;
+}
+
+.tree-key {
+    color: var(--terminal-blue);
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.tree-bracket {
+    color: var(--terminal-text-dim);
+    font-weight: bold;
+    margin: 0 0.25rem;
+}
+
+.tree-count {
+    font-size: 0.7rem;
+    margin-left: 0.5rem;
+    padding: 0.2rem 0.5rem;
+}
+
+.tree-value {
+    color: var(--terminal-text);
+}
+
+.tree-value.tree-string {
+    color: var(--terminal-green);
+}
+
+.tree-value.tree-number {
+    color: var(--terminal-purple);
+}
+
+.tree-value.tree-boolean {
+    color: var(--terminal-yellow);
+}
+
+.tree-value.tree-null {
+    color: var(--terminal-text-dim);
+    font-style: italic;
+}
+
+/* Statistics cards */
+.stat-card {
+    background: var(--terminal-card);
+    border: 1px solid var(--terminal-border);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.stat-card:hover {
+    border-color: var(--terminal-accent);
+    box-shadow: var(--glow-accent);
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    opacity: 0.8;
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--terminal-text);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--terminal-text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Notification animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stat-card {
+        padding: 0.75rem;
+    }
+    
+    .stat-icon {
+        font-size: 1.5rem;
+    }
+    
+    .stat-value {
+        font-size: 1.25rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .tree-node {
+        margin-left: 1rem;
+    }
+    
+    .beautifier-tree-view {
+        font-size: 0.75rem;
+    }
 }

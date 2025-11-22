@@ -6,7 +6,7 @@
 (function() {
     'use strict';
 
-        function base64UrlEncode(str) {
+    function base64UrlEncode(str) {
         return btoa(unescape(encodeURIComponent(str)))
             .replace(/\+/g, '-')
             .replace(/\//g, '_')
@@ -290,94 +290,7 @@
         `;
     }
 
-        function normalizeJsonInput(text) {
-        if (!text) return '';
-
-        // Remove leading BOM if present
-        text = text.replace(/^\uFEFF/, '');
-
-        // Replace smart quotes with normal quotes
-        // “ ” => "
-        // ‘ ’ => '
-        text = text
-            .replace(/[\u2018\u2019\u201B]/g, "'")
-            .replace(/[\u201C\u201D\u201F]/g, '"');
-
-        // Normalize line endings
-        text = text.replace(/\r\n?/g, '\n');
-
-        return text;
-    }
-
-    function buildJsonErrorHelpHtml(rawText, error) {
-        const hints = [];
-
-        // Smart quotes
-        if (/[“”‘’]/.test(rawText)) {
-            hints.push('It looks like you used “smart quotes”. JSON only accepts straight quotes, for example: {"test": "test"}.');
-        }
-
-        // Single-quoted keys/strings (JS object style)
-        if (/['‘’]\s*:/.test(rawText) || /:\s*['‘’]/.test(rawText)) {
-            hints.push('JSON requires double quotes for keys and strings. Use "test" instead of \'test\'.');
-        }
-
-        // Trailing commas
-        if (/,(\s*[}\]])/.test(rawText)) {
-            hints.push('Remove any trailing comma before } or ]. JSON does not allow trailing commas.');
-        }
-
-        // Comments
-        if (/\/\/|\/\*/.test(rawText)) {
-            hints.push('JSON does not allow comments (// or /* */). Remove all comments before parsing.');
-        }
-
-        // Not starting like JSON at all
-        if (!/^\s*[{[\"]/ .test(rawText)) {
-            hints.push('The payload should start with { for an object or [ for an array. Example: {"test": "test"}.');
-        }
-
-        let html = `<strong>Error parsing JSON:</strong> ${window.escapeHtml(error.message)}`;
-
-        if (hints.length) {
-            html += '<ul class="mt-2 mb-0">';
-            hints.forEach(h => {
-                html += `<li>${window.escapeHtml(h)}</li>`;
-            });
-            html += '</ul>';
-        }
-
-        return html;
-    }
-
-    function parseJsonWithHelpfulErrors(rawText) {
-        const normalized = normalizeJsonInput(rawText.trim());
-
-        try {
-            const value = JSON.parse(normalized);
-
-            let warning = null;
-            // JWT payloads are typically JSON objects; warn if not
-            if (value === null || typeof value !== 'object' || Array.isArray(value)) {
-                warning = 'The payload is valid JSON, but it is not a JSON object. JWT payloads are typically objects like {"sub": "123", "name": "Alice"}.';
-            }
-
-            return {
-                ok: true,
-                value,
-                normalized,
-                warning
-            };
-        } catch (err) {
-            return {
-                ok: false,
-                error: err,
-                normalized
-            };
-        }
-    }
-
-        function init() {
+    function init() {
         // lifetime presets for iat/exp
         window.jwtApplyLifetimePreset = function(preset) {
             const payloadEl = document.getElementById('jwtPayload');
@@ -704,7 +617,6 @@
         };
     }
 
-        
     // Register the tool
     window.registerCyberSuiteTool({
         id: 'jwt-tool',

@@ -21,85 +21,139 @@
 <body>
     <!-- Header -->
     <nav class="navbar navbar-dark bg-dark border-bottom border-secondary px-4 px-md-5">
-        <div class="container-fluid px-0">
-            <span class="navbar-brand mb-0 h1 mx-auto d-flex align-items-center gap-2">
+        <div class="container-fluid px-0 d-flex justify-content-between align-items-center">
+            <span class="navbar-brand mb-0 h1 d-flex align-items-center gap-2">
                 <i class="bi bi-tools"></i>
                 <span class="text-green fw-semibold">CyberSuite</span>
             </span>
+            
+            <!-- Pipeline Mode Button in Top Right -->
+            <button type="button" class="btn btn-outline-success mode-btn" data-mode="pipeline" onclick="switchMode('pipeline')">
+                <i class="bi bi-stack"></i> Pipeline Mode (Beta)
+            </button>
         </div>
     </nav>
 
-    <div class="container-fluid px-4 px-md-5 py-4">
+    <!-- Single tool mode container -->
+    <div id="singleToolMode">
+        <div class="container-fluid px-4 px-md-5 py-4">
 
-        <!-- Hero / Intro -->
-        <div class="row mb-4">
-            <div class="col-12 col-lg-10 mx-auto text-center">
-                <!--<div class="mb-3">
-                    <span class="badge rounded-pill border border-secondary text-secondary px-3 py-2">
-                        <i class="bi bi-github"></i> Proud to be open source
-                    </span>
-                </div>-->
+            <!-- Hero / Intro -->
+            <div class="row mb-4">
+                <div class="col-12 col-lg-10 mx-auto text-center">
+                    <h1 class="display-5 fw-semibold text-green mb-2">
+                        Your unified security toolbox
+                    </h1>
 
-                <h1 class="display-5 fw-semibold text-green mb-2">
-                    Your unified security toolbox
-                </h1>
-
-                <p class="text-secondary small mb-3">
-                    From
-                    <a href="https://github.com/0x8e5afe/cybersuite"
-                       target="_blank"
-                       class="text-info text-decoration-none">
-                        github.com/0x8e5afe/cybersuite
-                    </a>
-                    to your workflow: a fast, browser-friendly companion for cybersecurity professionals
-                </p>
-            </div>
-        </div>
-
-        <!-- Search Bar -->
-        <div class="row mb-4">
-            <div class="col-12 col-lg-8 mx-auto">
-                <div class="input-group input-group-lg">
-                    <span class="input-group-text bg-dark border-secondary">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text"
-                           class="form-control border-secondary"
-                           id="toolSearch"
-                           placeholder="">
-                    <button class="btn btn-outline-secondary" type="button" id="clearSearch">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
-                </div>
-                <small class="text-secondary mt-2 d-block text-center" id="searchResults"></small>
-            </div>
-        </div>
-
-        <!-- Category Filters -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="btn-group d-flex flex-wrap justify-content-center gap-2" role="group">
-                    <button type="button" class="btn btn-outline-danger category-filter" data-category="red">
-                        <i class="bi bi-crosshair"></i> Red
-                    </button>
-                    <button type="button" class="btn btn-outline-primary category-filter" data-category="blue">
-                        <i class="bi bi-shield-fill"></i> Blue
-                    </button>
-                    <button type="button" class="btn btn-outline-purple category-filter" data-category="purple">
-                        <i class="bi bi-layers-fill"></i> Purple
-                    </button>
-                    <button type="button" class="btn btn-outline-light category-filter active" data-category="all">
-                        <i class="bi bi-grid-fill"></i> All Tools
-                    </button>
+                    <p class="text-secondary small mb-3">
+                        From
+                        <a href="https://github.com/0x8e5afe/cybersuite"
+                           target="_blank"
+                           class="text-info text-decoration-none">
+                            github.com/0x8e5afe/cybersuite
+                        </a>
+                        to your workflow: a fast, browser-friendly companion for cybersecurity professionals
+                    </p>
                 </div>
             </div>
+
+            <!-- Search Bar -->
+            <div class="row mb-4">
+                <div class="col-12 col-lg-8 mx-auto">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-dark border-secondary">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text"
+                               class="form-control border-secondary"
+                               id="toolSearch"
+                               placeholder="">
+                        <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <small class="text-secondary mt-2 d-block text-center" id="searchResults"></small>
+                </div>
+            </div>
+
+            <!-- Category Filters -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="btn-group d-flex flex-wrap justify-content-center gap-2" role="group">
+                        <button type="button" class="btn btn-outline-danger category-filter" data-category="red">
+                            <i class="bi bi-crosshair"></i> Red
+                        </button>
+                        <button type="button" class="btn btn-outline-primary category-filter" data-category="blue">
+                            <i class="bi bi-shield-fill"></i> Blue
+                        </button>
+                        <button type="button" class="btn btn-outline-purple category-filter" data-category="purple">
+                            <i class="bi bi-layers-fill"></i> Purple
+                        </button>
+                        <button type="button" class="btn btn-outline-light category-filter active" data-category="all">
+                            <i class="bi bi-grid-fill"></i> All Tools
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools Sections -->
+            <div id="toolsSections"></div>
+
+            <!-- Workspace -->
+            <div id="workspace"></div>
         </div>
+    </div>
 
-        <!-- Tools Sections -->
-        <div id="toolsSections"></div>
+    <!-- Pipeline mode container -->
+    <div id="pipelineMode" style="display:none;">
+        <div class="container-fluid px-4 px-md-5 py-4">
+            <!-- your pipeline UI goes here -->
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Available tools</h5>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text bg-dark border-secondary">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text"
+                               class="form-control border-secondary"
+                               id="pipelineToolSearch"
+                               placeholder="Search pipeline tools">
+                        <button class="btn btn-outline-secondary" type="button" id="clearPipelineToolSearch">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <div id="availableTools"></div>
+                </div>
+                <div class="col-md-8">
 
-        <!-- Workspace -->
-        <div id="workspace"></div>
+                    <div class="d-flex align-items-center mb-3">
+                        <h6 class="mb-0">Pipeline chain</h6>
+                        <span id="chainCompatibility" class="badge bg-secondary ms-2">Empty</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger ms-auto" onclick="clearPipeline()">Clear</button>
+                    </div>
+                    <div id="pipelineChain"></div>
+
+                    <div class="mt-3">
+                        <button id="executePipelineBtn" class="btn btn-success" onclick="executePipeline()" disabled>
+                            <i class="bi bi-play-fill"></i> Run pipeline
+                        </button>
+                    </div>
+
+                    <div id="pipelineErrors"></div>
+
+                    <div id="pipelineOutputCard" class="card mt-4" style="display:none;">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Pipeline output</span>
+                            <button type="button" class="btn btn-sm btn-outline-light" onclick="copyPipelineOutput()">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                        <div class="card-body" id="pipelineOutput"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->
