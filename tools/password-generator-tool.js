@@ -87,82 +87,13 @@
             </div>
             
             <div class="mt-3">
-                <button class="btn btn-primary" id="pwdGenerateBtn" onclick="generatePasswords()">
+                <button class="btn btn-primary" onclick="generatePasswords()">
                     <i class="bi bi-arrow-repeat"></i> Generate Passwords
                 </button>
             </div>
             
             <div id="passwordResults" class="mt-3"></div>
         `;
-    }
-
-    function buildPasswordResultsHtml(passwords, charset, length) {
-        // Calculate entropy
-        const entropy = Math.log2(Math.pow(charset.length, length));
-
-        // Build results card
-        let html = `
-                <div class="card bg-dark mb-3">
-                    <div class="card-header bg-success text-dark">
-                        <i class="bi bi-shield-check"></i> Generated Passwords
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-info mb-3">
-                            <strong>Entropy:</strong> ${entropy.toFixed(2)} bits<br>
-                            <strong>Character Set Size:</strong> ${charset.length} characters<br>
-                            <strong>Possible Combinations:</strong> ${charset.length}^${length} ≈ ${Math.pow(charset.length, length).toExponential(2)}
-                        </div>
-            `;
-
-        passwords.forEach((pwd, idx) => {
-            const pwdId = `pwd_${idx}`;
-            html += `
-                    <div class="mb-2">
-                        <div class="input-group">
-                            <input type="text" class="form-control font-monospace" id="${pwdId}" value="${window.escapeHtml(pwd)}" readonly>
-                            <button class="btn btn-outline-primary" onclick="copyPasswordToClipboard('${pwdId}', this)">
-                                <i class="bi bi-clipboard"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-        });
-
-        html += `
-                        <button class="btn btn-sm btn-outline-secondary mt-2" onclick="copyAllPasswords()">
-                            <i class="bi bi-files"></i> Copy All
-                        </button>
-                    </div>
-                </div>
-            `;
-
-        // Strength indicator
-        let strength = 'Weak';
-        let strengthClass = 'danger';
-        if (entropy > 100) {
-            strength = 'Very Strong';
-            strengthClass = 'success';
-        } else if (entropy > 80) {
-            strength = 'Strong';
-            strengthClass = 'success';
-        } else if (entropy > 60) {
-            strength = 'Good';
-            strengthClass = 'primary';
-        } else if (entropy > 40) {
-            strength = 'Fair';
-            strengthClass = 'warning';
-        }
-
-        html += `
-                <div class="alert alert-${strengthClass}">
-                    <strong>Password Strength:</strong> ${strength}
-                </div>
-            `;
-
-        return {
-            html,
-            entropy
-        };
     }
 
     function init() {
@@ -217,16 +148,77 @@
                 let password = '';
                 const array = new Uint32Array(length);
                 crypto.getRandomValues(array);
-
+                
                 for (let j = 0; j < length; j++) {
                     password += charset[array[j] % charset.length];
                 }
                 passwords.push(password);
             }
-
-            const { html } = buildPasswordResultsHtml(passwords, charset, length);
+            
+            // Calculate entropy
+            const entropy = Math.log2(Math.pow(charset.length, length));
+            
+            // Display results
+            let html = `
+                <div class="card bg-dark mb-3">
+                    <div class="card-header bg-success text-dark">
+                        <i class="bi bi-shield-check"></i> Generated Passwords
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info mb-3">
+                            <strong>Entropy:</strong> ${entropy.toFixed(2)} bits<br>
+                            <strong>Character Set Size:</strong> ${charset.length} characters<br>
+                            <strong>Possible Combinations:</strong> ${charset.length}^${length} ≈ ${Math.pow(charset.length, length).toExponential(2)}
+                        </div>
+            `;
+            
+            passwords.forEach((pwd, idx) => {
+                const pwdId = `pwd_${idx}`;
+                html += `
+                    <div class="mb-2">
+                        <div class="input-group">
+                            <input type="text" class="form-control font-monospace" id="${pwdId}" value="${window.escapeHtml(pwd)}" readonly>
+                            <button class="btn btn-outline-primary" onclick="copyPasswordToClipboard('${pwdId}', this)">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                        <button class="btn btn-sm btn-outline-secondary mt-2" onclick="copyAllPasswords()">
+                            <i class="bi bi-files"></i> Copy All
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Strength indicator
+            let strength = 'Weak';
+            let strengthClass = 'danger';
+            if (entropy > 100) {
+                strength = 'Very Strong';
+                strengthClass = 'success';
+            } else if (entropy > 80) {
+                strength = 'Strong';
+                strengthClass = 'success';
+            } else if (entropy > 60) {
+                strength = 'Good';
+                strengthClass = 'primary';
+            } else if (entropy > 40) {
+                strength = 'Fair';
+                strengthClass = 'warning';
+            }
+            
+            html += `
+                <div class="alert alert-${strengthClass}">
+                    <strong>Password Strength:</strong> ${strength}
+                </div>
+            `;
+            
             resultsDiv.innerHTML = html;
-
+            
             // Store passwords for copy all function
             window.generatedPasswords = passwords;
         };
@@ -251,179 +243,6 @@
         };
     }
 
-function initPipeline(context) {
-    // Reuse normal init logic to wire up sliders and handlers
-    init();
-    
-    // In pipeline mode, the pipeline engine will invoke generation,
-    // so the manual "Generate Passwords" button should be hidden.
-    const btn = document.getElementById('pwdGenerateBtn');
-    if (btn) {
-        btn.style.display = 'none';
-    }
-    
-    // In pipeline mode, we also don't show the normal output panel;
-    // results are meant to flow through the pipeline, not be displayed here.
-    const resultsDiv = document.getElementById('passwordResults');
-    if (resultsDiv) {
-        resultsDiv.style.display = 'none';
-    }
-}
-
-    // ========================================
-    // PIPELINE INTEGRATION
-    // ========================================
-    async function passwordGeneratorPipelineProcess(input) {
-        try {
-            // Try to read options from the UI if present (pipeline tool box)
-            const lengthEl = document.getElementById('pwdLength');
-            const countEl = document.getElementById('pwdCount');
-            const includeLowerEl = document.getElementById('includeLower');
-            const includeUpperEl = document.getElementById('includeUpper');
-            const includeDigitsEl = document.getElementById('includeDigits');
-            const includeSpecialEl = document.getElementById('includeSpecial');
-            const avoidAmbiguousEl = document.getElementById('avoidAmbiguous');
-            const customCharsEl = document.getElementById('customChars');
-            const hasUI = !!(lengthEl && countEl && includeLowerEl && includeUpperEl && includeDigitsEl && includeSpecialEl && avoidAmbiguousEl && customCharsEl);
-    
-            // Determine desired count from pipeline input (optional override)
-            let countFromInput = 0;
-            if (typeof input === 'number') {
-                countFromInput = input;
-            } else if (typeof input === 'string') {
-                const parsed = parseInt(input.trim(), 10);
-                countFromInput = isNaN(parsed) ? 0 : parsed;
-            } else if (input && typeof input === 'object') {
-                if (typeof input.count === 'number') {
-                    countFromInput = input.count;
-                } else if (typeof input.passwords === 'number') {
-                    countFromInput = input.passwords;
-                } else if (typeof input.n === 'number') {
-                    countFromInput = input.n;
-                }
-            }
-    
-            // Resolve generation parameters
-            let length;
-            let count;
-            let includeLower;
-            let includeUpper;
-            let includeDigits;
-            let includeSpecial;
-            let avoidAmbiguous;
-            let customChars;
-    
-            if (hasUI) {
-                // Read from UI controls
-                length = parseInt(lengthEl.value, 10) || 16;
-    
-                let uiCount = parseInt(countEl.value, 10) || 1;
-                if (Number.isFinite(countFromInput) && countFromInput > 0) {
-                    const max = parseInt(countEl.max || '20', 10) || 20;
-                    uiCount = Math.min(countFromInput, max);
-                }
-                count = uiCount;
-    
-                includeLower = includeLowerEl.checked;
-                includeUpper = includeUpperEl.checked;
-                includeDigits = includeDigitsEl.checked;
-                includeSpecial = includeSpecialEl.checked;
-                avoidAmbiguous = avoidAmbiguousEl.checked;
-                customChars = customCharsEl.value || '';
-            } else {
-                // Headless mode (no UI available), use defaults
-                if (Number.isFinite(countFromInput) && countFromInput > 0) {
-                    count = countFromInput;
-                } else {
-                    count = 1;
-                }
-    
-                length = 16;
-                includeLower = true;
-                includeUpper = true;
-                includeDigits = true;
-                includeSpecial = true;
-                avoidAmbiguous = false;
-                customChars = '';
-            }
-    
-            if (!Number.isFinite(count) || count <= 0) {
-                return {
-                    success: false,
-                    error: 'Password generator pipeline expected a positive number of passwords as input'
-                };
-            }
-    
-            // Enforce an upper bound to avoid heavy computations
-            if (count > 1000) {
-                return {
-                    success: false,
-                    error: 'Requested password count is too large for pipeline mode (max 1000)'
-                };
-            }
-    
-            // Build character set (same rules as in generatePasswords)
-            let charset = '';
-            if (includeLower) {
-                charset += avoidAmbiguous ? 'abcdefghijkmnopqrstuvwxyz' : 'abcdefghijklmnopqrstuvwxyz';
-            }
-            if (includeUpper) {
-                charset += avoidAmbiguous ? 'ABCDEFGHJKLMNPQRSTUVWXYZ' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            }
-            if (includeDigits) {
-                charset += avoidAmbiguous ? '23456789' : '0123456789';
-            }
-            if (includeSpecial) {
-                charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
-            }
-            if (customChars) {
-                charset += customChars;
-            }
-    
-            if (!charset || charset.length === 0) {
-                return {
-                    success: false,
-                    error: hasUI
-                        ? 'Character set is empty in password generator pipeline (check UI settings)'
-                        : 'Internal error: character set is empty in password generator pipeline'
-                };
-            }
-    
-            // Generate passwords using crypto.getRandomValues, without touching the visible output
-            const passwords = [];
-            for (let i = 0; i < count; i++) {
-                let password = '';
-                const array = new Uint32Array(length);
-                crypto.getRandomValues(array);
-    
-                for (let j = 0; j < length; j++) {
-                    password += charset[array[j] % charset.length];
-                }
-                passwords.push(password);
-            }
-    
-            const { html, entropy } = buildPasswordResultsHtml(passwords, charset, length);
-    
-            return {
-                success: true,
-                output: passwords,
-                metadata: {
-                    source: 'password-generator',
-                    count,
-                    length,
-                    charsetLength: charset.length,
-                    entropyPerPassword: entropy,
-                    html
-                }
-            };
-        } catch (e) {
-            return {
-                success: false,
-                error: 'Password generator pipeline error: ' + e.message
-            };
-        }
-    }
-
     // Register the tool
     window.registerCyberSuiteTool({
         id: 'password-generator',
@@ -432,12 +251,6 @@ function initPipeline(context) {
         icon: 'bi-shield-lock-fill',
         category: 'purple',
         render: render,
-        init: init,
-        initPipeline: initPipeline,
-        // Pipeline Integration: receives a number (or numeric string/object)
-        // and/or uses its own UI, and returns an array of generated passwords for downstream tools.
-        inputTypes: 'number',
-        outputType: 'json',
-        processPipeline: passwordGeneratorPipelineProcess
+        init: init
     });
 })();

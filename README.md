@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple.svg)](https://getbootstrap.com)
-[![Security Tools](https://img.shields.io/badge/Tools-23-red.svg)](https://github.com/0x8e5afe/cybersuite)
+[![Security Tools](https://img.shields.io/badge/Tools-25-red.svg)](https://github.com/0x8e5afe/cybersuite)
 
 > ⚠️ **Disclaimer**
 >
@@ -16,7 +16,7 @@
 ## 🎯 What is CyberSuite?
 
 CyberSuite is a **modular, browser-based security toolbox** for red, blue, and purple teams.  
-Clone the repo, open `index.html` in a browser, and you immediately get a curated collection of **23 focused tools** for cybersecurity tasks.
+Clone the repo, open `index.html` in a browser, and you immediately get a curated collection of **25 focused tools** for cybersecurity tasks.
 
 Everything runs **completely client-side**: no backend, no external dependency chain, and nothing is sent to a server. 
 
@@ -32,12 +32,13 @@ Everything runs **completely client-side**: no backend, no external dependency c
 - **🔒 Privacy First**: All processing happens locally  
 - **🧩 Modular Architecture**: Easy to extend with new tools  
 - **📱 Mobile Friendly**: Works on desktop, tablet, and mobile  
+- **🔗 Pipeline Mode (Beta)**: Chain supported tools into multi-step workflows; add tools, reorder, and run them as a mini processing pipeline.
 
 ---
 
 ## 🧰 Tools Overview
 
-CyberSuite ships with 22 tools, grouped by **Red**, **Blue**, and **Purple** team usage.  
+CyberSuite ships with 25 tools, grouped by **Red**, **Blue**, and **Purple** team usage.  
 Below is a brief overview (see the individual tool UIs for details and options).
 
 ### 🔴 Red Team Tools
@@ -60,11 +61,12 @@ Below is a brief overview (see the individual tool UIs for details and options).
 
 | Tool Name | Description |
 |-----------|-------------|
-| **Comparer** | Compare strings, hashes, HTTP requests, snippets of code, etc.. |
+| **Text Comparer** | Compare strings, hashes, HTTP requests, snippets of code, etc.. |
 | **CORS Misconfiguration Checker** | Test endpoints for permissive or unsafe CORS responses and highlight risky configurations. |
 | **CVSS v3.1 Calculator** | Calculate CVSS v3.1 base/temporal/environmental scores from vulnerability characteristics. |
 | **Encoder/Decoder** | Encode / decode using many formats: Base64, URL, HTML entities, Unicode, hex, ROT13, binary, Morse, and more. |
 | **Encryption Tool** | Encrypt/decrypt text and files with multiple algorithms and modes, plus HMAC helpers for integrity checks. |
+| **Code Beautifier & Converter** | Beautify, minify, validate, and convert JSON/XML/HTML/CSS/JS/SQL with tree view and statistics. |
 | **Hash Generator** | Compute and compare cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512, etc.) for files and text. |
 | **HTTP Security Headers** | Analyze HTTP response headers and detect missing or misconfigured security headers (CSP, HSTS, X-Frame-Options, etc.). |
 | **JWT Tool** | Decode and inspect JSON Web Tokens, view header/payload, and experiment with signing / verification scenarios. |
@@ -236,7 +238,18 @@ Create a new file: **`tools/hello-world-tool.js`**:
         icon: 'bi-emoji-smile',
         category: 'purple',
         render,
-        init
+        init,
+        // Optional pipeline support (beta)
+        inputTypes: ['text'],
+        outputType: 'text',
+        processPipeline: async (input) => {
+            const now = new Date().toISOString();
+            const message = input ? String(input) : 'Hello from CyberSuite!';
+            return {
+                success: true,
+                output: `${message} (${now})`
+            };
+        }
     });
 })();
 ```
@@ -285,6 +298,7 @@ with this interface:
 - category: "red" | "blue" | "purple"
 - render(): returns HTML string for the tool's UI
 - init(): wires up event handlers and behavior
+- Optional (for future pipeline support): inputTypes (array), outputType (string), processPipeline(input) and renderPipelineOutput(...) to let the tool run inside the Pipeline Mode (Beta).
 
 I will paste four files as CONTEXT:
 1) index.html

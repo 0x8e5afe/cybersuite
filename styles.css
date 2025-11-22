@@ -69,7 +69,6 @@
     border-radius: 8px;
     margin-bottom: 0.5rem;
     transition: all 0.3s ease;
-    padding:20px;
 }
 
 .pipeline-tool-card:hover {
@@ -102,20 +101,6 @@
     animation: arrowPulse 2s ease-in-out infinite;
 }
 
-.pipeline-io-badges .badge-io {
-    font-size: 0.7rem;
-    border: 1px solid var(--terminal-border);
-    background: var(--terminal-card);
-}
-
-.pipeline-io-badges .badge-io i {
-    margin-right: 4px;
-}
-
-.pipeline-embed .section-header {
-    display: none;
-}
-
 @keyframes arrowPulse {
     0%, 100% {
         opacity: 0.5;
@@ -125,6 +110,7 @@
         transform: translateY(3px);
     }
 }
+
 
 /* ========================================
    BASE STYLES
@@ -703,33 +689,6 @@ body::before {
 .tool-card .badge-sm {
     font-size: 0.65rem;
     padding: 0.25rem 0.5rem;
-}
-
-.pipeline-support {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    color: var(--terminal-accent);
-    font-size: 1rem;
-}
-
-.pipeline-add-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 0.3rem 0.6rem;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-
-.pipeline-add-btn-workspace {
-    z-index: 2;
-}
-
-.tool-workspace {
-    position: relative;
 }
 
 /* ========================================
