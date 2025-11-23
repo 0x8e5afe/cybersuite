@@ -100,7 +100,7 @@ function renderAvailableTools() {
                     <div class="fw-bold">${tool.name}</div>
                     <small class="text-muted">${tool.description}</small>
                     <div class="mt-1">
-                        <span class="badge bg-secondary" style="font-size: 0.65rem;">
+                        <span class="badge bg-warning" style="font-size: 0.65rem;">
                             in: ${tool.inputTypes.join(', ')}
                         </span>
                         <span class="badge bg-info" style="font-size: 0.65rem;">

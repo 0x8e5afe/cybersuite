@@ -273,35 +273,50 @@ function initPipeline(context) {
     // ========================================
     // PIPELINE INTEGRATION
     // ========================================
-    async function passwordGeneratorPipelineProcess(input) {
+    async function passwordGeneratorPipelineProcess(input, context = {}) {
         try {
             // Try to read options from the UI if present (pipeline tool box)
-            const lengthEl = document.getElementById('pwdLength');
-            const countEl = document.getElementById('pwdCount');
-            const includeLowerEl = document.getElementById('includeLower');
-            const includeUpperEl = document.getElementById('includeUpper');
-            const includeDigitsEl = document.getElementById('includeDigits');
-            const includeSpecialEl = document.getElementById('includeSpecial');
-            const avoidAmbiguousEl = document.getElementById('avoidAmbiguous');
-            const customCharsEl = document.getElementById('customChars');
-            const hasUI = !!(lengthEl && countEl && includeLowerEl && includeUpperEl && includeDigitsEl && includeSpecialEl && avoidAmbiguousEl && customCharsEl);
-    
-            // Determine desired count from pipeline input (optional override)
-            let countFromInput = 0;
-            if (typeof input === 'number') {
-                countFromInput = input;
-            } else if (typeof input === 'string') {
-                const parsed = parseInt(input.trim(), 10);
-                countFromInput = isNaN(parsed) ? 0 : parsed;
-            } else if (input && typeof input === 'object') {
-                if (typeof input.count === 'number') {
-                    countFromInput = input.count;
-                } else if (typeof input.passwords === 'number') {
-                    countFromInput = input.passwords;
-                } else if (typeof input.n === 'number') {
-                    countFromInput = input.n;
+            const getScopedElement = (id) => {
+                if (context && typeof context.stepIndex === 'number') {
+                    const root = document.getElementById(`pipelineToolBody-${context.stepIndex}`);
+                    if (root) {
+                        const scoped = root.querySelector(`#${id}`);
+                        if (scoped) return scoped;
+                    }
                 }
-            }
+                return document.getElementById(id);
+            };
+
+            const lengthEl = getScopedElement('pwdLength');
+            const countEl = getScopedElement('pwdCount');
+            const includeLowerEl = getScopedElement('includeLower');
+            const includeUpperEl = getScopedElement('includeUpper');
+            const includeDigitsEl = getScopedElement('includeDigits');
+            const includeSpecialEl = getScopedElement('includeSpecial');
+            const avoidAmbiguousEl = getScopedElement('avoidAmbiguous');
+            const customCharsEl = getScopedElement('customChars');
+            const hasUI = !!(lengthEl && countEl && includeLowerEl && includeUpperEl && includeDigitsEl && includeSpecialEl && avoidAmbiguousEl && customCharsEl);
+
+            const normalizeConfig = (raw) => {
+                if (raw == null || raw === '') return null;
+                if (typeof raw === 'number') return { count: raw };
+                if (typeof raw === 'string') {
+                    const trimmed = raw.trim();
+                    if (!trimmed) return null;
+                    const maybeNum = Number(trimmed);
+                    if (Number.isFinite(maybeNum)) return { count: maybeNum };
+                    try {
+                        return JSON.parse(trimmed);
+                    } catch (e) {
+                        return null;
+                    }
+                }
+                if (typeof raw === 'object') return raw;
+                return null;
+            };
+
+            const config = normalizeConfig(input);
+            const countFromInput = config && Number.isFinite(config.count) ? config.count : 0;
     
             // Resolve generation parameters
             let length;
@@ -313,17 +328,26 @@ function initPipeline(context) {
             let avoidAmbiguous;
             let customChars;
     
-            if (hasUI) {
+            if (config && typeof config === 'object') {
+                length = Number.isFinite(config.length) ? config.length : 16;
+                count = Number.isFinite(config.count) && config.count > 0 ? config.count : 1;
+                includeLower = config.includeLower !== false;
+                includeUpper = config.includeUpper !== false;
+                includeDigits = config.includeDigits !== false;
+                includeSpecial = config.includeSpecial !== false;
+                avoidAmbiguous = !!config.avoidAmbiguous;
+                customChars = typeof config.customChars === 'string' ? config.customChars : '';
+            } else if (hasUI) {
                 // Read from UI controls
                 length = parseInt(lengthEl.value, 10) || 16;
-    
+
                 let uiCount = parseInt(countEl.value, 10) || 1;
                 if (Number.isFinite(countFromInput) && countFromInput > 0) {
                     const max = parseInt(countEl.max || '20', 10) || 20;
                     uiCount = Math.min(countFromInput, max);
                 }
                 count = uiCount;
-    
+
                 includeLower = includeLowerEl.checked;
                 includeUpper = includeUpperEl.checked;
                 includeDigits = includeDigitsEl.checked;
@@ -331,13 +355,13 @@ function initPipeline(context) {
                 avoidAmbiguous = avoidAmbiguousEl.checked;
                 customChars = customCharsEl.value || '';
             } else {
-                // Headless mode (no UI available), use defaults
+                // Headless mode (no UI available), use defaults or numeric count
                 if (Number.isFinite(countFromInput) && countFromInput > 0) {
                     count = countFromInput;
                 } else {
                     count = 1;
                 }
-    
+
                 length = 16;
                 includeLower = true;
                 includeUpper = true;
@@ -403,10 +427,10 @@ function initPipeline(context) {
             }
     
             const { html, entropy } = buildPasswordResultsHtml(passwords, charset, length);
-    
+
             return {
                 success: true,
-                output: passwords,
+                output: { passwords },
                 metadata: {
                     source: 'password-generator',
                     count,
@@ -434,10 +458,19 @@ function initPipeline(context) {
         render: render,
         init: init,
         initPipeline: initPipeline,
-        // Pipeline Integration: receives a number (or numeric string/object)
-        // and/or uses its own UI, and returns an array of generated passwords for downstream tools.
-        inputTypes: 'number',
-        outputType: 'json',
-        processPipeline: passwordGeneratorPipelineProcess
+        // Pipeline Integration: single block that emits generated passwords
+        pipelineBlocks: [
+            {
+                id: 'generate',
+                name: 'Password generator',
+                description: 'Generate one or more passwords for downstream blocks',
+                inputTypes: ['json', 'number'],
+                outputType: 'json',
+                processPipeline: passwordGeneratorPipelineProcess,
+                renderPipelineOutput: ({ metadata }) => metadata && metadata.html ? metadata.html : '',
+                hint: 'Input: number (count) or JSON config e.g. {"count":5,"length":12,"includeSpecial":true}. Output: {"passwords":[...]}',
+                disablePipelineInputCard: true
+            }
+        ]
     });
 })();

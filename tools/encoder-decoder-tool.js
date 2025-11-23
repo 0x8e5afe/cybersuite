@@ -608,6 +608,145 @@
         });
     };
 
+    const pipelineExamples = {
+        base64: 'Hello, World!',
+        base64url: 'token+value/with=spaces',
+        url: 'param=value&special=@test',
+        urlDouble: 'q=special value',
+        hex: '48656c6c6f',
+        hexWithPrefix: '\\x48\\x65\\x6c\\x6c\\x6f',
+        html: '<script>alert(1)</script>',
+        htmlDecimal: '&#60;h1&#62;Title&#60;/h1&#62;',
+        unicode: '\\u0041\\u0042\\u0043',
+        rot13: 'uryyb jbeyq',
+        binary: '01001000 01101001',
+        morse: '.... . .-.. .-.. ---'
+    };
+
+    function buildPipelineInputForm({ stepIndex, title, sampleText }) {
+        const suffix = typeof stepIndex === 'number' ? stepIndex : 'encoder';
+        const textareaId = `encoderPipelineInput-${suffix}`;
+        const sampleBtnId = `encoderPipelineSample-${suffix}`;
+        const placeholder = sampleText ? `e.g., ${sampleText}` : 'Enter text to encode or decode';
+
+        return `
+            <div class="card bg-dark pipeline-input-card">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-keyboard"></i>
+                    <div class="d-flex flex-column">
+                        <span>${title || 'Pipeline input'}</span>
+                        <small class="text-secondary">Used when this block starts the pipeline.</small>
+                    </div>
+                    ${
+                        sampleText
+                            ? `<button class="btn btn-sm btn-outline-info ms-auto" type="button" id="${sampleBtnId}">
+                                    <i class="bi bi-magic"></i> Sample
+                               </button>`
+                            : ''
+                    }
+                </div>
+                <div class="card-body">
+                    <textarea
+                        class="form-control font-monospace"
+                        id="${textareaId}"
+                        data-encoder-input
+                        rows="4"
+                        placeholder="${window.escapeHtml(placeholder)}"></textarea>
+                    <small class="text-secondary d-block mt-2">
+                        If this block is first, the pipeline will read from this field.
+                    </small>
+                </div>
+            </div>
+        `;
+    }
+
+    function initEncoderPipelineForm({ stepIndex, sampleText }) {
+        const suffix = typeof stepIndex === 'number' ? stepIndex : 'encoder';
+        const sampleBtn = document.getElementById(`encoderPipelineSample-${suffix}`);
+        const textarea = document.getElementById(`encoderPipelineInput-${suffix}`);
+        if (sampleBtn && textarea) {
+            sampleBtn.addEventListener('click', () => {
+                textarea.value = sampleText || '';
+                textarea.focus();
+            });
+        }
+    }
+
+    function buildPipelineResultHtml({ methodName, mode, input, output }) {
+        const modeLabel = mode === 'decode' ? 'Decode' : 'Encode';
+        const modeColor = mode === 'decode' ? 'info' : 'success';
+        return `
+            <div class="card border-${modeColor}">
+                <div class="card-header bg-${modeColor} d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-arrow-left-right"></i> ${methodName} ${modeLabel}</span>
+                    <span class="badge bg-dark text-light text-uppercase">${modeLabel}</span>
+                </div>
+                <div class="card-body">
+                    <div class="small text-secondary mb-1"><strong>Input (${input.length} chars)</strong></div>
+                    <code class="d-block mb-2 text-break">${window.escapeHtml(input.substring(0, 200))}${input.length > 200 ? '...' : ''}</code>
+                    <div class="small text-success mb-1"><strong>Output (${output.length} chars)</strong></div>
+                    <div class="alert alert-${modeColor} mb-0 py-2">
+                        <strong class="user-select-all">${window.escapeHtml(output)}</strong>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function encoderPipelineProcess(input, methodKey, context = {}, modeOverride = 'encode') {
+        const method = encodingMethods[methodKey];
+        if (!method) {
+            return { success: false, error: `Unknown encoding method: ${methodKey}` };
+        }
+
+        const mode = modeOverride || 'encode';
+
+        let text = input;
+        if (context && context.isFirst) {
+            const scoped = typeof context.stepIndex === 'number'
+                ? document.querySelector(`#pipelineToolBody-${context.stepIndex} textarea[data-encoder-input]`)
+                : null;
+            if (scoped && typeof scoped.value === 'string') {
+                text = scoped.value;
+            }
+        }
+
+        if (typeof text !== 'string') {
+            return { success: false, error: 'Encoder/decoder pipeline blocks require text input. If this is the first block, enter text in the block form; otherwise ensure the previous block outputs text.' };
+        }
+
+        if (!text.trim()) {
+            return { success: false, error: 'Encoder/decoder pipeline blocks received empty text input.' };
+        }
+
+        try {
+            const fn = mode === 'decode' ? method.decode : method.encode;
+            const output = fn(text);
+            const html = buildPipelineResultHtml({
+                methodName: method.name,
+                mode,
+                input: text,
+                output
+            });
+
+            return {
+                success: true,
+                output,
+                metadata: {
+                    source: 'encoder-decoder',
+                    method: method.name,
+                    mode,
+                    html
+                }
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: `Failed to ${mode} with ${method.name}: ${error.message || error}`
+            };
+        }
+    }
+
     // Register the tool
     window.registerCyberSuiteTool({
         id: 'encoder-decoder',
@@ -616,6 +755,64 @@
         icon: 'bi-arrow-left-right',
         category: 'purple',
         render: render,
-        init: init
+        init: init,
+        pipelineBlocks: Object.entries(encodingMethods).flatMap(([key, method]) => ([
+            {
+                id: `to-${key}`,
+                name: `To ${method.name}`,
+                description: `${method.description} (encode)`,
+                inputTypes: ['text'],
+                outputType: 'text',
+                processPipeline: (input, ctx) => encoderPipelineProcess(input, key, ctx, 'encode'),
+                renderPipelineOutput: ({ metadata, output }) => (metadata && metadata.html) ? metadata.html : buildPipelineResultHtml({
+                    methodName: method.name,
+                    mode: 'encode',
+                    input: '',
+                    output: output || ''
+                }),
+                hint: `Input: string. Output: encoded string. Example input: ${pipelineExamples[key] || 'sample text'}.`,
+                baseToolId: 'encoder-decoder',
+                renderPipelineForm: ({ stepIndex }) => buildPipelineInputForm({
+                    stepIndex,
+                    title: `${method.name} input`,
+                    sampleText: pipelineExamples[key] || ''
+                }),
+                renderPipelineInputs: () => '',
+                initPipeline: ({ index }) => initEncoderPipelineForm({
+                    stepIndex: index,
+                    sampleText: pipelineExamples[key] || ''
+                }),
+                forcePipelineInputCard: true,
+                suppressBaseRender: true
+            },
+            {
+                id: `from-${key}`,
+                name: `From ${method.name}`,
+                description: `${method.description} (decode)`,
+                inputTypes: ['text'],
+                outputType: 'text',
+                processPipeline: (input, ctx) => encoderPipelineProcess(input, key, ctx, 'decode'),
+                renderPipelineOutput: ({ metadata, output }) => (metadata && metadata.html) ? metadata.html : buildPipelineResultHtml({
+                    methodName: method.name,
+                    mode: 'decode',
+                    input: '',
+                    output: output || ''
+                }),
+                hint: `Input: encoded string. Output: decoded string. Example input: ${pipelineExamples[key] || 'sample text'}.`,
+                baseToolId: 'encoder-decoder',
+                renderPipelineForm: ({ stepIndex }) => buildPipelineInputForm({
+                    stepIndex,
+                    title: `${method.name} input`,
+                    sampleText: pipelineExamples[key] || ''
+                }),
+                renderPipelineInputs: () => '',
+                initPipeline: ({ index }) => initEncoderPipelineForm({
+                    stepIndex: index,
+                    sampleText: pipelineExamples[key] || ''
+                }),
+                forcePipelineInputCard: true,
+                suppressBaseRender: true
+            }
+        ]))
     });
 })();
