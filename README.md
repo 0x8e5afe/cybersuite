@@ -32,13 +32,17 @@ Everything runs **completely client-side**: no backend, no external dependency c
 - **🔒 Privacy First**: All processing happens locally  
 - **🧩 Modular Architecture**: Easy to extend with new tools  
 - **📱 Mobile Friendly**: Works on desktop, tablet, and mobile  
-- **🔗 Pipeline Mode (Beta)**: Chain supported tools into multi-step workflows; add tools, reorder, and run them as a mini processing pipeline.
+- **🔗 Pipeline Mode (Experimental)**: Chain supported features into multi-step workflows; add blocks, reorder, and run them as a mini processing pipeline.
 
 ---
 
 ## 🧰 Tools Overview
 
+<<<<<<< HEAD
 CyberSuite ships with 26 tools, grouped by **Red**, **Blue**, and **Purple** team usage.  
+=======
+CyberSuite ships with **25 tools**, grouped by **Red**, **Blue**, and **Purple** team usage.  
+>>>>>>> refs/remotes/origin/main
 Below is a brief overview (see the individual tool UIs for details and options).
 
 ### 🔴 Red Team Tools
@@ -143,6 +147,7 @@ The loading flow is:
 2. `app.js` defines the core UI, categories, and `window.registerCyberSuiteTool`  
 3. `app.js` dynamically loads every file listed in `const toolFiles = [...]`  
 4. Each tool file registers itself with `registerCyberSuiteTool({ ... })` and provides its own UI and logic  
+5. (Optional) Tools can expose **multiple pipeline blocks** via `pipelineBlocks` (each block declares its own `inputTypes`, `outputType`, `processPipeline`, and optional `renderPipelineForm`/`renderPipelineOutput`).  
 
 No bundler, no build step: everything is static.
 
@@ -240,7 +245,7 @@ Create a new file: **`tools/hello-world-tool.js`**:
         category: 'purple',
         render,
         init,
-        // Optional pipeline support (beta)
+        // Optional pipeline support (experimental)
         inputTypes: ['text'],
         outputType: 'text',
         processPipeline: async (input) => {
@@ -274,12 +279,48 @@ Reload the page. You should see **Hello World** in the tool list, categorized un
 
 ---
 
+### 4. (Optional) Add a Pipeline Block
+
+Pipeline blocks let a single tool expose multiple pipeline-friendly behaviors (e.g., "Encode" and "Decode" blocks from the same tool). Minimal example:
+
+```js
+window.registerCyberSuiteTool({
+  id: 'hello-world',
+  name: 'Hello World',
+  description: 'Simple demo',
+  icon: 'bi-emoji-smile',
+  category: 'purple',
+  render: () => '<div class="p-3">Hello from render()</div>',
+  init: () => {},
+  pipelineBlocks: [
+    {
+      id: 'shout',
+      name: 'Hello pipeline',
+      inputTypes: ['text'],
+      outputType: 'text',
+      renderPipelineForm: ({ stepIndex }) => `
+        <textarea class="form-control" id="hello-input-${stepIndex}" rows="3" placeholder="Say hello"></textarea>
+      `,
+      initPipeline: ({ index }) => {
+        const el = document.getElementById(`hello-input-${index}`);
+        if (el) el.value = 'Hello pipeline!';
+      },
+      processPipeline: (input, ctx) => {
+        const scoped = document.getElementById(`hello-input-${ctx.stepIndex}`);
+        const val = scoped && scoped.value ? scoped.value : (input || 'Hello');
+        return { success: true, output: `${val} 🚀` };
+      }
+    }
+  ]
+});
+```
+
 ## 🤖 Example LLM Prompt to Generate a New Tool
 
 CyberSuite plays nicely with LLMs like Claude / GPT.  
 A practical workflow is:
 
-1. Copy `index.html`, `styles.css`, `app.js` and one existing tool file (as a reference)  
+1. Copy `index.html`, `styles.css`, `app.js`, `pipeline.js` and one existing tool file (as a reference)  
 2. Paste them into your LLM prompt  
 3. Ask the LLM to create a new tool that follows the same registration pattern  
 
@@ -299,13 +340,14 @@ with this interface:
 - category: "red" | "blue" | "purple"
 - render(): returns HTML string for the tool's UI
 - init(): wires up event handlers and behavior
-- Optional (for future pipeline support): inputTypes (array), outputType (string), processPipeline(input) and renderPipelineOutput(...) to let the tool run inside the Pipeline Mode (Beta).
+- Optional pipeline support: `inputTypes` (array), `outputType` (string), `processPipeline(input, ctx)`, `pipelineBlocks` (array of blocks with their own `id/name/inputTypes/outputType/processPipeline`), and `renderPipelineOutput`/`renderPipelineForm` hooks to run inside the Pipeline Mode (Experimental).
 
-I will paste four files as CONTEXT:
+I will paste five files as CONTEXT:
 1) index.html
 2) styles.css
-2) app.js
-3) one existing example tool file from tools/
+3) app.js
+4) pipeline.js
+5) one existing example tool file from tools/
 
 Please READ them to understand the structure, CSS classes, and JavaScript utilities.
 

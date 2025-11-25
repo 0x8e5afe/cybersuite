@@ -1172,7 +1172,91 @@ function buildTreeView(data, path = '', query = '') {
     // PIPELINE INTEGRATION
     // ========================================
 
-    async function beautifierPipelineProcess(input) {
+    function renderBeautifierPipelineForm(expectedFormat, stepIndex) {
+        const suffix = typeof stepIndex === 'number' ? stepIndex : expectedFormat;
+        const textareaId = `beautifierPipelineInput-${expectedFormat}-${suffix}`;
+        const statusId = `${textareaId}-status`;
+        const sampleBtnId = `${textareaId}-sample`;
+        const placeholder = expectedFormat === 'xml'
+            ? '<root>\n  <item>Value</item>\n</root>'
+            : '{\n  "name": "CyberSuite",\n  "valid": true\n}';
+        const title = expectedFormat === 'xml' ? 'XML pipeline input' : 'JSON pipeline input';
+
+        return `
+            <div class="card bg-dark pipeline-input-card">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-code-slash"></i>
+                    <span>${title}</span>
+                    <button class="btn btn-sm btn-outline-info ms-auto" type="button" id="${sampleBtnId}">
+                        <i class="bi bi-magic"></i> Sample
+                    </button>
+                </div>
+                <div class="card-body">
+                    <textarea
+                        class="form-control font-monospace"
+                        id="${textareaId}"
+                        rows="6"
+                        placeholder="${window.escapeHtml(placeholder)}"
+                        spellcheck="false"
+                    ></textarea>
+                    <div id="${statusId}" class="text-secondary small mt-2">Provide valid ${expectedFormat.toUpperCase()} to start the pipeline.</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function initBeautifierPipelineForm(expectedFormat, context = {}) {
+        const suffix = typeof context.index === 'number' ? context.index : expectedFormat;
+        const textareaId = `beautifierPipelineInput-${expectedFormat}-${suffix}`;
+        const statusId = `${textareaId}-status`;
+        const sampleBtnId = `${textareaId}-sample`;
+
+        const textarea = document.getElementById(textareaId);
+        const status = document.getElementById(statusId);
+        const sampleBtn = document.getElementById(sampleBtnId);
+
+        const sampleValue = expectedFormat === 'xml'
+            ? '<root>\n  <item>Value</item>\n</root>'
+            : '{\n  "name": "CyberSuite",\n  "valid": true\n}';
+
+        const setStatus = (msg, cls) => {
+            if (!status) return;
+            status.textContent = msg;
+            status.className = `small mt-2 ${cls}`;
+        };
+
+        const validate = () => {
+            if (!textarea) return;
+            const val = textarea.value.trim();
+            if (!val) {
+                setStatus(`Provide valid ${expectedFormat.toUpperCase()} to start the pipeline.`, 'text-secondary');
+                return;
+            }
+            try {
+                if (expectedFormat === 'xml') {
+                    parseXML(val);
+                } else {
+                    JSON.parse(val);
+                }
+                setStatus('Looks valid.', 'text-success');
+            } catch (e) {
+                setStatus(`Invalid ${expectedFormat.toUpperCase()}: ${e.message}`, 'text-danger');
+            }
+        };
+
+        if (textarea) {
+            textarea.addEventListener('input', validate);
+        }
+        if (sampleBtn && textarea) {
+            sampleBtn.addEventListener('click', () => {
+                textarea.value = sampleValue;
+                validate();
+                textarea.focus();
+            });
+        }
+    }
+
+    async function beautifierPipelineProcess(input, expectedFormat = 'any', context = {}) {
         try {
             let dataObj;
             let workingInput = input;
@@ -1184,8 +1268,44 @@ function buildTreeView(data, path = '', query = '') {
                 return false;
             };
 
-            if (isEmptyValue(workingInput)) {
-                const inputArea = document.getElementById('beautifierInput');
+            const getScopedElement = (id) => {
+                if (context && typeof context.stepIndex === 'number') {
+                    const root = document.getElementById(`pipelineToolBody-${context.stepIndex}`);
+                    if (root) {
+                        const scoped = root.querySelector(`#${id}`);
+                        if (scoped) return scoped;
+                    }
+                }
+                return document.getElementById(id);
+            };
+
+            const firstInputId = `beautifierPipelineInput-${expectedFormat}-${typeof context.stepIndex === 'number' ? context.stepIndex : expectedFormat}`;
+            const firstInputEl = getScopedElement(firstInputId);
+            const useFirstInput = context && context.isFirst && firstInputEl;
+
+            if (useFirstInput) {
+                const raw = (firstInputEl.value || '').trim();
+                if (!raw) {
+                    return {
+                        success: false,
+                        error: `Beautifier ${expectedFormat.toUpperCase()} input is required for the first step.`
+                    };
+                }
+                try {
+                    if (expectedFormat === 'xml') {
+                        parseXML(raw);
+                    } else {
+                        JSON.parse(raw);
+                    }
+                    workingInput = raw;
+                } catch (e) {
+                    return {
+                        success: false,
+                        error: `Invalid ${expectedFormat.toUpperCase()} in pipeline input: ${e.message}`
+                    };
+                }
+            } else if (isEmptyValue(workingInput)) {
+                const inputArea = getScopedElement('beautifierInput');
                 if (inputArea && inputArea.value.trim().length > 0) {
                     workingInput = inputArea.value;
                 }
@@ -1194,14 +1314,15 @@ function buildTreeView(data, path = '', query = '') {
             // Accept either a JSON string, XML string, or a plain JS object
             if (typeof workingInput === 'string') {
                 const trimmed = workingInput.trim();
-                if (trimmed.startsWith('<')) {
+                const wantsXml = expectedFormat === 'xml';
+                if (wantsXml || trimmed.startsWith('<')) {
                     try {
                         dataObj = parseXML(trimmed);
                         detectedFormat = 'xml';
                     } catch (e) {
                         return {
                             success: false,
-                            error: 'Beautifier pipeline expected valid XML or JSON; XML parse failed: ' + e.message
+                            error: 'Beautifier pipeline expected valid XML; parse failed: ' + e.message
                         };
                     }
                 } else {
@@ -1216,6 +1337,12 @@ function buildTreeView(data, path = '', query = '') {
                     }
                 }
             } else if (workingInput !== null && typeof workingInput === 'object') {
+                if (expectedFormat === 'xml') {
+                    return {
+                        success: false,
+                        error: 'Beautifier XML block expects XML text input.'
+                    };
+                }
                 dataObj = workingInput;
                 detectedFormat = 'json';
             } else {
@@ -1259,13 +1386,13 @@ function buildTreeView(data, path = '', query = '') {
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>
                             <i class="bi bi-magic"></i>
-                            Beautified JSON (Pipeline)
+                            Beautified ${detectedFormat.toUpperCase()} (Pipeline)
                         </span>
                         <span class="badge bg-secondary">Beautifier</span>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Pretty JSON</label>
+                            <label class="form-label">Pretty ${detectedFormat.toUpperCase()}</label>
                             <pre class="mb-0"><code>${window.escapeHtml(prettyJson)}</code></pre>
                         </div>
                         ${
@@ -1302,15 +1429,15 @@ function buildTreeView(data, path = '', query = '') {
                 </div>
             `;
 
-            // Try to sync the beautifier UI if it is rendered (single-tool mode)
+            // Try to sync the beautifier UI if it is rendered (single-tool or pipeline start)
             try {
-                const inputArea       = document.getElementById('beautifierInput');
-                const outputArea      = document.getElementById('beautifierOutput');
-                const validation      = document.getElementById('beautifierValidation');
-                const formatBadge     = document.getElementById('detectedFormat');
-                const conversionBtns  = document.getElementById('conversionButtons');
-                const treeContainer   = document.getElementById('beautifierTree');
-                const statsContainer  = document.getElementById('beautifierStats');
+                const inputArea       = getScopedElement('beautifierInput');
+                const outputArea      = getScopedElement('beautifierOutput');
+                const validation      = getScopedElement('beautifierValidation');
+                const formatBadge     = getScopedElement('detectedFormat');
+                const conversionBtns  = getScopedElement('conversionButtons');
+                const treeContainer   = getScopedElement('beautifierTree');
+                const statsContainer  = getScopedElement('beautifierStats');
 
                 if (inputArea) {
                     inputArea.value = prettyJson;
@@ -1341,12 +1468,12 @@ function buildTreeView(data, path = '', query = '') {
 
             return {
                 success: true,
-                // Keep JSON as an object so next tools in the chain (if any) can consume it
-                output: dataObj,
+                // Keep JSON as an object; for XML return beautified string
+                output: detectedFormat === 'xml' ? prettyJson : dataObj,
                 metadata: {
                     prettyPrinted: true,
                     source: 'beautifier-tool',
-                    type: 'json',
+                    type: detectedFormat,
                     treeHtml,
                     stats,
                     html
@@ -1369,72 +1496,131 @@ function buildTreeView(data, path = '', query = '') {
         category: 'purple',
         render: render,
         init: init,
-        // Pipeline integration: this tool is typically used after the JWT tool
-        // which decodes a JWT into a JSON payload.
-        inputTypes: ['json', 'xml'], // accept JSON or XML
-        outputType: 'json',
-        processPipeline: beautifierPipelineProcess,
-        renderPipelineOutput: function({ output, metadata }) {
-            if (metadata && typeof metadata.html === 'string') {
-                return metadata.html;
-            }
+        // Pipeline integration split into JSON and XML blocks
+        pipelineBlocks: [
+            {
+                id: 'json',
+                name: 'Beautify JSON',
+                description: 'Pretty print JSON with tree view and stats',
+                inputTypes: ['json'],
+                outputType: 'json',
+                processPipeline: (input, ctx) => beautifierPipelineProcess(input, 'json', ctx),
+                renderPipelineForm: ({ stepIndex }) => renderBeautifierPipelineForm('json', stepIndex),
+                initPipeline: ({ index }) => initBeautifierPipelineForm('json', { index }),
+                renderPipelineOutput: function({ output, metadata }) {
+                    if (metadata && typeof metadata.html === 'string') {
+                        return metadata.html;
+                    }
 
-            // Fallback: rebuild a simple view if html is missing
-            let treeHtml = metadata && metadata.treeHtml ? metadata.treeHtml : '';
-            let statsHtml = '';
-            if (metadata && metadata.stats) {
-                statsHtml = buildBeautifierStatsHtml(metadata.stats);
-            }
+                    let treeHtml = metadata && metadata.treeHtml ? metadata.treeHtml : '';
+                    let statsHtml = '';
+                    if (metadata && metadata.stats) {
+                        statsHtml = buildBeautifierStatsHtml(metadata.stats);
+                    }
 
-            const prettyJson = JSON.stringify(output, null, 2);
+                    const prettyJson = JSON.stringify(output, null, 2);
 
-            return `
-                <div class="card bg-dark border-secondary">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>
-                            <i class="bi bi-magic"></i>
-                            Beautified JSON (Pipeline)
-                        </span>
-                        <span class="badge bg-secondary">Beautifier</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label">Pretty JSON</label>
-                            <pre class="mb-0"><code>${window.escapeHtml(prettyJson)}</code></pre>
+                    return `
+                        <div class="card bg-dark border-secondary">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>
+                                    <i class="bi bi-magic"></i>
+                                    Beautified JSON (Pipeline)
+                                </span>
+                                <span class="badge bg-secondary">Beautifier</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Pretty JSON</label>
+                                    <pre class="mb-0"><code>${window.escapeHtml(prettyJson)}</code></pre>
+                                </div>
+                                ${
+                                    treeHtml
+                                        ? `
+                                            <hr class="text-secondary" />
+                                            <div>
+                                                <h6 class="small text-uppercase text-secondary mb-2">
+                                                    <i class="bi bi-diagram-3"></i> Tree View
+                                                </h6>
+                                                <div class="beautifier-tree-view">
+                                                    ${treeHtml}
+                                                </div>
+                                            </div>
+                                          `
+                                        : ''
+                                }
+                                ${
+                                    statsHtml
+                                        ? `
+                                            <hr class="text-secondary" />
+                                            <div>
+                                                <h6 class="small text-uppercase text-secondary mb-2">
+                                                    <i class="bi bi-graph-up"></i> Statistics
+                                                </h6>
+                                                <div class="row g-3">
+                                                    ${statsHtml}
+                                                </div>
+                                            </div>
+                                          `
+                                        : ''
+                                }
+                            </div>
                         </div>
-                        ${
-                            treeHtml
-                                ? `
-                                    <hr class="text-secondary" />
-                                    <div>
-                                        <h6 class="small text-uppercase text-secondary mb-2">
-                                            <i class="bi bi-diagram-3"></i> Tree View
-                                        </h6>
-                                        <div class="beautifier-tree-view">
-                                            ${treeHtml}
-                                        </div>
-                                    </div>
-                                  `
-                                : ''
-                        }
-                        ${
-                            statsHtml
-                                ? `
-                                    <hr class="text-secondary" />
-                                    <div>
-                                        <h6 class="small text-uppercase text-secondary mb-2">
-                                            <i class="bi bi-graph-up"></i> Statistics
-                                        </h6>
-                                        <div class="row g-3">
-                                            ${statsHtml}
-                                        </div>
-                                    </div>
-                                  `
-                                : ''
-                        }
-                    </div>
-                </div>
-            `;
-        }
+                    `;
+                },
+                hint: 'Input: JSON string or object. Output: pretty JSON + stats.'
+            },
+            {
+                id: 'xml',
+                name: 'Beautify XML',
+                description: 'Pretty print XML with tree view',
+                inputTypes: ['xml'],
+                outputType: 'text',
+                processPipeline: (input, ctx) => beautifierPipelineProcess(input, 'xml', ctx),
+                renderPipelineForm: ({ stepIndex }) => renderBeautifierPipelineForm('xml', stepIndex),
+                initPipeline: ({ index }) => initBeautifierPipelineForm('xml', { index }),
+                renderPipelineOutput: function({ metadata, output }) {
+                    if (metadata && typeof metadata.html === 'string') {
+                        return metadata.html;
+                    }
+                    const treeHtml = metadata && metadata.treeHtml ? metadata.treeHtml : '';
+                    const prettyXml = typeof output === 'string' ? output : '';
+                    return `
+                        <div class="card bg-dark border-secondary">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>
+                                    <i class="bi bi-magic"></i>
+                                    Beautified XML (Pipeline)
+                                </span>
+                                <span class="badge bg-secondary">Beautifier</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Pretty XML</label>
+                                    <pre class="mb-0"><code>${window.escapeHtml(prettyXml)}</code></pre>
+                                </div>
+                                ${
+                                    treeHtml
+                                        ? `
+                                            <hr class="text-secondary" />
+                                            <div>
+                                                <h6 class="small text-uppercase text-secondary mb-2">
+                                                    <i class="bi bi-diagram-3"></i> Tree View
+                                                </h6>
+                                                <div class="beautifier-tree-view">
+                                                    ${treeHtml}
+                                                </div>
+                                            </div>
+                                          `
+                                        : ''
+                                }
+                            </div>
+                        </div>
+                    `;
+                },
+                hint: 'Input: XML string. Output: pretty XML and tree view.'
+            }
+        ],
+        processPipeline: (input, ctx) => beautifierPipelineProcess(input, 'any', ctx)
     });
 })();

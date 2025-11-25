@@ -175,12 +175,27 @@ let pipelineToolSearchQuery = '';
 const pipelineEnabledToolIds = new Set([
     'password-generator',
     'password-cracker',
-    'beautifier'
+    'beautifier',
+    'encoder-decoder'
 ]);
 const pipelineToolEnabled = tool => tool && pipelineEnabledToolIds.has(tool.id);
-// Some tools should not start the chain (e.g., Beautifier expects upstream data)
-const pipelineDisallowFirst = new Set(['beautifier']);
+// Some tools might be restricted from starting the chain (currently all allowed)
+const pipelineDisallowFirst = new Set();
 const pipelineToolCanBeFirst = tool => tool && !pipelineDisallowFirst.has(tool.id);
+
+// Helper to normalize IO types
+const normalizeIoTypes = (value, fallback = ['any']) => {
+    if (Array.isArray(value)) {
+        return value.filter(Boolean);
+    }
+    if (typeof value === 'string' && value.trim() !== '') {
+        return [value.trim()];
+    }
+    if (value == null || value === '') {
+        return fallback.slice();
+    }
+    return [String(value)];
+};
 
 // ========================================
 // TOOL REGISTRATION SYSTEM (ENHANCED)
@@ -203,20 +218,8 @@ const pipelineToolCanBeFirst = tool => tool && !pipelineDisallowFirst.has(tool.i
  */
 window.registerCyberSuiteTool = function(toolConfig) {
 
-    if (!Array.isArray(toolConfig.inputTypes)) {
-        if (typeof toolConfig.inputTypes === 'string' && toolConfig.inputTypes.trim() !== '') {
-            toolConfig.inputTypes = [toolConfig.inputTypes.trim()];
-        } else if (toolConfig.inputTypes == null) {
-            toolConfig.inputTypes = [];
-        } else {
-            // Fallback: coerce non-array, non-string inputTypes into an array
-            toolConfig.inputTypes = [String(toolConfig.inputTypes)];
-        }
-    }
-
-    if (typeof toolConfig.outputType !== 'string' || !toolConfig.outputType.trim()) {
-        toolConfig.outputType = 'json';
-    }
+    toolConfig.inputTypes = normalizeIoTypes(toolConfig.inputTypes, ['text']);
+    toolConfig.outputType = (typeof toolConfig.outputType === 'string' && toolConfig.outputType.trim()) ? toolConfig.outputType : 'json';
     
     const required = ['id', 'name', 'description', 'icon', 'category', 'render', 'init'];
     for (const field of required) {
@@ -237,11 +240,37 @@ window.registerCyberSuiteTool = function(toolConfig) {
     }
 
     // Pipeline-related defaults
-    if (!toolConfig.inputTypes) toolConfig.inputTypes = ['text'];
-    if (!toolConfig.outputType) toolConfig.outputType = 'text';
     if (!toolConfig.processPipeline) {
         toolConfig.processPipeline = async (input) => ({ success: false, error: 'Pipeline not supported' });
     }
+
+    // Normalize pipeline block definitions; each tool can expose multiple pipeline blocks
+    const pipelineBlocks = Array.isArray(toolConfig.pipelineBlocks) && toolConfig.pipelineBlocks.length
+        ? toolConfig.pipelineBlocks
+        : [{ id: 'default' }];
+
+    toolConfig.__pipelineBlocks = pipelineBlocks.map((blockDef, idx) => {
+        const blockId = blockDef.id || `block-${idx}`;
+        const renderForm = blockDef.renderPipelineInputs || blockDef.renderPipelineForm || toolConfig.render;
+        const initForm = blockDef.initPipeline || toolConfig.initPipeline || toolConfig.init;
+
+        return {
+            id: `${toolConfig.id}::${blockId}`,
+            blockKey: blockId,
+            name: blockDef.name || toolConfig.name,
+            description: blockDef.description || toolConfig.description,
+            icon: toolConfig.icon,
+            category: toolConfig.category,
+            inputTypes: normalizeIoTypes(blockDef.inputTypes, toolConfig.inputTypes),
+            outputType: (typeof blockDef.outputType === 'string' && blockDef.outputType.trim()) ? blockDef.outputType : toolConfig.outputType,
+            processPipeline: blockDef.processPipeline || toolConfig.processPipeline,
+            renderPipelineOutput: blockDef.renderPipelineOutput || toolConfig.renderPipelineOutput,
+            renderPipelineForm: renderForm,
+            initPipeline: initForm,
+            baseTool: toolConfig,
+            hint: blockDef.hint || ''
+        };
+    });
     
     window.CYBERSUITE_TOOLS.push(toolConfig);
     console.log(`✓ Registered tool: ${toolConfig.name} [in:${toolConfig.inputTypes.join(',')} → out:${toolConfig.outputType}]`);
@@ -263,9 +292,10 @@ window.switchMode = function(mode) {
     const pipelineToggle = document.querySelector('.mode-btn[data-mode="pipeline"]');
     if (pipelineToggle) {
         const isPipeline = mode === 'pipeline';
-        pipelineToggle.innerHTML = isPipeline
-            ? '<i class="bi bi-stack"></i> Normal mode'
-            : '<i class="bi bi-stack"></i> Pipeline Mode (Beta)';
+        pipelineToggle.innerHTML = `
+            <span class="mode-icon"><i class="bi ${isPipeline ? 'bi-square-fill' : 'bi-stack'}"></i></span>
+            <span class="mode-label">${isPipeline ? 'Normal mode' : 'Pipeline Mode (Experimental)'}</span>
+        `;
         pipelineToggle.onclick = () => switchMode(isPipeline ? 'single' : 'pipeline');
     }
     
@@ -284,6 +314,9 @@ window.switchMode = function(mode) {
             renderPipelineChain();
             renderAvailableTools();
             updateExecuteButton();
+            if (window.bootstrap && bootstrap.Tooltip) {
+                document.querySelectorAll('#pipelineMode [data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+            }
         }
     }
 };
@@ -291,6 +324,21 @@ window.switchMode = function(mode) {
 // ========================================
 // PIPELINE MANAGEMENT
 // ========================================
+
+function getPipelineBlocks() {
+    const blocks = [];
+    window.CYBERSUITE_TOOLS.forEach(tool => {
+        if (!pipelineToolEnabled(tool)) return;
+        if (Array.isArray(tool.__pipelineBlocks)) {
+            tool.__pipelineBlocks.forEach(b => blocks.push(b));
+        }
+    });
+    return blocks;
+}
+
+function findPipelineBlock(blockId) {
+    return getPipelineBlocks().find(b => b.id === blockId);
+}
 
 function setupPipelineSearch() {
     const searchInput = document.getElementById('pipelineToolSearch');
@@ -338,28 +386,23 @@ function renderAvailableTools() {
     const query = (pipelineToolSearchQuery || '').trim();
     const queryLower = query.toLowerCase();
     
-    const availableTools = window.CYBERSUITE_TOOLS.filter(tool => {
-        // Pipeline beta exposes only a small subset of tools
-        if (!pipelineToolEnabled(tool)) return false;
-
+    const availableBlocks = getPipelineBlocks().filter(block => {
+        if (pipelineChain.find(t => t.id === block.id)) return false;
         // Search filter
         if (query) {
-            const nameMatch = (tool.name || '').toLowerCase().includes(queryLower);
-            const descMatch = (tool.description || '').toLowerCase().includes(queryLower);
+            const nameMatch = (block.name || '').toLowerCase().includes(queryLower);
+            const descMatch = (block.description || '').toLowerCase().includes(queryLower);
             if (!nameMatch && !descMatch) return false;
         }
-
-        // Tool already in chain
-        if (pipelineChain.find(t => t.id === tool.id)) return false;
         
         // If chain is empty, all tools available
-        if (!lastTool) return pipelineToolCanBeFirst(tool);
+        if (!lastTool) return pipelineToolCanBeFirst(block.baseTool);
         
         // Check if tool accepts output from last tool
-        return tool.inputTypes.includes(expectedInputType) || tool.inputTypes.includes('any');
+        return block.inputTypes.includes(expectedInputType) || block.inputTypes.includes('any');
     });
     
-    if (availableTools.length === 0) {
+    if (availableBlocks.length === 0) {
         const searchMsg = query
             ? `No pipeline tools match "${window.escapeHtml(pipelineToolSearchQuery)}".`
             : `No compatible tools available. Current chain output type: <strong>${expectedInputType || 'any'}</strong>`;
@@ -371,37 +414,62 @@ function renderAvailableTools() {
         return;
     }
     
-    container.innerHTML = availableTools.map(tool => `
-        <div class="available-tool-card" onclick="addToolToPipeline('${tool.id}')">
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi ${tool.icon} fs-5"></i>
-                <div class="flex-grow-1">
-                    <div class="fw-bold">${tool.name}</div>
-                    <small class="text-muted">${tool.description}</small>
-                    <div class="mt-1">
-                        <span class="badge bg-secondary" style="font-size: 0.65rem;">
-                            in: ${tool.inputTypes.join(', ')}
-                        </span>
-                        <span class="badge bg-info" style="font-size: 0.65rem;">
-                            out: ${tool.outputType}
-                        </span>
+    const grouped = availableBlocks.reduce((acc, block) => {
+        const key = block.baseTool?.id || 'other';
+        if (!acc[key]) acc[key] = { tool: block.baseTool, blocks: [] };
+        acc[key].blocks.push(block);
+        return acc;
+    }, {});
+
+    container.innerHTML = Object.values(grouped).map(group => `
+        <div class="mb-3 available-tool-group">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi ${group.tool?.icon || 'bi-stack'} me-2"></i>
+                <strong>${group.tool?.name || 'Tool'}</strong>
+            </div>
+            ${group.blocks.map(block => `
+                <div class="available-tool-card mb-2" onclick="addToolToPipeline('${block.id}')">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi ${block.icon} fs-5"></i>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold d-flex align-items-center gap-1">
+                                <span>${block.name}</span>
+                                <i class="bi bi-question-circle-fill text-info hint-icon"
+                                   title="${window.escapeHtml(block.hint || `Input: ${block.inputTypes.join(', ')} → Output: ${block.outputType}`)}"
+                                   data-bs-toggle="tooltip"></i>
+                            </div>
+                            <small class="text-muted">${block.description}</small>
+                            <div class="mt-1">
+                                <span class="badge bg-warning" style="font-size: 0.65rem;">
+                                    in: ${block.inputTypes.join(', ')}
+                                </span>
+                                <span class="badge bg-info" style="font-size: 0.65rem;">
+                                    out: ${block.outputType}
+                                </span>
+                            </div>
+                        </div>
+                        <i class="bi bi-plus-circle text-success fs-4"></i>
                     </div>
                 </div>
-                <i class="bi bi-plus-circle text-success fs-4"></i>
-            </div>
+            `).join('')}
         </div>
     `).join('');
+
+    if (window.bootstrap && bootstrap.Tooltip) {
+        container.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+    }
 }
 
 window.addToolToPipeline = function(toolId) {
-    const tool = window.CYBERSUITE_TOOLS.find(t => t.id === toolId);
-    if (!tool || !pipelineToolEnabled(tool)) return;
-    if (pipelineChain.length === 0 && !pipelineToolCanBeFirst(tool)) {
+    const block = findPipelineBlock(toolId);
+    if (!block || !pipelineToolEnabled(block.baseTool)) return;
+    if (pipelineChain.length === 0 && !pipelineToolCanBeFirst(block.baseTool)) {
         alert('This tool cannot be the first step in the pipeline. Please add another tool before it.');
         return;
     }
     
-    pipelineChain.push(tool);
+    pipelineChain.push(block);
+    resetPipelineOutput();
     renderPipelineChain();
     renderAvailableTools();
     updateExecuteButton();
@@ -414,7 +482,7 @@ function renderPipelineChain() {
     if (pipelineChain.length === 0) {
         container.innerHTML = `
             <div class="text-center text-muted py-5">
-                <i class="bi bi-diagram-3 fs-1"></i>
+                <i class="bi bi-stack fs-1"></i>
                 <p class="mt-2">No tools in pipeline yet. Add tools from the left panel.</p>
             </div>
         `;
@@ -422,6 +490,14 @@ function renderPipelineChain() {
         if (compatEmpty) {
             compatEmpty.textContent = 'Empty';
             compatEmpty.className = 'badge bg-secondary ms-2';
+        }
+        const clearBtn = document.getElementById('clearPipelineBtn');
+        if (clearBtn) {
+            clearBtn.style.display = 'none';
+        }
+        const chainCount = document.getElementById('chainCount');
+        if (chainCount) {
+            chainCount.textContent = '';
         }
         const inputInfoEmpty = document.getElementById('inputTypeInfo');
         if (inputInfoEmpty) {
@@ -431,29 +507,38 @@ function renderPipelineChain() {
     }
     
  container.innerHTML = pipelineChain.map((tool, index) => `
-            <div class="pipeline-tool-card" data-pipeline-index="${index}">
+            <div class="pipeline-tool-card mb-3" data-pipeline-index="${index}">
                 <div class="pipeline-tool-header">
                     <div class="d-flex align-items-center gap-2">
                         <span class="pipeline-tool-number">${index + 1}</span>
                         <i class="bi ${tool.icon}"></i>
                         <div class="flex-grow-1">
-                            <div class="fw-bold">${tool.name}</div>
+                            <div class="fw-bold d-flex align-items-center gap-1">
+                                <span>${tool.name}</span>
+                                <i class="bi bi-question-circle-fill text-info hint-icon"
+                                   title="${window.escapeHtml(tool.hint || `Input: ${tool.inputTypes.join(', ')} → Output: ${tool.outputType}`)}"
+                                   data-bs-toggle="tooltip"></i>
+                            </div>
                             <div class="pipeline-io-badges mt-1">
-                                <span class="badge bg-secondary badge-io"><i class="bi bi-box-arrow-in-down"></i> ${tool.inputTypes.join(', ') || 'any'}</span>
+                                <span class="badge bg-warning badge-io"><i class="bi bi-box-arrow-in-down"></i> ${tool.inputTypes.join(', ') || 'any'}</span>
                                 <span class="badge bg-info badge-io"><i class="bi bi-box-arrow-up"></i> ${tool.outputType || 'data'}</span>
                             </div>
                         </div>
                         <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-secondary" onclick="moveToolUp(${index})" ${index === 0 ? 'disabled' : ''}>
-                                <i class="bi bi-arrow-up"></i>
+                            ${index === 0 ? '' : `
+                                <button class="btn btn-outline-secondary" onclick="moveToolUp(${index})">
+                                    <i class="bi bi-arrow-up"></i>
+                                </button>
+                            `}
+                            ${index === pipelineChain.length - 1 ? '' : `
+                                <button class="btn btn-outline-secondary" onclick="moveToolDown(${index})">
+                                    <i class="bi bi-arrow-down"></i>
+                                </button>
+                            `}
+                            <button class="btn btn-outline-danger" onclick="removeToolFromPipeline(${index})">
+                                <i class="bi bi-x"></i>
                             </button>
-                        <button class="btn btn-outline-secondary" onclick="moveToolDown(${index})" ${index === pipelineChain.length - 1 ? 'disabled' : ''}>
-                            <i class="bi bi-arrow-down"></i>
-                        </button>
-                        <button class="btn btn-outline-danger" onclick="removeToolFromPipeline(${index})">
-                            <i class="bi bi-x"></i>
-                        </button>
-                    </div>
+                        </div>
                 </div>
             </div>
             <div class="pipeline-tool-body mt-2" id="pipelineToolBody-${index}"></div>
@@ -467,6 +552,14 @@ function renderPipelineChain() {
     if (compat) {
         compat.textContent = isCompatible ? 'Valid' : 'Invalid';
         compat.className = `badge ${isCompatible ? 'bg-success' : 'bg-danger'} ms-2`;
+    }
+    const chainCount = document.getElementById('chainCount');
+    if (chainCount) {
+        chainCount.textContent = `• ${pipelineChain.length} block${pipelineChain.length === 1 ? '' : 's'}`;
+    }
+    const clearBtn = document.getElementById('clearPipelineBtn');
+    if (clearBtn) {
+        clearBtn.style.display = pipelineChain.length > 0 ? 'inline-flex' : 'none';
     }
     
     const inputInfo = document.getElementById('inputTypeInfo');
@@ -486,16 +579,56 @@ function renderPipelineChain() {
         const body = document.getElementById(`pipelineToolBody-${index}`);
         if (!body) return;
 
-        // Only the first tool in the chain exposes its full input UI
-        if (index === 0) {
+        const isFirst = index === 0;
+        const renderForm = tool.renderPipelineForm;
+        const hasCustomForm = typeof renderForm === 'function' && renderForm !== tool.baseTool?.render && renderForm !== tool.baseTool?.renderPipelineInputs;
+        const shouldRenderCustomForm = hasCustomForm && (isFirst || renderForm.alwaysShow);
+        const shouldRenderBaseForm = isFirst && !tool.suppressBaseRender && typeof tool.baseTool?.render === 'function';
+        const wrapFirstIntro = (html) => {
+            if (!isFirst) return html;
+            return `
+                <div class="pipeline-first-start">
+                    <span class="badge bg-success d-inline-flex align-items-center gap-1">
+                        <i class="bi bi-play-fill"></i> Pipeline start
+                    </span>
+                    <small class="text-secondary">Provide the initial input below. Downstream blocks will use this output.</small>
+                </div>
+                ${html}
+            `;
+        };
+
+        body.classList.toggle('pipeline-first-body', isFirst);
+
+        // First block shows its own input UI (custom form or the normal tool workspace)
+        if (shouldRenderCustomForm) {
             try {
-                body.innerHTML = tool.render();
+                const rendered = renderForm({ stepIndex: index, mode: 'pipeline' }) || '';
+                body.innerHTML = wrapFirstIntro(rendered || `
+                    <div class="text-muted small fst-italic d-flex align-items-center gap-2">
+                        <i class="bi bi-diagram-3"></i>
+                        This step consumes input from the pipeline. When it is first, use this form to provide the initial payload.
+                    </div>
+                `);
                 body.classList.add('pipeline-embed');
                 if (typeof tool.initPipeline === 'function') {
-                    // Optional: tools can define a specialized init for pipeline mode
-                    tool.initPipeline({ mode: 'pipeline', index });
-                } else if (typeof tool.init === 'function') {
-                    tool.init();
+                    tool.initPipeline({ mode: 'pipeline', index: index });
+                }
+            } catch (e) {
+                console.error(`Error initializing pipeline UI for tool ${tool.id}:`, e);
+                body.innerHTML = `
+                    <div class="alert alert-danger mb-0">
+                        Failed to render tool UI in pipeline mode: ${window.escapeHtml(e.message)}
+                    </div>
+                `;
+            }
+        } else if (shouldRenderBaseForm) {
+            try {
+                body.innerHTML = wrapFirstIntro(tool.baseTool.render());
+                body.classList.add('pipeline-embed');
+                if (typeof tool.baseTool.initPipeline === 'function') {
+                    tool.baseTool.initPipeline({ mode: 'pipeline', index });
+                } else if (typeof tool.baseTool.init === 'function') {
+                    tool.baseTool.init();
                 }
             } catch (e) {
                 console.error(`Error initializing pipeline UI for tool ${tool.id}:`, e);
@@ -506,15 +639,40 @@ function renderPipelineChain() {
                 `;
             }
         } else {
-            // For all other tools, do not render their input UI; they will only
-            // display their outputs in the pipelineToolOutput area after execution.
             body.innerHTML = `
-                <div class="text-muted small fst-italic">
-                    This step receives input from the previous tool. Its output will appear here after the pipeline is executed.
+                <div class="text-muted small fst-italic d-flex align-items-center gap-2">
+                    <i class="bi bi-stack"></i>
+                    ${isFirst
+                        ? 'This starting block needs an input UI. Use a block that exposes a form or enable its base UI for pipeline mode.'
+                        : 'This step receives input from the previous tool. Its output will appear below after execution.'}
                 </div>
             `;
         }
+
+        // Safety net: if the first block still has no input fields, inject a simple text/JSON textarea
+        if (isFirst && !body.querySelector('textarea, input[type="text"], input[type="number"]')) {
+            const placeholder = `Enter ${tool.inputTypes && tool.inputTypes.length ? tool.inputTypes.join(' / ') : 'input'} for the first block`;
+            const isEncoder = tool.baseTool && tool.baseTool.id === 'encoder-decoder';
+            const textareaAttrs = isEncoder ? 'data-encoder-input data-default-pipeline-input' : 'data-default-pipeline-input';
+            body.innerHTML = wrapFirstIntro(`
+                <div class="card bg-dark pipeline-input-card">
+                    <div class="card-header d-flex align-items-center gap-2">
+                        <i class="bi bi-terminal"></i>
+                        <span>Pipeline input</span>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control font-monospace" rows="4" placeholder="${window.escapeHtml(placeholder)}" ${textareaAttrs}></textarea>
+                        <small class="text-secondary d-block mt-2">This value seeds the pipeline when no custom form is available.</small>
+                    </div>
+                </div>
+            `);
+        }
     });
+
+    if (window.bootstrap && bootstrap.Tooltip) {
+        container.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+    }
+
 }
 
 function validatePipelineChain() {
@@ -529,9 +687,14 @@ function validatePipelineChain() {
     return true;
 }
 
+function updatePipelineInputVisibility() {
+    // No-op: shared pipeline input removed. Per-block UIs handle first-step input.
+}
+
 window.moveToolUp = function(index) {
     if (index === 0) return;
     [pipelineChain[index], pipelineChain[index - 1]] = [pipelineChain[index - 1], pipelineChain[index]];
+    resetPipelineOutput();
     renderPipelineChain();
     renderAvailableTools();
     updateExecuteButton();
@@ -540,6 +703,7 @@ window.moveToolUp = function(index) {
 window.moveToolDown = function(index) {
     if (index === pipelineChain.length - 1) return;
     [pipelineChain[index], pipelineChain[index + 1]] = [pipelineChain[index + 1], pipelineChain[index]];
+    resetPipelineOutput();
     renderPipelineChain();
     renderAvailableTools();
     updateExecuteButton();
@@ -547,6 +711,7 @@ window.moveToolDown = function(index) {
 
 window.removeToolFromPipeline = function(index) {
     pipelineChain.splice(index, 1);
+    resetPipelineOutput();
     renderPipelineChain();
     renderAvailableTools();
     updateExecuteButton();
@@ -566,7 +731,28 @@ window.clearPipeline = function() {
     if (errorsDiv) {
         errorsDiv.innerHTML = '';
     }
+    const chainCount = document.getElementById('chainCount');
+    if (chainCount) {
+        chainCount.textContent = '';
+    }
+    const clearBtn = document.getElementById('clearPipelineBtn');
+    if (clearBtn) {
+        clearBtn.style.display = 'none';
+    }
+    resetPipelineOutput();
 };
+
+// Home/logo click handler to return to normal mode
+document.addEventListener('DOMContentLoaded', () => {
+    const homeLogo = document.getElementById('homeLogo');
+    if (homeLogo) {
+        homeLogo.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchMode('single');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+});
 
 function updateExecuteButton() {
     const btn = document.getElementById('executePipelineBtn');
@@ -576,93 +762,119 @@ function updateExecuteButton() {
     btn.disabled = pipelineChain.length === 0 || !validatePipelineChain();
 }
 
+function resetPipelineOutput() {
+    const outputCard = document.getElementById('pipelineOutputCard');
+    const outputDiv = document.getElementById('pipelineOutput');
+    const errorsDiv = document.getElementById('pipelineErrors');
+    if (outputCard) {
+        outputCard.style.display = 'none';
+    }
+    if (outputDiv) {
+        outputDiv.innerHTML = '';
+    }
+    if (errorsDiv) {
+        errorsDiv.innerHTML = '';
+    }
+}
+
 // ========================================
 // PIPELINE EXECUTION
 // ========================================
 
-// Render output for a single pipeline step inside its tool card
-function renderPipelineStepOutput(stepIndex, tool, result) {
+// Render input + output for a single pipeline step inside its tool card (two accordions, raw view)
+function renderPipelineStepOutput(stepIndex, tool, result, stepInput) {
     const stepEl = document.getElementById(`pipelineToolOutput-${stepIndex}`);
-    if (!stepEl) return;
+    if (!stepEl) return '';
 
     const output = result.output;
-    const metadata = result.metadata || {};
+    const prettyInput = window.escapeHtml(
+        typeof stepInput === 'object'
+            ? JSON.stringify(stepInput, null, 2)
+            : String(stepInput == null ? '' : stepInput)
+    );
+    const prettyOutput = window.escapeHtml(
+        typeof output === 'object'
+            ? JSON.stringify(output, null, 2)
+            : String(output == null ? '' : output)
+    );
 
-    // If the tool provides its own pipeline output renderer, delegate to it.
-    // The tool can return a full HTML snippet consistent with its normal mode UI.
-    if (tool && typeof tool.renderPipelineOutput === 'function') {
-        try {
-            const html = tool.renderPipelineOutput({
-                stepIndex,
-                output,
-                metadata,
-                mode: 'pipeline'
-            });
+    const accordionInId = `pipelineAccordionIn-${stepIndex}`;
+    const collapseInId = `pipelineCollapseIn-${stepIndex}`;
+    const accordionOutId = `pipelineAccordionOut-${stepIndex}`;
+    const collapseOutId = `pipelineCollapseOut-${stepIndex}`;
 
-            if (typeof html === 'string' && html.trim().length > 0) {
-                stepEl.innerHTML = html;
-                return;
-            }
-        } catch (e) {
-            console.error(`Error in renderPipelineOutput for tool ${tool.id}:`, e);
-            // fall through to generic rendering
-        }
-    }
-
-    // Generic fallback if the tool has no custom renderer:
     stepEl.innerHTML = `
-        <div class="card bg-dark border-secondary">
-            <div class="card-header py-1">
-                <small>Step ${stepIndex + 1} output</small>
+        <div class="pipeline-tool-output">
+            <div class="accordion mb-2 accordion-warning" id="${accordionInId}">
+                <div class="accordion-item bg-dark text-light border border-warning">
+                    <h2 class="accordion-header" id="${accordionInId}-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseInId}" aria-expanded="false" aria-controls="${collapseInId}">
+                            <div class="d-flex flex-column">
+                                <span class="fw-semibold text-warning">Step ${stepIndex + 1} - Input</span>
+                                <small class="text-secondary">Raw data received by this block</small>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="${collapseInId}" class="accordion-collapse collapse" data-bs-parent="#${accordionInId}">
+                        <div class="accordion-body">
+                            <pre class="mb-0"><code>${prettyInput}</code></pre>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <pre class="mb-0"><code>${
-                    window.escapeHtml(
-                        typeof output === 'object'
-                            ? JSON.stringify(output, null, 2)
-                            : String(output)
-                    )
-                }</code></pre>
-                ${
-                    metadata && metadata.treeHtml
-                        ? `
-                            <hr class="text-secondary" />
-                            <div class="beautifier-tree-view mt-2">
-                                ${metadata.treeHtml}
+            <div class="accordion accordion-info" id="${accordionOutId}">
+                <div class="accordion-item bg-dark text-light border border-info">
+                    <h2 class="accordion-header" id="${accordionOutId}-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseOutId}" aria-expanded="false" aria-controls="${collapseOutId}">
+                            <div class="d-flex flex-column">
+                                <span class="fw-semibold text-blue">Step ${stepIndex + 1} - Output</span>
+                                <small class="text-secondary">Raw output returned by this block</small>
                             </div>
-                          `
-                        : ''
-                }
-                ${
-                    metadata && metadata.html
-                        ? `
-                            <hr class="text-secondary" />
-                            <div class="pipeline-tool-html mt-2">
-                                ${metadata.html}
-                            </div>
-                          `
-                        : ''
-                }
+                        </button>
+                    </h2>
+                    <div id="${collapseOutId}" class="accordion-collapse collapse" data-bs-parent="#${accordionOutId}">
+                        <div class="accordion-body">
+                            <pre class="mb-0"><code>${prettyOutput}</code></pre>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `;
+
+    if (window.bootstrap && bootstrap.Collapse) {
+        const collapseIn = document.getElementById(collapseInId);
+        if (collapseIn) new bootstrap.Collapse(collapseIn, { toggle: false });
+        const collapseOut = document.getElementById(collapseOutId);
+        if (collapseOut) new bootstrap.Collapse(collapseOut, { toggle: false });
+    }
+
+    return prettyOutput;
 }
 
 window.executePipeline = async function() {
-    const inputEl = document.getElementById('pipelineInput');
     const outputCard = document.getElementById('pipelineOutputCard');
     const outputDiv = document.getElementById('pipelineOutput');
     const errorsDiv = document.getElementById('pipelineErrors');
+    const runBtn = document.getElementById('executePipelineBtn');
     
     if (!outputCard || !outputDiv || !errorsDiv) {
         console.warn('Pipeline UI elements not found, aborting pipeline execution');
         return;
     }
     
-    // Initial pipeline input can come from a dedicated field if present,
-    // but it is no longer required; tools can also read from their own UI.
-    const input = inputEl ? inputEl.value.trim() : '';
     errorsDiv.innerHTML = '';
+    if (outputDiv) {
+        outputDiv.innerHTML = `
+            <div class="d-flex align-items-center gap-2 text-secondary pipeline-loader">
+                <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+                <span>Warming up the pipeline engine...</span>
+            </div>
+        `;
+    }
+    if (outputCard) {
+        outputCard.style.display = 'block';
+    }
     
     if (!validatePipelineChain()) {
         errorsDiv.innerHTML = '<div class="alert alert-danger mt-3">Pipeline chain is invalid. Check tool compatibility.</div>';
@@ -670,18 +882,32 @@ window.executePipeline = async function() {
     }
     
     try {
-        let currentData = input;
+        if (runBtn) {
+            runBtn.classList.add('running');
+            runBtn.disabled = true;
+        }
+        let currentData = '';
         const results = [];
+        let lastStepResult = null;
+        let lastTool = null;
         
         for (let i = 0; i < pipelineChain.length; i++) {
             const tool = pipelineChain[i];
             console.log(`Executing tool ${i + 1}/${pipelineChain.length}: ${tool.name}`);
+
+            if (i === 0 && (currentData === '' || currentData == null)) {
+                const fallbackInput = document.querySelector(`#pipelineToolBody-${i} [data-default-pipeline-input]`);
+                if (fallbackInput && typeof fallbackInput.value === 'string' && fallbackInput.value.trim().length > 0) {
+                    currentData = fallbackInput.value.trim();
+                }
+            }
+            const stepInput = currentData;
             
             const result = await tool.processPipeline(currentData, {
                 isFirst: i === 0,
                 stepIndex: i,
                 totalSteps: pipelineChain.length,
-                pipelineInput: input,
+                pipelineInput: currentData,
                 previousOutput: currentData
             });
             if (!result || !result.success) {
@@ -697,15 +923,33 @@ window.executePipeline = async function() {
                 tool: tool.name,
                 ...stepResult
             });
+            lastStepResult = stepResult;
+            lastTool = tool;
             
-            // Render this step's output inside its own tool box
-            renderPipelineStepOutput(i, tool, stepResult);
+            // Render this step's output inside its own tool box (collapsed accordion)
+            renderPipelineStepOutput(i, tool, stepResult, stepInput);
         }
         
         // Render final summary and final output
         outputCard.style.display = 'block';
-        const lastStepEl = document.getElementById(`pipelineToolOutput-${pipelineChain.length - 1}`);
-        let finalHtml = lastStepEl ? lastStepEl.innerHTML : '';
+        await new Promise(resolve => setTimeout(resolve, 600));
+        let finalHtml = '';
+        if (lastTool && typeof lastTool.renderPipelineOutput === 'function' && lastStepResult) {
+            try {
+                const rendered = lastTool.renderPipelineOutput({
+                    stepIndex: pipelineChain.length - 1,
+                    output: lastStepResult.output,
+                    metadata: lastStepResult.metadata || {},
+                    mode: 'pipeline'
+                });
+                if (typeof rendered === 'string' && rendered.trim().length > 0) {
+                    finalHtml = rendered;
+                }
+            } catch (e) {
+                console.error(`Error rendering final pipeline output via tool ${lastTool.id}:`, e);
+            }
+        }
+
         if (!finalHtml) {
             const pretty = window.escapeHtml(
                 typeof currentData === 'object'
@@ -720,14 +964,8 @@ window.executePipeline = async function() {
                 <h6>Pipeline executed successfully!</h6>
                 <p class="text-muted small">Processed through ${pipelineChain.length} tool(s)</p>
             </div>
-            <div class="card bg-dark border-success">
-                <div class="card-header bg-success">
-                    <strong>Final Output</strong>
-                </div>
-                <div class="card-body">
-                    <div id="finalOutput">${finalHtml}</div>
-                </div>
-            </div>
+            
+                <div id="finalOutput">${finalHtml}</div>
         `;
         
         outputCard.scrollIntoView({ behavior: 'smooth' });
@@ -737,6 +975,11 @@ window.executePipeline = async function() {
                 <strong>Pipeline Error:</strong> ${window.escapeHtml(error.message)}
             </div>
         `;
+    } finally {
+        if (runBtn) {
+            runBtn.classList.remove('running');
+            runBtn.disabled = pipelineChain.length === 0 || !validatePipelineChain();
+        }
     }
 };
 
@@ -853,9 +1096,9 @@ function loadTool(toolId) {
                     <div class="card tool-workspace ${borderClass}">
                         ${
                             pipelineToolEnabled(tool) && pipelineToolCanBeFirst(tool)
-                                ? `<button class="btn btn-sm btn-outline-success pipeline-add-btn pipeline-add-btn-workspace" onclick="addToolAsFirst('${tool.id}')" title="Add to a pipeline">
+                                ? `<button class="btn btn-sm btn-outline-success pipeline-add-btn pipeline-add-btn-workspace" onclick="addToolAsFirst('${tool.id}')" title="Add to pipeline">
                                         <i class="bi bi-stack"></i>
-                                        <span>Add to a pipeline</span>
+                                        <span>Add to pipeline</span>
                                    </button>`
                                 : ''
                         }
@@ -1170,11 +1413,14 @@ window.addToolAsFirst = function(toolId) {
         return;
     }
 
+    const block = (tool.__pipelineBlocks && tool.__pipelineBlocks[0]) ? tool.__pipelineBlocks[0] : null;
+    if (!block) return;
+
     switchMode('pipeline');
 
     // Remove existing instance if present
-    pipelineChain = pipelineChain.filter(t => t.id !== tool.id);
-    pipelineChain.unshift(tool);
+    pipelineChain = pipelineChain.filter(t => t.baseTool?.id !== tool.id);
+    pipelineChain.unshift(block);
 
     renderPipelineChain();
     renderAvailableTools();

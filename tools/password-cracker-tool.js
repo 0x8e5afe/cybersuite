@@ -390,6 +390,35 @@ function initPipeline(context) {
             `;
         }
 
+        // If there is only one password, show a compact summary instead of a table
+        if (results.length === 1) {
+            const row = results[0];
+            const strengthBadge = row.strength || 'n/a';
+            const badgeClass =
+                strengthBadge === 'Very Weak' ? 'danger' :
+                strengthBadge === 'Weak' ? 'warning' :
+                strengthBadge === 'Fair' ? 'info' :
+                'success';
+
+            return `
+                <div class="alert alert-${badgeClass} mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-shield-lock"></i>
+                        <strong>${window.escapeHtml(row.password)}</strong>
+                        <span class="badge bg-${badgeClass}">${strengthBadge}</span>
+                        <span class="badge bg-secondary">${attemptsPerSec.toLocaleString()} hashes/sec</span>
+                    </div>
+                    <div class="small mt-2">
+                        <div><strong>Length:</strong> ${row.length}</div>
+                        <div><strong>Charset size:</strong> ${row.charsetSize}</div>
+                        <div><strong>Entropy:</strong> ${row.entropyBits.toFixed ? row.entropyBits.toFixed(2) : row.entropyBits} bits</div>
+                        <div><strong>Average time:</strong> ${row.formattedAverage}</div>
+                        <div><strong>Worst case:</strong> ${row.formattedWorst}</div>
+                    </div>
+                </div>
+            `;
+        }
+
         let html = `
             <div class="card bg-dark border-secondary">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -687,6 +716,446 @@ function initPipeline(context) {
         }
     }
 
+    function buildPolicyPipelineHtml(result) {
+        const badgeClass =
+            result.strength === 'Very Weak' ? 'danger' :
+            result.strength === 'Weak' ? 'warning' :
+            result.strength === 'Fair' ? 'info' :
+            'success';
+
+        return `
+            <div class="card bg-dark border-${badgeClass}">
+                <div class="card-header bg-${badgeClass} d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-file-earmark-lock"></i> Policy Complexity</span>
+                    <span class="badge bg-dark text-light">${window.escapeHtml(result.strength)}</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <h6 class="text-secondary text-uppercase small mb-2">Lengths</h6>
+                            <ul class="list-unstyled mb-0 small">
+                                <li><strong>Min length:</strong> ${result.minLength}</li>
+                                <li><strong>Max length:</strong> ${result.maxLength}</li>
+                                <li><strong>Charset size:</strong> ${result.charsetSize}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-secondary text-uppercase small mb-2">Entropy</h6>
+                            <ul class="list-unstyled mb-0 small">
+                                <li><strong>Min entropy:</strong> ${result.entropyMin.toFixed(2)} bits</li>
+                                <li><strong>Max entropy:</strong> ${result.entropyMax.toFixed(2)} bits</li>
+                                <li><strong>Hashes/sec:</strong> ${result.attemptsPerSec.toLocaleString()}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr class="text-secondary" />
+                    <div class="row g-3 small">
+                        <div class="col-md-6">
+                            <div class="alert alert-info mb-0">
+                                <strong>Average time @ min length:</strong><br>${result.formattedAverageMin}<br>
+                                <small class="text-secondary">Worst case: ${result.formattedWorstMin}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-info mb-0">
+                                <strong>Average time @ max length:</strong><br>${result.formattedAverageMax}<br>
+                                <small class="text-secondary">Worst case: ${result.formattedWorstMax}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderPolicyPipelineForm({ stepIndex }) {
+        const suffix = typeof stepIndex === 'number' ? stepIndex : 'policy';
+        const textareaId = `policyPipelineInput-${suffix}`;
+        const sampleBtnId = `policyPipelineLoadSample-${suffix}`;
+
+        const samplePolicy = {
+            minLength: 12,
+            maxLength: 16,
+            requireLower: true,
+            requireUpper: true,
+            requireDigits: true,
+            requireSpecial: true,
+            specialCharacters: "!@#$%^&*",
+            hashesPerSecond: 100000000
+        };
+
+        return `
+            <div class="card bg-dark pipeline-input-card">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span>Password policy JSON</span>
+                </div>
+                <div class="card-body">
+                    <textarea class="form-control font-monospace" id="${textareaId}" rows="6" placeholder='${window.escapeHtml(JSON.stringify(samplePolicy, null, 2))}'></textarea>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <small class="text-secondary">Fields: minLength, maxLength, requireLower/Upper/Digits/Special, specialCharacters, hashesPerSecond.</small>
+                        <button class="btn btn-sm btn-outline-info" type="button" id="${sampleBtnId}">
+                            <i class="bi bi-magic"></i> Sample
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function initPolicyPipelineForm(context = {}) {
+        const suffix = typeof context.index === 'number' ? context.index : 'policy';
+        const sampleBtn = document.getElementById(`policyPipelineLoadSample-${suffix}`);
+        const textarea = document.getElementById(`policyPipelineInput-${suffix}`);
+        if (sampleBtn && textarea) {
+            sampleBtn.addEventListener('click', () => {
+                const samplePolicy = {
+                    minLength: 12,
+                    maxLength: 16,
+                    requireLower: true,
+                    requireUpper: true,
+                    requireDigits: true,
+                    requireSpecial: true,
+                    specialCharacters: "!@#$%^&*",
+                    hashesPerSecond: 100000000
+                };
+                textarea.value = JSON.stringify(samplePolicy, null, 2);
+            });
+        }
+    }
+
+    function renderSmartComplexityPipelineForm({ stepIndex }) {
+        const suffix = typeof stepIndex === 'number' ? stepIndex : 'smart';
+        const pwdId = `smartPasswordList-${suffix}`;
+        const pwdSampleId = `smartPasswordSample-${suffix}`;
+        const policyId = `smartPolicyInput-${suffix}`;
+        const policySampleId = `smartPolicySample-${suffix}`;
+
+        return `
+            <div class="card bg-dark pipeline-input-card mb-3">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-key"></i>
+                    <span>Password list (optional)</span>
+                    <button class="btn btn-sm btn-warning ms-auto" type="button" id="${pwdSampleId}">
+                        <i class="bi bi-magic"></i> Sample
+                    </button>
+                </div>
+                <div class="card-body">
+                    <textarea class="form-control font-monospace" id="${pwdId}" rows="4" placeholder="hunter2&#10;Tr0ub4dor&3"></textarea>
+                    <small class="text-secondary d-block mt-2">Provide newline-separated passwords to analyze.</small>
+                </div>
+            </div>
+            <div class="card bg-dark pipeline-input-card">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span>Password policy or {"passwords":[...]}</span>
+                    <button class="btn btn-sm btn-warning ms-auto" type="button" id="${policySampleId}">
+                        <i class="bi bi-magic"></i> Sample
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label small">Min length</label>
+                            <input type="number" class="form-control" id="smartPolicyMin-${suffix}" min="1" placeholder="12">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small">Max length</label>
+                            <input type="number" class="form-control" id="smartPolicyMax-${suffix}" min="1" placeholder="16">
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="smartPolicyLower-${suffix}" checked>
+                                <label class="form-check-label small" for="smartPolicyLower-${suffix}">Require lowercase</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="smartPolicyUpper-${suffix}" checked>
+                                <label class="form-check-label small" for="smartPolicyUpper-${suffix}">Require uppercase</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="smartPolicyDigits-${suffix}" checked>
+                                <label class="form-check-label small" for="smartPolicyDigits-${suffix}">Require digits</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="smartPolicySpecial-${suffix}" checked>
+                                <label class="form-check-label small" for="smartPolicySpecial-${suffix}">Require special</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small">Special characters</label>
+                            <input type="text" class="form-control" id="smartPolicySpecialChars-${suffix}" placeholder="!@#$%^&*">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small">Hashes per second (approx)</label>
+                            <input type="number" class="form-control" id="smartPolicyHps-${suffix}" placeholder="100000000">
+                        </div>
+                    </div>
+                    <small class="text-secondary d-block mt-2">Fill fields for a policy or provide passwords above; JSON {"passwords":[...]} from upstream is also accepted.</small>
+                </div>
+            </div>
+        `;
+    }
+
+    function initSmartComplexityPipelineForm({ index }) {
+        const suffix = typeof index === 'number' ? index : 'smart';
+        const pwdId = `smartPasswordList-${suffix}`;
+        const pwdSampleId = `smartPasswordSample-${suffix}`;
+        const policySampleId = `smartPolicySample-${suffix}`;
+
+        const pwdTextarea = document.getElementById(pwdId);
+        const pwdSampleBtn = document.getElementById(pwdSampleId);
+        const policySampleBtn = document.getElementById(policySampleId);
+
+        if (pwdSampleBtn && pwdTextarea) {
+            pwdSampleBtn.addEventListener('click', () => {
+                pwdTextarea.value = 'hunter2\nTr0ub4dor&3\nCorrectHorseBatteryStaple!';
+                pwdTextarea.focus();
+            });
+        }
+
+        if (policySampleBtn) {
+            policySampleBtn.addEventListener('click', () => {
+                const setVal = (id, val) => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (el.type === 'checkbox') {
+                            el.checked = !!val;
+                        } else {
+                            el.value = val;
+                        }
+                    }
+                };
+                setVal(`smartPolicyMin-${suffix}`, 12);
+                setVal(`smartPolicyMax-${suffix}`, 16);
+                setVal(`smartPolicyLower-${suffix}`, true);
+                setVal(`smartPolicyUpper-${suffix}`, true);
+                setVal(`smartPolicyDigits-${suffix}`, true);
+                setVal(`smartPolicySpecial-${suffix}`, true);
+                setVal(`smartPolicySpecialChars-${suffix}`, '!@#$%^&*');
+                setVal(`smartPolicyHps-${suffix}`, 100000000);
+            });
+        }
+    }
+
+    function passwordPolicyPipelineProcess(rawInput, context = {}) {
+        const normalizePolicy = (input) => {
+            if (typeof input === 'string' && input.trim() !== '') {
+                return JSON.parse(input);
+            }
+            if (input && typeof input === 'object') {
+                return input;
+            }
+            throw new Error('Password policy must be provided as JSON object or string');
+        };
+
+        try {
+            const scopedTextarea = context && typeof context.stepIndex === 'number'
+                ? document.querySelector(`#pipelineToolBody-${context.stepIndex} #policyPipelineInput-${context.stepIndex}`)
+                : null;
+            const hasScopedValue = scopedTextarea && scopedTextarea.value.trim();
+            const workingInput = hasScopedValue ? scopedTextarea.value : rawInput;
+            const policy = normalizePolicy(workingInput);
+
+            const attemptsPerSec = Number(policy.hashesPerSecond) > 0 ? Number(policy.hashesPerSecond) : 100000000;
+            const minLength = Number(policy.minLength || policy.length || 0);
+            const maxLength = Number(policy.maxLength || policy.minLength || policy.length || 0) || minLength;
+
+            if (!Number.isFinite(minLength) || minLength <= 0) {
+                return { success: false, error: 'Policy requires a positive minLength' };
+            }
+            if (!Number.isFinite(maxLength) || maxLength < minLength) {
+                return { success: false, error: 'Policy maxLength must be >= minLength' };
+            }
+
+            const requireLower = !!policy.requireLower;
+            const requireUpper = !!policy.requireUpper;
+            const requireDigits = !!policy.requireDigits;
+            const requireSpecial = !!policy.requireSpecial;
+            const customCharset = typeof policy.customCharset === 'string' ? policy.customCharset : '';
+            const specialCharacters = typeof policy.specialCharacters === 'string' ? policy.specialCharacters : '';
+
+            let charsetSize = 0;
+            if (requireLower) charsetSize += 26;
+            if (requireUpper) charsetSize += 26;
+            if (requireDigits) charsetSize += 10;
+            if (requireSpecial) charsetSize += Math.max(1, specialCharacters.length || 10);
+            charsetSize += customCharset.length;
+
+            if (!charsetSize) {
+                return { success: false, error: 'Policy produced an empty charset; enable at least one requirement' };
+            }
+
+            const formatTime = (seconds) => {
+                if (seconds < 60) {
+                    return `${seconds.toFixed(2)} seconds`;
+                } else if (seconds < 3600) {
+                    return `${(seconds / 60).toFixed(2)} minutes`;
+                } else if (seconds < 86400) {
+                    return `${(seconds / 3600).toFixed(2)} hours`;
+                } else if (seconds < 31536000) {
+                    return `${(seconds / 86400).toFixed(2)} days`;
+                } else if (seconds < 31536000000) {
+                    return `${(seconds / 31536000).toFixed(2)} years`;
+                } else if (seconds < 31536000000000) {
+                    return `${(seconds / 31536000000).toFixed(2)} thousand years`;
+                } else if (seconds < 31536000000000000) {
+                    return `${(seconds / 31536000000000).toFixed(2)} million years`;
+                } else {
+                    return `${(seconds / 31536000000000000).toFixed(2)} billion years`;
+                }
+            };
+
+            const entropyMin = minLength * Math.log2(charsetSize);
+            const entropyMax = maxLength * Math.log2(charsetSize);
+
+            const combinationsMin = Math.pow(charsetSize, minLength);
+            const combinationsMax = Math.pow(charsetSize, maxLength);
+
+            const worstMin = combinationsMin / attemptsPerSec;
+            const avgMin = worstMin / 2;
+            const worstMax = combinationsMax / attemptsPerSec;
+            const avgMax = worstMax / 2;
+
+            const classify = (secondsToAverage) => {
+                if (secondsToAverage < 60) return 'Very Weak';
+                if (secondsToAverage < 3600) return 'Weak';
+                if (secondsToAverage < 86400) return 'Fair';
+                if (secondsToAverage < 31536000) return 'Good';
+                return 'Strong';
+            };
+
+            const result = {
+                minLength,
+                maxLength,
+                charsetSize,
+                attemptsPerSec,
+                entropyMin,
+                entropyMax,
+                formattedAverageMin: formatTime(avgMin),
+                formattedWorstMin: formatTime(worstMin),
+                formattedAverageMax: formatTime(avgMax),
+                formattedWorstMax: formatTime(worstMax),
+                strength: classify(avgMin)
+            };
+
+            return {
+                success: true,
+                output: result,
+                metadata: {
+                    source: 'password-policy',
+                    html: buildPolicyPipelineHtml(result)
+                }
+            };
+        } catch (e) {
+            return {
+                success: false,
+                error: 'Password policy pipeline error: ' + e.message
+            };
+        }
+    }
+
+    async function smartPasswordComplexityPipelineProcess(rawInput, context = {}) {
+        const suffix = typeof context.stepIndex === 'number' ? context.stepIndex : 'smart';
+        const getScoped = (id) => {
+            if (context && typeof context.stepIndex === 'number') {
+                const root = document.getElementById(`pipelineToolBody-${context.stepIndex}`);
+                if (root) {
+                    const scoped = root.querySelector(`#${id}`);
+                    if (scoped) return scoped;
+                }
+            }
+            return document.getElementById(id);
+        };
+
+        const pwdTextarea = getScoped(`smartPasswordList-${suffix}`);
+        const pwdText = pwdTextarea ? pwdTextarea.value.trim() : '';
+
+        const readPolicyForm = () => {
+            const readNumber = (id) => {
+                const el = getScoped(id);
+                if (!el) return NaN;
+                const v = parseInt(el.value, 10);
+                return Number.isFinite(v) ? v : NaN;
+            };
+            const readBool = (id, def = false) => {
+                const el = getScoped(id);
+                return el ? !!el.checked : def;
+            };
+            const minLength = readNumber(`smartPolicyMin-${suffix}`);
+            const maxLength = readNumber(`smartPolicyMax-${suffix}`);
+            const specialCharsVal = getScoped(`smartPolicySpecialChars-${suffix}`)?.value?.trim();
+            const hpsVal = getScoped(`smartPolicyHps-${suffix}`)?.value?.trim();
+            const hasAnyField = !isNaN(minLength) || !isNaN(maxLength) || (specialCharsVal && specialCharsVal.length) || (hpsVal && hpsVal.length);
+
+            if (!hasAnyField) return null;
+
+            const policy = {};
+            if (!isNaN(minLength)) policy.minLength = minLength;
+            if (!isNaN(maxLength)) policy.maxLength = maxLength;
+            policy.requireLower = readBool(`smartPolicyLower-${suffix}`, true);
+            policy.requireUpper = readBool(`smartPolicyUpper-${suffix}`, true);
+            policy.requireDigits = readBool(`smartPolicyDigits-${suffix}`, true);
+            policy.requireSpecial = readBool(`smartPolicySpecial-${suffix}`, true);
+            if (specialCharsVal) policy.specialCharacters = specialCharsVal;
+            const hps = readNumber(`smartPolicyHps-${suffix}`);
+            if (!isNaN(hps)) policy.hashesPerSecond = hps;
+
+            return policy;
+        };
+        const policyFromForm = readPolicyForm();
+
+        let workingInput = rawInput;
+
+        if (context && context.isFirst) {
+            if (policyFromForm) {
+                workingInput = policyFromForm;
+            } else if (pwdText) {
+                workingInput = pwdText;
+            }
+        } else if (workingInput == null || (typeof workingInput === 'string' && workingInput.trim() === '')) {
+            if (policyFromForm) {
+                workingInput = policyFromForm;
+            } else if (pwdText) {
+                workingInput = pwdText;
+            }
+        }
+
+        const tryParse = (val) => {
+            if (typeof val !== 'string') return { ok: false };
+            try {
+                return { ok: true, value: JSON.parse(val) };
+            } catch (e) {
+                return { ok: false };
+            }
+        };
+
+        // If string and JSON parseable, decide based on shape
+        if (typeof workingInput === 'string') {
+            const parsed = tryParse(workingInput);
+            if (parsed.ok) {
+                workingInput = parsed.value;
+            }
+        }
+
+        // If we have an object or array, decide the path
+        if (Array.isArray(workingInput)) {
+            return passwordCrackerPipelineProcess(workingInput, context);
+        }
+
+        if (workingInput && typeof workingInput === 'object') {
+            if (Array.isArray(workingInput.passwords)) {
+                return passwordCrackerPipelineProcess(workingInput.passwords, context);
+            }
+            // Treat as policy-like object
+            return passwordPolicyPipelineProcess(workingInput, context);
+        }
+
+        // Fallback: treat as text password list
+        return passwordCrackerPipelineProcess(workingInput, context);
+    }
+
     // Register the tool
     window.registerCyberSuiteTool({
         id: 'password-cracker',
@@ -697,16 +1166,31 @@ function initPipeline(context) {
         render: render,
         init: init,
         initPipeline: initPipeline,
-        // Pipeline: takes an array (or list) of passwords and returns
-        // per-password cracking complexity metrics.
-        inputTypes: ['json'],
-        outputType: 'json',
-        processPipeline: passwordCrackerPipelineProcess,
-        renderPipelineOutput: function({ output, metadata }) {
-            if (metadata && typeof metadata.html === 'string') {
-                return metadata.html;
+        // Unified smart pipeline block
+        pipelineBlocks: [
+            {
+                id: 'smart',
+                name: 'Password complexity',
+                description: 'Analyze passwords or policies automatically',
+                inputTypes: ['text', 'json'],
+                outputType: 'json',
+                processPipeline: smartPasswordComplexityPipelineProcess,
+                renderPipelineOutput: function({ output, metadata }) {
+                    if (metadata && typeof metadata.html === 'string') {
+                        return metadata.html;
+                    }
+                    if (Array.isArray(output)) {
+                        return buildPasswordCrackerResultsHtml(output || [], metadata && metadata.attemptsPerSec ? metadata.attemptsPerSec : 100000000);
+                    }
+                    if (output && typeof output === 'object' && output.passwords && Array.isArray(output.passwords)) {
+                        return buildPasswordCrackerResultsHtml(output.passwords, metadata && metadata.attemptsPerSec ? metadata.attemptsPerSec : 100000000);
+                    }
+                    return '<pre class="mb-0"><code>' + window.escapeHtml(JSON.stringify(output, null, 2)) + '</code></pre>';
+                },
+                renderPipelineForm: renderSmartComplexityPipelineForm,
+                initPipeline: initSmartComplexityPipelineForm,
+                hint: 'Input: text -> passwords; JSON -> policy or {"passwords":[...]}. Outputs cracking complexity for passwords or policy.'
             }
-            return buildPasswordCrackerResultsHtml(output || [], metadata && metadata.attemptsPerSec ? metadata.attemptsPerSec : 100000000);
-        }
+        ]
     });
 })();
