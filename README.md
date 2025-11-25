@@ -38,11 +38,7 @@ Everything runs **completely client-side**: no backend, no external dependency c
 
 ## 🧰 Tools Overview
 
-<<<<<<< HEAD
 CyberSuite ships with 26 tools, grouped by **Red**, **Blue**, and **Purple** team usage.  
-=======
-CyberSuite ships with **25 tools**, grouped by **Red**, **Blue**, and **Purple** team usage.  
->>>>>>> refs/remotes/origin/main
 Below is a brief overview (see the individual tool UIs for details and options).
 
 ### 🔴 Red Team Tools
