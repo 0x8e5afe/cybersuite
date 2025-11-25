@@ -26,6 +26,15 @@
     --terminal-green: #00ff88;
     --terminal-yellow: #ffcc00;
     --terminal-orange: #ff6b35;
+    --diff-added-bg: rgba(0, 255, 136, 0.12);
+    --diff-removed-bg: rgba(255, 0, 110, 0.12);
+    --diff-changed-bg: linear-gradient(90deg, rgba(255, 0, 110, 0.05), rgba(0, 255, 136, 0.05));
+    --diff-unchanged-bg: rgba(255, 255, 255, 0.02);
+    --diff-inline-added: rgba(0, 255, 136, 0.35);
+    --diff-inline-removed: rgba(255, 0, 110, 0.35);
+    --diff-line-border: rgba(255, 255, 255, 0.05);
+    --diff-removed-soft: rgba(255, 0, 110, 0.12);
+    --diff-added-soft: rgba(0, 255, 136, 0.12);
     
     /* Shadows & Glows */
     --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.8);
@@ -3289,6 +3298,106 @@ body::after {
     color: var(--terminal-text-dim);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* Comparer diff view */
+.diff-card {
+    border: 1px solid var(--terminal-border);
+    box-shadow: var(--shadow-md);
+}
+
+.diff-table thead tr {
+    background: var(--terminal-surface);
+}
+
+.diff-line td {
+    border-top: 1px solid var(--diff-line-border);
+}
+
+.diff-line-num {
+    width: 3rem;
+    border-right: 1px solid var(--terminal-border);
+}
+
+.diff-cell {
+    border-right: 1px solid var(--terminal-border);
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: var(--diff-unchanged-bg);
+    vertical-align: top;
+}
+
+.diff-cell:last-child {
+    border-right: none;
+}
+
+.diff-cell-same {
+    background: var(--diff-unchanged-bg);
+}
+
+.diff-cell-removed {
+    background: rgba(255, 0, 110, 0.15);
+    border-left: 4px solid #ff2a7a;
+}
+
+.diff-cell-added {
+    background: rgba(0, 255, 136, 0.15);
+    border-left: 4px solid #00ff88;
+}
+
+.diff-chunk {
+    display: inline-block;
+    padding: 0.05rem 0.12rem;
+    white-space: pre-wrap;
+}
+
+.diff-inline-added {
+    background: rgba(0, 255, 136, 0.6);
+    color: #03140e;
+    border-radius: 6px;
+    padding: 0.05rem 0.25rem;
+    box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.65);
+    font-weight: 600;
+}
+
+.diff-inline-removed {
+    background: rgba(255, 0, 110, 0.55);
+    color: #fff1f7;
+    border-radius: 6px;
+    padding: 0.05rem 0.25rem;
+    box-shadow: 0 0 0 1px rgba(255, 0, 110, 0.65);
+    font-weight: 600;
+}
+
+.diff-inline-same {
+    color: var(--terminal-text);
+}
+
+.diff-summary {
+    border: 1px solid var(--terminal-border);
+    background: var(--terminal-surface);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+}
+
+.diff-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.diff-badge-removed {
+    background: var(--diff-removed-soft);
+    color: #ff99b5;
+}
+
+.diff-badge-added {
+    background: var(--diff-added-soft);
+    color: #8dfacc;
 }
 
 /* Notification animations */

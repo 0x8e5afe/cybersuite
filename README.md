@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple.svg)](https://getbootstrap.com)
-[![Security Tools](https://img.shields.io/badge/Tools-25-red.svg)](https://github.com/0x8e5afe/cybersuite)
+[![Security Tools](https://img.shields.io/badge/Tools-26-red.svg)](https://github.com/0x8e5afe/cybersuite)
 
 > ⚠️ **Disclaimer**
 >
@@ -16,7 +16,7 @@
 ## 🎯 What is CyberSuite?
 
 CyberSuite is a **modular, browser-based security toolbox** for red, blue, and purple teams.  
-Clone the repo, open `index.html` in a browser, and you immediately get a curated collection of **25 focused tools** for cybersecurity tasks.
+Clone the repo, open `index.html` in a browser, and you immediately get a curated collection of **26 focused tools** for cybersecurity tasks.
 
 Everything runs **completely client-side**: no backend, no external dependency chain, and nothing is sent to a server. 
 
@@ -38,7 +38,7 @@ Everything runs **completely client-side**: no backend, no external dependency c
 
 ## 🧰 Tools Overview
 
-CyberSuite ships with 25 tools, grouped by **Red**, **Blue**, and **Purple** team usage.  
+CyberSuite ships with 26 tools, grouped by **Red**, **Blue**, and **Purple** team usage.  
 Below is a brief overview (see the individual tool UIs for details and options).
 
 ### 🔴 Red Team Tools
@@ -62,6 +62,7 @@ Below is a brief overview (see the individual tool UIs for details and options).
 | Tool Name | Description |
 |-----------|-------------|
 | **Text Comparer** | Compare strings, hashes, HTTP requests, snippets of code, etc.. |
+| **HTTP Request Converter** | Convert HTTP requests between formats (cURL, Burp raw, Fetch, Python requests, etc.) with automatic format detection. |
 | **CORS Misconfiguration Checker** | Test endpoints for permissive or unsafe CORS responses and highlight risky configurations. |
 | **CVSS v3.1 Calculator** | Calculate CVSS v3.1 base/temporal/environmental scores from vulnerability characteristics. |
 | **Encoder/Decoder** | Encode / decode using many formats: Base64, URL, HTML entities, Unicode, hex, ROT13, binary, Morse, and more. |
