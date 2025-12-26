@@ -421,7 +421,7 @@ This project is licensed under the **MIT License**. See [`LICENSE`](LICENSE) for
 
 <div align="center">
 
-Made with ❤️ by [Giuseppe Toscano](https://0x8e5afe.github.io/portfolio/)
+Made with ❤️ by [Giuseppe Toscano](https://gtoscano.me)
 
 [⭐ Star on GitHub](https://github.com/0x8e5afe/cybersuite)
 
