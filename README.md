@@ -1,6 +1,6 @@
 # 🧰 Cybersuite — Security Resource Hub
 
-[![Resources](https://img.shields.io/badge/Resources-275-22c55e)](./res)
+[![Resources](https://img.shields.io/badge/Resources-277-22c55e)](./res)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38bdf8.svg)](https://tailwindcss.com)
 [![Vanilla JS](https://img.shields.io/badge/JavaScript-Vanilla-f7df1e.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
