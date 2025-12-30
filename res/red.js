@@ -759,5 +759,25 @@ window.CYBER_RESOURCES_RED = [
     "desc": "AWS security auditing and checks",
     "details": "## Overview\nProwler runs AWS security checks and best-practice audits. Works well for internal cloud assessment and continuous compliance.\n\n## Alternatives\n- ScoutSuite\n- AWS Security Hub",
     "source": "https://github.com/prowler-cloud/prowler"
+  },
+  
+  {
+    "name": "Mindblowing",
+    "url": "https://github.com/0x8e5afe/mindblowing",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Interactive pentest mind maps with zero build steps",
+    "details": "## Overview\nMindblowing is a lightweight, browser-based set of interactive pentesting mind maps. It’s designed to be used locally (offline-first): you just open `index.html`, explore the map, and copy commands directly from the detail panel.\n\n## Highlights\n- Two curated maps (General Pentest, Active Directory)\n- Offline-first (no bundler/server/npm)\n- Rich node details (notes, links, copyable commands)\n- Smooth navigation (pan/zoom, fit/reset)\n- Progress tracking with per-node status (e.g., mark nodes \"COMPROMISED\")\n\n## Quick start\n- Clone/download the repo, then double-click `index.html` to open it in your browser.\n\n## Alternatives\n- Orange Cyberdefense Mindmaps (AD/Pentest)\n- Synacktiv Mindmaps (Azure)\n- Orange Cyberdefense AD mindmap forks/exports (e.g., pentesting-active-directory)",
+    "source": "https://github.com/0x8e5afe/mindblowing"
+  },
+  {
+    "name": "Pwnsheet",
+    "url": "https://github.com/0x8e5afe/pwnsheet",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Dynamic pentesting cheatsheets that turn Markdown notes into an interactive workspace with local progress tracking",
+    "details": "## Overview\nPwnsheet is a browser-based, interactive pentesting cheatsheet. It converts static Markdown notes into a dynamic workspace with parameter-aware commands and progress tracking. It runs with zero build steps and stores everything locally (nothing leaves your machine).\n\n## Key features\n- Phase-based workflow from recon to lateral movement\n- Dynamic parameters that propagate into commands\n- Persistent progress tracking (checkbox state)\n- Local storage for parameters/progress\n- Helpers for file transfer and shells, plus a tools/wordlists table\n\n## Quick start\n- `git clone https://github.com/0x8e5afe/pwnsheet.git`\n- `cd pwnsheet`\n- `python3 -m http.server 8000` and open the local URL in your browser\n\n## Alternatives\n- PayloadsAllTheThings (broad pentest payloads/cheatsheets)\n- TheGetch/Penetration-Testing-Methodology (methodology + collected notes)\n- mikesmullin/pentest-notes (pentest cheatsheets/notes repo)",
+    "source": "https://github.com/0x8e5afe/pwnsheet"
   }
+
 ];
