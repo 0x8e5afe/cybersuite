@@ -411,7 +411,6 @@ window.CYBER_RESOURCES_PURPLE = [
     "type": "reference",
     "desc": "Large Language Model security risks",
     "details": "## Overview\nReleased November 2024. Covers prompt injection, sensitive information disclosure, supply chain vulnerabilities, data and model poisoning, improper output handling, excessive agency, system prompt leakage, vector and embedding weaknesses, misinformation, and unbounded consumption.\n\n## Purple team use\nTest LLM guardrails, validate prompt injection defenses, simulate adversarial inputs, verify data sanitization, test RAG security, and validate agent permission boundaries.\n\n## Key 2025 updates\n- Expanded focus on agentic AI (excessive agency)\n- RAG vulnerabilities (vector/embedding weaknesses)\n- System prompt leakage prominence\n- Resource management (unbounded consumption)\n\n## Alternatives\n- NIST AI RMF\n- EU AI Act compliance frameworks\n- MITRE ATLAS",
-    "source": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
   },
   {
     "name": "OWASP Top 10 for Agentic AI Applications (2026)",
