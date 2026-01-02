@@ -345,15 +345,6 @@ window.CYBER_RESOURCES_UTILS = [
     "details": "## Overview\nGPG supports encryption and signing for secure artifact sharing and integrity verification.\n\n## Alternatives\n- age (simpler)\n- OS-native keychains"
   },
   {
-    "name": "CyberChef - Official repo",
-    "url": "https://github.com/gchq/CyberChef",
-    "cat": "utils",
-    "type": "archive",
-    "desc": "Source code and releases",
-    "details": "## Overview\nGitHub repo for CyberChef (issues, releases, self-hosting options).\n\n## Alternatives\n- Self-host minimal transforms via scripts\n- Other web decoders",
-    "source": "https://github.com/gchq/CyberChef"
-  },
-  {
     "name": "Postman",
     "url": "https://www.postman.com/",
     "cat": "utils",
