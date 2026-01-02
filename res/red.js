@@ -434,14 +434,6 @@ window.CYBER_RESOURCES_RED = [
     "source": "https://github.com/enaqx/awesome-pentest"
   },
   {
-    "name": "OWASP Top 10",
-    "url": "https://owasp.org/www-project-top-ten/",
-    "cat": "red",
-    "type": "guide",
-    "desc": "Top web application risks",
-    "details": "## Overview\nOWASP Top 10 is a high-level list of common web application risks and categories.\n\n## Use it well\nTreat it as a communication tool; use WSTG/ASVS for actionable test and requirement detail.\n\n## Alternatives\n- ASVS (requirements)\n- WSTG (testing guide)"
-  },
-  {
     "name": "SSRF Bible",
     "url": "https://github.com/jdonsec/AllThingsSSRF",
     "cat": "red",
@@ -778,6 +770,224 @@ window.CYBER_RESOURCES_RED = [
     "desc": "Dynamic pentesting cheatsheets that turn Markdown notes into an interactive workspace with local progress tracking",
     "details": "## Overview\nPwnsheet is a browser-based, interactive pentesting cheatsheet. It converts static Markdown notes into a dynamic workspace with parameter-aware commands and progress tracking. It runs with zero build steps and stores everything locally (nothing leaves your machine).\n\n## Key features\n- Phase-based workflow from recon to lateral movement\n- Dynamic parameters that propagate into commands\n- Persistent progress tracking (checkbox state)\n- Local storage for parameters/progress\n- Helpers for file transfer and shells, plus a tools/wordlists table\n\n## Quick start\n- `git clone https://github.com/0x8e5afe/pwnsheet.git`\n- `cd pwnsheet`\n- `python3 -m http.server 8000` and open the local URL in your browser\n\n## Alternatives\n- PayloadsAllTheThings (broad pentest payloads/cheatsheets)\n- TheGetch/Penetration-Testing-Methodology (methodology + collected notes)\n- mikesmullin/pentest-notes (pentest cheatsheets/notes repo)",
     "source": "https://github.com/0x8e5afe/pwnsheet"
+  },
+    {
+    "name": "revshells",
+    "url": "https://www.revshells.com/",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Reverse shell payload generator",
+    "details": "## Overview\nrevshells is a web-based reverse shell generator supporting many languages (bash, python, php, powershell, perl, ruby, etc.). It is commonly used during authorized exploitation and labs.\n\n## Defensive use\n- Build EDR/IDS detections\n- Test egress filtering\n- Create regression tests for RCE vulnerabilities\n\n## Alternatives\n- PayloadsAllTheThings (reverse shells)\n- msfvenom"
+  },
+  {
+    "name": "msfvenom",
+    "url": "https://docs.metasploit.com/docs/using-metasploit/basics/how-to-use-msfvenom.html",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Payload generation utility",
+    "details": "## Overview\nmsfvenom is Metasploit’s standalone payload generator. It supports many platforms and output formats (ELF, EXE, DLL, ASPX, raw).\n\n## Defensive use\n- Reproduce malware-like payloads in labs\n- Validate AV/EDR detection pipelines\n\n## Alternatives\n- Donut\n- Sliver payloads"
+  },
+  {
+    "name": "GTFOArgs",
+    "url": "https://gtfoargs.github.io/",
+    "cat": "red",
+    "type": "reference",
+    "desc": "Argument injection primitives",
+    "details": "## Overview\nGTFOArgs documents argument injection techniques for common Unix binaries when user-controlled arguments are improperly handled.\n\n## Defensive use\n- Identify unsafe argument passing\n- Improve input validation and exec wrappers\n\n## Alternatives\n- GTFOBins\n- Secure coding guidelines"
+  },
+  {
+    "name": "shcheck",
+    "url": "https://github.com/santoru/shcheck",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Shellshock vulnerability checker",
+    "details": "## Overview\nshcheck detects Shellshock vulnerabilities in CGI and web-exposed Bash environments.\n\n## Defensive use\n- Validate patching of legacy systems\n- Confirm CGI hardening\n\n## Alternatives\n- nmap NSE scripts\n- Manual header testing",
+    "source": "https://github.com/santoru/shcheck"
+  },
+  {
+    "name": "pspy",
+    "url": "https://github.com/DominicBreuker/pspy",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Monitor processes without root (Linux)",
+    "details": "## Overview\npspy allows observation of cron jobs, services, and short-lived processes without root permissions. Frequently used for privilege escalation discovery.\n\n## Defensive use\n- Detect risky cron jobs\n- Identify privilege boundaries\n\n## Alternatives\n- auditd\n- Falco",
+    "source": "https://github.com/DominicBreuker/pspy"
+  },
+  {
+    "name": "LinEnum",
+    "url": "https://github.com/rebootuser/LinEnum",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Linux local enumeration script",
+    "details": "## Overview\nLinEnum performs basic Linux system enumeration for privilege escalation paths.\n\n## Alternatives\n- LinPEAS\n- Manual enumeration",
+    "source": "https://github.com/rebootuser/LinEnum"
+  },
+  {
+    "name": "Linux Exploit Suggester",
+    "url": "https://github.com/mzet-/linux-exploit-suggester",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Suggest kernel exploits based on version",
+    "details": "## Overview\nLinux Exploit Suggester maps kernel versions to known privilege escalation exploits. Use only in labs or authorized tests.\n\n## Defensive use\n- Prioritize kernel patching\n- Validate exploit exposure windows\n\n## Alternatives\n- searchsploit\n- Manual CVE review",
+    "source": "https://github.com/mzet-/linux-exploit-suggester"
+  },
+  {
+    "name": "searchsploit",
+    "url": "https://www.exploit-db.com/searchsploit",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Offline exploit database search",
+    "details": "## Overview\nsearchsploit allows local searching of Exploit-DB entries. Useful for exploit research and vulnerability validation.\n\n## Defensive use\n- Track exploit availability\n- Assess real-world exploitability\n\n## Alternatives\n- CVE databases\n- Vendor advisories"
+  },
+  {
+    "name": "Chisel",
+    "url": "https://github.com/jpillora/chisel",
+    "cat": "red",
+    "type": "tool",
+    "desc": "TCP tunneling over HTTP",
+    "details": "## Overview\nChisel creates encrypted tunnels over HTTP(S). Commonly used for pivoting in authorized internal tests.\n\n## Defensive use\n- Detect abnormal long-lived HTTP tunnels\n- Validate proxy egress controls\n\n## Alternatives\n- SSH port forwarding\n- Ligolo-ng",
+    "source": "https://github.com/jpillora/chisel"
+  },
+  {
+    "name": "Ligolo-ng",
+    "url": "https://github.com/nicocha30/ligolo-ng",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Modern tunneling and pivoting tool",
+    "details": "## Overview\nLigolo-ng provides fast, userland network pivoting without requiring SOCKS or proxychains.\n\n## Defensive use\n- Test network segmentation\n- Improve east-west monitoring\n\n## Alternatives\n- Chisel\n- SSH tunnels",
+    "source": "https://github.com/nicocha30/ligolo-ng"
+  },
+  {
+    "name": "Updog",
+    "url": "https://github.com/sc0tfree/updog",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Simple file transfer HTTP server",
+    "details": "## Overview\nUpdog is a replacement for `python -m http.server` with upload support. Useful for file transfer in labs.\n\n## Defensive use\n- Detect unauthorized file servers\n- Validate proxy and upload restrictions\n\n## Alternatives\n- SimpleHTTPServer\n- SCP/SFTP",
+    "source": "https://github.com/sc0tfree/updog"
+  },
+    {
+    "name": "Exploit Database",
+    "url": "https://www.exploit-db.com/",
+    "cat": "red",
+    "type": "reference",
+    "desc": "Public archive of exploits and PoCs",
+    "details": "## Overview\nExploit Database (Exploit-DB) is one of the most well-known public repositories of exploits and proof-of-concepts. Closely tied to Offensive Security tooling.\n\n## Defensive use\n- Track exploit availability for CVEs\n- Assess real-world exploitability\n\n## Alternatives\n- Packet Storm\n- GitHub PoC repos"
+  },
+  {
+    "name": "Packet Storm Security",
+    "url": "https://packetstormsecurity.com/",
+    "cat": "red",
+    "type": "reference",
+    "desc": "Security tools, exploits, and advisories",
+    "details": "## Overview\nPacket Storm is one of the oldest and most respected security archives, hosting exploits, advisories, tools, and whitepapers.\n\n## Alternatives\n- Exploit-DB\n- Full Disclosure mailing list"
+  },
+  {
+    "name": "Full Disclosure Mailing List",
+    "url": "https://seclists.org/fulldisclosure/",
+    "cat": "red",
+    "type": "mailing-list",
+    "desc": "Vulnerability disclosure discussions",
+    "details": "## Overview\nFull Disclosure is a long-running security mailing list where vulnerabilities, exploits, and research are publicly discussed.\n\n## Defensive use\n- Early awareness of emerging vulnerabilities\n\n## Alternatives\n- Bugtraq (historical)\n- Vendor advisories"
+  },
+  {
+    "name": "Bugtraq (historical)",
+    "url": "https://seclists.org/bugtraq/",
+    "cat": "red",
+    "type": "mailing-list",
+    "desc": "Historic vulnerability mailing list",
+    "details": "## Overview\nBugtraq was the canonical vulnerability disclosure mailing list for many years. Still valuable as an archive.\n\n## Alternatives\n- Full Disclosure\n- CVE/NVD"
+  },
+  {
+    "name": "Atomic Red Team",
+    "url": "https://github.com/redcanaryco/atomic-red-team",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Small, focused ATT&CK technique tests",
+    "details": "## Overview\nAtomic Red Team provides minimal, reproducible tests for individual ATT&CK techniques.\n\n## Defensive use\n- Validate detections\n- Purple team exercises\n\n## Alternatives\n- Caldera\n- Custom attack scripts",
+    "source": "https://github.com/redcanaryco/atomic-red-team"
+  },
+  {
+    "name": "Red Team Notes",
+    "url": "https://www.ired.team/",
+    "cat": "red",
+    "type": "reference",
+    "desc": "Well-known red team knowledge base",
+    "details": "## Overview\niRed.Team is a popular, practitioner-focused knowledge base covering Active Directory attacks, post-exploitation, and tradecraft.\n\n## Alternatives\n- HackTricks\n- PayloadsAllTheThings"
+  },
+  {
+    "name": "The Hacker Recipes",
+    "url": "https://www.thehacker.recipes/",
+    "cat": "red",
+    "type": "reference",
+    "desc": "Practical offensive security playbooks",
+    "details": "## Overview\nThe Hacker Recipes is a concise, high-signal collection of offensive techniques, particularly strong for Active Directory and internal attacks.\n\n## Alternatives\n- HackTricks\n- iRed.Team"
+  },
+  {
+    "name": "SANS Offensive Cheat Sheets",
+    "url": "https://www.sans.org/blog/the-ultimate-list-of-sans-cheat-sheets/",
+    "cat": "red",
+    "type": "reference",
+    "desc": "Well-known security cheat sheets",
+    "details": "## Overview\nSANS cheat sheets are widely referenced quick guides for commands, tools, and attack techniques.\n\n## Alternatives\n- Pwnsheet\n- Internal playbooks"
+  },
+  {
+    "name": "Offensive Security Documentation",
+    "url": "https://www.offsec.com/",
+    "cat": "red",
+    "type": "training",
+    "desc": "Canonical offensive security training vendor",
+    "details": "## Overview\nOffensive Security (OffSec) is one of the most influential organizations in professional penetration testing, behind Kali Linux, OSCP, OSEP, etc.\n\n## Alternatives\n- SANS\n- eLearnSecurity (INE)"
+  },
+  {
+    "name": "Kali Linux Tools Documentation",
+    "url": "https://www.kali.org/tools/",
+    "cat": "red",
+    "type": "reference",
+    "desc": "Official Kali Linux tool catalog",
+    "details": "## Overview\nKali Linux’s tool documentation provides categorized descriptions of hundreds of offensive security tools.\n\n## Alternatives\n- Parrot OS tools\n- Awesome Pentest"
+  },
+  {
+    "name": "Parrot OS Security Tools",
+    "url": "https://www.parrotsec.org/",
+    "cat": "red",
+    "type": "reference",
+    "desc": "Security-focused Linux distribution",
+    "details": "## Overview\nParrot OS is a popular alternative to Kali Linux with a focus on security, privacy, and development.\n\n## Alternatives\n- Kali Linux\n- BlackArch"
+  },
+  {
+    "name": "BlackArch Linux",
+    "url": "https://blackarch.org/",
+    "cat": "red",
+    "type": "reference",
+    "desc": "Arch Linux-based pentesting distribution",
+    "details": "## Overview\nBlackArch provides thousands of offensive security tools for Arch Linux users.\n\n## Alternatives\n- Kali Linux\n- Parrot OS"
+  },
+  {
+    "name": "Cobalt Strike (concept)",
+    "url": "https://www.cobaltstrike.com/",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Commercial adversary simulation platform",
+    "details": "## Overview\nCobalt Strike is a well-known commercial red team platform used for adversary simulation and detection validation.\n\n## Defensive note\nOften abused by threat actors; understanding it improves detection capability.\n\n## Alternatives\n- Sliver\n- Mythic"
+  },
+  {
+    "name": "Sliver",
+    "url": "https://github.com/BishopFox/sliver",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Open-source red team C2 framework",
+    "details": "## Overview\nSliver is a modern, open-source command-and-control framework used by professional red teams.\n\n## Defensive use\n- Emulate real attacker tradecraft\n- Improve EDR detections\n\n## Alternatives\n- Mythic\n- Caldera",
+    "source": "https://github.com/BishopFox/sliver"
+  },
+  {
+    "name": "Mythic",
+    "url": "https://github.com/its-a-feature/Mythic",
+    "cat": "red",
+    "type": "tool",
+    "desc": "Pluggable C2 framework",
+    "details": "## Overview\nMythic is a highly extensible, API-driven C2 framework used in advanced red team operations.\n\n## Alternatives\n- Sliver\n- Cobalt Strike",
+    "source": "https://github.com/its-a-feature/Mythic"
   }
 
 ];

@@ -141,8 +141,8 @@ function renderMarkdown(md) {
 
 function buildDetailsMarkdown(item) {
     const sameLink = item.source && item.source === item.url;
-    const sourceLine = item.source ? `\n- [Source code](${item.source})` : '';
-    const websiteLine = sameLink ? '' : `- [Website](${item.url})\n`;
+    const sourceLine = item.source && !sameLink ? `\n- [Source code](${item.source})` : '';
+    const websiteLine = `- [Website](${item.url})\n`;
     return `# ${item.name}\n\n${item.desc}\n\n## Why it matters\n- Primary category: **${item.cat.toUpperCase()}**\n- Type: **${(item.type || 'tool').toUpperCase()}**\n- Best for: recon, testing, or lab work\n- Suggested workflow: bookmark, review docs, then integrate\n\n## Quick links\n${websiteLine}${sourceLine}\n- [Search for guides](https://www.google.com/search?q=${encodeURIComponent(item.name + ' security tool')})`;
 }
 
@@ -320,8 +320,8 @@ async function renderCards(filter = 'all', searchQuery = '') {
         const iconClass = TYPE_ICONS[item.type] || TYPE_ICONS.tool;
         const hasSource = Boolean(item.source);
         const sameLink = hasSource && item.source === item.url;
-        const showWebsite = !sameLink;
-        const showSource = hasSource;
+        const showWebsite = true;
+        const showSource = hasSource && !sameLink;
         const buttonCount = (showWebsite ? 1 : 0) + (showSource ? 1 : 0);
         const actionButtons = `
             <div class="mt-4 grid gap-2 ${buttonCount > 1 ? 'grid-cols-2' : 'grid-cols-1'}">

@@ -377,5 +377,58 @@ window.CYBER_RESOURCES_PURPLE = [
     "desc": "Attack simulation datasets",
     "details": "## Overview\nMordor provides datasets of adversary simulations with telemetry to develop and test detections.\n\n## Alternatives\n- Splunk attack_data\n- Internal lab datasets",
     "source": "https://github.com/OTRF/mordor"
+  },
+  {
+    "name": "OWASP Top 10 Web Application Security (2025)",
+    "url": "https://owasp.org/www-project-top-ten/",
+    "cat": "purple",
+    "type": "reference",
+    "desc": "Top 10 critical web app security risks",
+    "details": "## Overview\nThe most widely recognized standard for web application security risks. Updated for 2025 with focus on broken access control, cryptographic failures, injection, insecure design, security misconfiguration, vulnerable components, authentication failures, data integrity failures, logging failures, and SSRF.\n\n## Purple team use\nMap web app vulnerabilities to ATT&CK techniques, validate detection rules against simulated exploits, and prioritize security testing efforts.\n\n## Key changes in 2025\n- Greater focus on software supply chain failures\n- Mishandling of exceptional conditions added as new category\n- Expanded CWE coverage (589 CWEs analyzed)\n\n## Alternatives\n- SANS Top 25\n- CWE Top 25",
+    "source": "https://owasp.org/www-project-top-ten/"
+  },
+  {
+    "name": "OWASP API Security Top 10 (2023)",
+    "url": "https://owasp.org/API-Security/",
+    "cat": "purple",
+    "type": "reference",
+    "desc": "Critical API security risks",
+    "details": "## Overview\nTop 10 security risks specific to APIs. Covers broken object level authorization (BOLA), broken authentication, broken object property level authorization, unrestricted resource consumption, broken function level authorization, unrestricted access to sensitive business flows, SSRF, security misconfiguration, improper inventory management, and unsafe consumption of APIs.\n\n## Purple team use\nValidate API security controls, test authorization boundaries, simulate API abuse patterns, and verify rate limiting and resource controls.\n\n## Key insights\n- 3 of top 5 risks are authorization-related\n- 40% of API attacks involve BOLA\n- New focus on business flow abuse\n\n## Alternatives\n- OWASP Web Top 10 (overlap exists)\n- Cloud provider API security guides",
+  },
+  {
+    "name": "OWASP Mobile Top 10 (2024)",
+    "url": "https://owasp.org/www-project-mobile-top-10/",
+    "cat": "purple",
+    "type": "reference",
+    "desc": "Mobile application security risks",
+    "details": "## Overview\nFirst major update since 2016. Covers improper credential usage, inadequate supply chain security, insecure authentication/authorization, insufficient input/output validation, insecure communication, inadequate privacy controls, insufficient binary protections, security misconfiguration, insecure data storage, and insufficient cryptography.\n\n## Purple team use\nTest mobile app security controls, validate secure storage implementation, simulate MITM attacks, verify certificate pinning, and test reverse engineering protections.\n\n## Key changes from 2016\n- New focus on credential management\n- Supply chain security added\n- Expanded privacy controls emphasis\n\n## Alternatives\n- NIST Mobile Security guidelines\n- Platform-specific security guides (iOS/Android)",
+    "source": "https://owasp.org/www-project-mobile-top-10/"
+  },
+  {
+    "name": "OWASP Top 10 for LLM Applications (2025)",
+    "url": "https://genai.owasp.org/llm-top-10/",
+    "cat": "purple",
+    "type": "reference",
+    "desc": "Large Language Model security risks",
+    "details": "## Overview\nReleased November 2024. Covers prompt injection, sensitive information disclosure, supply chain vulnerabilities, data and model poisoning, improper output handling, excessive agency, system prompt leakage, vector and embedding weaknesses, misinformation, and unbounded consumption.\n\n## Purple team use\nTest LLM guardrails, validate prompt injection defenses, simulate adversarial inputs, verify data sanitization, test RAG security, and validate agent permission boundaries.\n\n## Key 2025 updates\n- Expanded focus on agentic AI (excessive agency)\n- RAG vulnerabilities (vector/embedding weaknesses)\n- System prompt leakage prominence\n- Resource management (unbounded consumption)\n\n## Alternatives\n- NIST AI RMF\n- EU AI Act compliance frameworks\n- MITRE ATLAS",
+    "source": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+  },
+  {
+    "name": "OWASP Top 10 for Agentic AI Applications (2026)",
+    "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+    "cat": "purple",
+    "type": "reference",
+    "desc": "Autonomous AI agent security risks",
+    "details": "## Overview\nReleased December 2024 for 2026. First comprehensive framework for agentic AI security. Covers agent goal hijack (ASI01), tool misuse & exploitation (ASI02), identity & privilege abuse (ASI03), agentic supply chain vulnerabilities (ASI04), AI system card tampering (ASI05), data & memory poisoning (ASI06), uncontrolled agent resource burn (ASI07), agent privilege escalation (ASI08), agentic guardrail bypasses (ASI09), and rogue agents (ASI10).\n\n## Purple team use\nTest agent autonomy boundaries, simulate tool misuse scenarios, validate agent identity controls, test memory poisoning attacks, verify guardrail effectiveness, and monitor agent behavior.\n\n## Real incidents included\n- EchoLeak (prompt-based exfiltration)\n- Amazon Q tool misuse\n- PromptPwnd (GitHub Actions exploitation)\n\n## Key principle\nLeast Agency - grant minimum autonomy required for safe, bounded tasks.\n\n## Alternatives\n- OWASP LLM Top 10 (foundation)\n- MITRE ATLAS for AI\n- NIST AI RMF",
+    "source": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+  },
+  {
+    "name": "OWASP Kubernetes Top 10 (2022)",
+    "url": "https://owasp.org/www-project-kubernetes-top-ten/",
+    "cat": "purple",
+    "type": "reference",
+    "desc": "Kubernetes security risks",
+    "details": "## Overview\nPrioritized list of security risks in Kubernetes ecosystems. Covers insecure workload configurations, supply chain vulnerabilities, overly permissive RBAC, lack of centralized policy enforcement, inadequate logging and monitoring, broken authentication mechanisms, missing network segmentation controls, secrets management failures, misconfigured cluster components, and outdated/vulnerable components.\n\n## Purple team use\nTest K8s RBAC boundaries, validate pod security policies, simulate container escapes, test network policies, verify secrets management, and validate admission controller effectiveness.\n\n## Common attack patterns\n- Exposed kubelet APIs\n- Privilege escalation via RBAC\n- Container breakout attempts\n- Network traversal\n\n## Note\n2025 update in progress.\n\n## Alternatives\n- CIS Kubernetes Benchmark\n- NSA Kubernetes Hardening Guide\n- Kubernetes threat model",
+    "source": "https://github.com/OWASP/www-project-kubernetes-top-ten"
   }
 ];
