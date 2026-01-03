@@ -55,11 +55,23 @@ cybersuite/
 ├── app.js              # Rendering, filtering, and UI logic
 ├── resources.js        # Aggregates resource lists
 ├── res/                # Resource data + type icons
-│   ├── red.js
-│   ├── blue.js
-│   ├── purple.js
-│   ├── utils.js
-│   └── types.js
+│   ├── red/             # Red team resources split by type
+│   │   ├── tool.js
+│   │   ├── guide.js
+│   │   └── ...
+│   ├── blue/            # Blue team resources split by type
+│   │   ├── tool.js
+│   │   ├── framework.js
+│   │   └── ...
+│   ├── purple/          # Purple team resources split by type
+│   │   ├── tool.js
+│   │   ├── training.js
+│   │   └── ...
+│   ├── utils/           # Utility resources split by type
+│   │   ├── tool.js
+│   │   ├── reference.js
+│   │   └── ...
+│   └── types.js         # Icon mapping for resource types
 └── assets/             # Screenshots
 ```
 
@@ -72,7 +84,7 @@ cybersuite/
 
 Contributions are welcome. A few good ways to help:
 
-- Add new tools or improve descriptions in `res/*.js`
+- Add new tools or improve descriptions in `res/<category>/<type>.js`
 - Improve UI/UX in `index.html` or `styles.css`
 - Fix bugs and polish the filtering, pinning, or modal workflows
 
