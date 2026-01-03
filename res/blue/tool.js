@@ -53,7 +53,7 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Open-source XDR/SIEM",
-    "details": "A unified XDR and SIEM protection platform that provides endpoint security, threat detection, and incident response.\n\n## Setup\nDeploy Manager (Server) via Docker or scripted install. Deploy Agents to endpoints.\n```bash\n# Agent install (Linux)\nwget -O wazuh-agent.deb [https://packages.wazuh.com/4.x/wazuh-agent_4.7.2-1_amd64.deb](https://packages.wazuh.com/4.x/wazuh-agent_4.7.2-1_amd64.deb)\nsudo dpkg -i wazuh-agent.deb\n```\n\n## Use\nEndpoint monitoring, file integrity monitoring (FIM), and log aggregation. \n\n## Interesting Options\n- **FIM**: Detects changes to critical system files.\n- **Vulnerability Detector**: Scans installed apps against CVE databases.\n\n## Alternatives\n- **OSSEC**: The ancestor project.\n- **Elastic Security**: Similar agent-based capabilities."
+    "details": "A unified XDR and SIEM protection platform that provides endpoint security, threat detection, and incident response.\n\n## Setup\nDeploy Manager (Server) via Docker or scripted install. Deploy Agents to endpoints.\n```bash\n# Agent install (Linux)\nwget -O wazuh-agent.deb https://packages.wazuh.com/4.x/wazuh-agent_4.7.2-1_amd64.deb\nsudo dpkg -i wazuh-agent.deb\n```\n\n## Use\nEndpoint monitoring, file integrity monitoring (FIM), and log aggregation. \n\n## Interesting Options\n- **FIM**: Detects changes to critical system files.\n- **Vulnerability Detector**: Scans installed apps against CVE databases.\n\n## Alternatives\n- **OSSEC**: The ancestor project.\n- **Elastic Security**: Similar agent-based capabilities."
   },
   {
     "name": "osquery",
@@ -108,7 +108,7 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Threat intel sharing platform",
-    "details": "An open source threat intelligence platform for gathering, sharing, storing and correlating Indicators of Compromise.\n\n## Setup\nInstall script for Ubuntu is the standard method. VM images available.\n```bash\n# Standard install script\nwget -O /tmp/INSTALL.sh [https://raw.githubusercontent.com/MISP/MISP/2.4/INSTALL/INSTALL.sh](https://raw.githubusercontent.com/MISP/MISP/2.4/INSTALL/INSTALL.sh)\nbash /tmp/INSTALL.sh\n```\n\n## Use\nStore, correlate, and share IoCs (Indicators of Compromise). Feeds into SIEM/Firewalls. \n\n## Alternatives\n- **OpenCTI**: More visualization focused.\n- **ThreatConnect**: Commercial."
+    "details": "An open source threat intelligence platform for gathering, sharing, storing and correlating Indicators of Compromise.\n\n## Setup\nInstall script for Ubuntu is the standard method. VM images available.\n```bash\n# Standard install script\nwget -O /tmp/INSTALL.sh https://raw.githubusercontent.com/MISP/MISP/2.4/INSTALL/INSTALL.sh\nbash /tmp/INSTALL.sh\n```\n\n## Use\nStore, correlate, and share IoCs (Indicators of Compromise). Feeds into SIEM/Firewalls. \n\n## Alternatives\n- **OpenCTI**: More visualization focused.\n- **ThreatConnect**: Commercial."
   },
   {
     "name": "OpenCTI",
@@ -152,7 +152,7 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Memory forensics framework",
-    "details": "The advanced memory forensics framework for extracting digital artifacts (processes, network connections, injected code) from volatile memory samples.\n\n## Setup\nRequires Python 3. Install via git or pip.\n```bash\ngit clone [https://github.com/volatilityfoundation/volatility3.git](https://github.com/volatilityfoundation/volatility3.git)\npip install -r requirements.txt\n```\n\n## Use\nAnalyze RAM dumps to find hidden processes, network connections, and injected code.\n\n## Example\n```bash\npython3 vol.py -f memory.dmp windows.pslist\npython3 vol.py -f memory.dmp windows.malfind\n```\n\n## Alternatives\n- **Rekall**: Fork of Volatility 2.\n- **MemProcFS**: Mount memory as a file system."
+    "details": "The advanced memory forensics framework for extracting digital artifacts (processes, network connections, injected code) from volatile memory samples.\n\n## Setup\nRequires Python 3. Install via git or pip.\n```bash\ngit clone https://github.com/volatilityfoundation/volatility3.git\npip install -r requirements.txt\n```\n\n## Use\nAnalyze RAM dumps to find hidden processes, network connections, and injected code.\n\n## Example\n```bash\npython3 vol.py -f memory.dmp windows.pslist\npython3 vol.py -f memory.dmp windows.malfind\n```\n\n## Alternatives\n- **Rekall**: Fork of Volatility 2.\n- **MemProcFS**: Mount memory as a file system."
   },
   {
     "name": "KAPE",
@@ -196,7 +196,7 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Unix security auditing tool",
-    "details": "A battle-tested security auditing tool for systems running Linux, macOS, or Unix-based OS, focusing on system hardening and compliance.\n\n## Setup\nClone git repo or install package.\n```bash\ngit clone [https://github.com/CISOfy/lynis](https://github.com/CISOfy/lynis)\n```\n\n## Use\nPerforms a deep scan of the OS configuration and suggests hardening steps.\n\n## Example\n```bash\n./lynis audit system\n```\n\n## Alternatives\n- **OpenSCAP**: Standards based.\n- **LinPEAS**: Privilege escalation checker (Offensive focus)."
+    "details": "A battle-tested security auditing tool for systems running Linux, macOS, or Unix-based OS, focusing on system hardening and compliance.\n\n## Setup\nClone git repo or install package.\n```bash\ngit clone https://github.com/CISOfy/lynis\n```\n\n## Use\nPerforms a deep scan of the OS configuration and suggests hardening steps.\n\n## Example\n```bash\n./lynis audit system\n```\n\n## Alternatives\n- **OpenSCAP**: Standards based.\n- **LinPEAS**: Privilege escalation checker (Offensive focus)."
   },
   {
     "name": "Trivy",
@@ -207,7 +207,7 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Comprehensive security scanner",
-    "details": "A comprehensive security scanner for containers, filesystems, and git repositories, detecting vulnerabilities and configuration issues.\n\n## Setup\n```bash\n# Install script\ncurl -sfL [https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh](https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh) | sh -s -- -b /usr/local/bin\n```\n\n## Use\nScans containers, filesystems, and git repos for vulnerabilities and config issues.\n\n## Example\n```bash\n# Scan a docker image\ntrivy image python:3.4-alpine\n```\n\n## Alternatives\n- **Grype**: Anchor's scanner.\n- **Clair**: CoreOS scanner."
+    "details": "A comprehensive security scanner for containers, filesystems, and git repositories, detecting vulnerabilities and configuration issues.\n\n## Setup\n```bash\n# Install script\ncurl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin\n```\n\n## Use\nScans containers, filesystems, and git repos for vulnerabilities and config issues.\n\n## Example\n```bash\n# Scan a docker image\ntrivy image python:3.4-alpine\n```\n\n## Alternatives\n- **Grype**: Anchor's scanner.\n- **Clair**: CoreOS scanner."
   },
   {
     "name": "Grype",
@@ -218,7 +218,7 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Vulnerability scanner for containers",
-    "details": "A vulnerability scanner for container images and filesystems that works easily with Syft to analyze software bills of materials.\n\n## Setup\n```bash\ncurl -sSfL [https://raw.githubusercontent.com/anchore/grype/main/install.sh](https://raw.githubusercontent.com/anchore/grype/main/install.sh) | sh -s -- -b /usr/local/bin\n```\n\n## Use\nScan container images and filesystems for vulnerabilities. Works well with Syft (SBOM).\n\n## Example\n```bash\ngrype alpine:latest\n```\n\n## Alternatives\n- **Trivy**\n- **Snyk**"
+    "details": "A vulnerability scanner for container images and filesystems that works easily with Syft to analyze software bills of materials.\n\n## Setup\n```bash\ncurl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin\n```\n\n## Use\nScan container images and filesystems for vulnerabilities. Works well with Syft (SBOM).\n\n## Example\n```bash\ngrype alpine:latest\n```\n\n## Alternatives\n- **Trivy**\n- **Snyk**"
   },
   {
     "name": "Syft",
@@ -229,7 +229,7 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Generate SBOMs (Software Bill of Materials)",
-    "details": "A CLI tool and library for generating a Software Bill of Materials (SBOM) from container images and filesystems.\n\n## Setup\n```bash\ncurl -sSfL [https://raw.githubusercontent.com/anchore/syft/main/install.sh](https://raw.githubusercontent.com/anchore/syft/main/install.sh) | sh -s -- -b /usr/local/bin\n```\n\n## Use\nGenerates a detailed manifest of packages inside a container or filesystem.\n\n## Example\n```bash\nsyft packages alpine:latest -o json\n```\n\n## Alternatives\n- **Trivy** (can also generate SBOMs).\n- **Microsoft SBOM Tool**"
+    "details": "A CLI tool and library for generating a Software Bill of Materials (SBOM) from container images and filesystems.\n\n## Setup\n```bash\ncurl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin\n```\n\n## Use\nGenerates a detailed manifest of packages inside a container or filesystem.\n\n## Example\n```bash\nsyft packages alpine:latest -o json\n```\n\n## Alternatives\n- **Trivy** (can also generate SBOMs).\n- **Microsoft SBOM Tool**"
   },
   {
     "name": "OWASP Dependency-Check",
@@ -339,7 +339,7 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Collaborative IPS/IDS",
-    "details": "An open-source, collaborative security automation tool that analyzes logs to detect attacks and shares signals with the community. \n\n## Setup\n```bash\ncurl -s [https://packagecloud.io/install/repositories/crowdsec/crowdsec/script.deb.sh](https://packagecloud.io/install/repositories/crowdsec/crowdsec/script.deb.sh) | sudo bash\nsudo apt install crowdsec\n```\n\n## Use\nParses logs (nginx, ssh) to detect attacks. Shares signals with the community to block aggressive IPs globally.\n\n## Alternatives\n- **Fail2ban**: Local only.\n- **WAFs** (Cloudflare, AWS WAF)."
+    "details": "An open-source, collaborative security automation tool that analyzes logs to detect attacks and shares signals with the community. \n\n## Setup\n```bash\ncurl -s https://packagecloud.io/install/repositories/crowdsec/crowdsec/script.deb.sh | sudo bash\nsudo apt install crowdsec\n```\n\n## Use\nParses logs (nginx, ssh) to detect attacks. Shares signals with the community to block aggressive IPs globally.\n\n## Alternatives\n- **Fail2ban**: Local only.\n- **WAFs** (Cloudflare, AWS WAF)."
   },
   {
     "name": "Fail2ban",
@@ -482,6 +482,6 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Automated YARA rule curation pipeline",
-    "details": "A robust pipeline tool that automates the sourcing, standardization, and quality assurance of YARA rules, ensuring that blue teams have access to clean, high-performance rule sets for production environments. \n\n## Setup\nYARA Forge is Python-based. A clean install pattern:\n```bash\ngit clone [https://github.com/YARAHQ/yara-forge.git](https://github.com/YARAHQ/yara-forge.git)\ncd yara-forge\npython3 -m venv .venv\nsource .venv/bin/activate\npip install -U pip\npip install -r requirements.txt\n```\n\n## Use\nRun the main script to fetch upstream sources, run QA (syntax, compile checks, performance heuristics), and output curated sets.\n\n## Integration\n- **Production**: Deploy curated rule sets to endpoints or file analysis pipelines.\n- **Hunting**: Use the curated sets as a baseline, then layer environment-specific rules.\n\n## Tips\n- **Governance**: Track rule provenance and keep a changelog per release.\n- **Testing**: Run QA against benign corpora (admin tools, software installers) to control false positives.\n\n## Alternatives\n- **Valhalla**: Commercial YARA feed and curation.\n- **Manual Curation**: Custom scripts/repositories."
+    "details": "A robust pipeline tool that automates the sourcing, standardization, and quality assurance of YARA rules, ensuring that blue teams have access to clean, high-performance rule sets for production environments. \n\n## Setup\nYARA Forge is Python-based. A clean install pattern:\n```bash\ngit clone https://github.com/YARAHQ/yara-forge.git\ncd yara-forge\npython3 -m venv .venv\nsource .venv/bin/activate\npip install -U pip\npip install -r requirements.txt\n```\n\n## Use\nRun the main script to fetch upstream sources, run QA (syntax, compile checks, performance heuristics), and output curated sets.\n\n## Integration\n- **Production**: Deploy curated rule sets to endpoints or file analysis pipelines.\n- **Hunting**: Use the curated sets as a baseline, then layer environment-specific rules.\n\n## Tips\n- **Governance**: Track rule provenance and keep a changelog per release.\n- **Testing**: Run QA against benign corpora (admin tools, software installers) to control false positives.\n\n## Alternatives\n- **Valhalla**: Commercial YARA feed and curation.\n- **Manual Curation**: Custom scripts/repositories."
   }
 );

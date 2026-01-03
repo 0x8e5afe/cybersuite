@@ -16,7 +16,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "High-speed port scanner",
-    "details": "## Description\nMasscan is an internet-scale port scanner. It can scan the entire internet in under 6 minutes, capable of transmitting up to 10 million packets per second.\n\n## Setup\n```bash\nsudo apt install masscan\n# Or build from source:\ngit clone [https://github.com/robertdavidgraham/masscan](https://github.com/robertdavidgraham/masscan)\ncd masscan && make\n```\n\n## Usage\nIt uses its own custom TCP/IP stack to achieve extreme speeds. It is best used for broad discovery rather than detailed service enumeration.\n\n## Useful Commands\n```bash\n# Scan a subnet for web ports at 10k packets/sec\nmasscan 10.11.1.0/24 -p80,443 --rate 10000\n\n# Save to binary format and read later\nmasscan 10.0.0.0/8 -p80 -oB output.bin\nmasscan --readscan output.bin\n```\n\n## Alternatives\n- **nmap**\n- **zmap**",
+    "details": "## Description\nMasscan is an internet-scale port scanner. It can scan the entire internet in under 6 minutes, capable of transmitting up to 10 million packets per second.\n\n## Setup\n```bash\nsudo apt install masscan\n# Or build from source:\ngit clone https://github.com/robertdavidgraham/masscan\ncd masscan && make\n```\n\n## Usage\nIt uses its own custom TCP/IP stack to achieve extreme speeds. It is best used for broad discovery rather than detailed service enumeration.\n\n## Useful Commands\n```bash\n# Scan a subnet for web ports at 10k packets/sec\nmasscan 10.11.1.0/24 -p80,443 --rate 10000\n\n# Save to binary format and read later\nmasscan 10.0.0.0/8 -p80 -oB output.bin\nmasscan --readscan output.bin\n```\n\n## Alternatives\n- **nmap**\n- **zmap**",
     "source": "https://github.com/robertdavidgraham/masscan",
     "binaries": null
   },
@@ -76,7 +76,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Template-based vulnerability scanning",
-    "details": "## Description\nNuclei is a modern, fast vulnerability scanner that uses simple YAML-based templates to detect vulnerabilities.\n\n## Setup\n```bash\ngo install -v [github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest](https://github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest)\n# Update templates\nnuclei -update-templates\n```\n\n## Usage\nRun nuclei against a list of targets using community templates to find CVEs, misconfigurations, and exposed panels.\n\n## Useful Commands\n```bash\n# Scan list of URLs with all templates\nnuclei -l urls.txt\n\n# Scan only for critical CVEs\nnuclei -u [https://example.com](https://example.com) -tags cve,critical\n\n# Scan for specific tech (e.g., jira)\nnuclei -u [https://example.com](https://example.com) -tags jira\n```\n\n## Alternatives\n- **Nessus**\n- **OpenVAS**",
+    "details": "## Description\nNuclei is a modern, fast vulnerability scanner that uses simple YAML-based templates to detect vulnerabilities.\n\n## Setup\n```bash\ngo install -v [github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest](https://github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest)\n# Update templates\nnuclei -update-templates\n```\n\n## Usage\nRun nuclei against a list of targets using community templates to find CVEs, misconfigurations, and exposed panels.\n\n## Useful Commands\n```bash\n# Scan list of URLs with all templates\nnuclei -l urls.txt\n\n# Scan only for critical CVEs\nnuclei -u https://example.com -tags cve,critical\n\n# Scan for specific tech (e.g., jira)\nnuclei -u https://example.com -tags jira\n```\n\n## Alternatives\n- **Nessus**\n- **OpenVAS**",
     "source": "https://github.com/projectdiscovery/nuclei",
     "binaries": "https://github.com/projectdiscovery/nuclei/releases"
   },
@@ -86,7 +86,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Fast web fuzzer and content discovery",
-    "details": "## Description\nFfuf (Fuzz Faster U Fool) is a fast web fuzzer written in Go. It allows you to discover directories, files, or fuzz parameters.\n\n## Setup\n```bash\ngo install [github.com/ffuf/ffuf/v2@latest](https://github.com/ffuf/ffuf/v2@latest)\n```\n\n## Usage\nUse wordlists to brute-force URLs or parameters. Replace the fuzzing point with the keyword `FUZZ`.\n\n## Useful Commands\n```bash\n# Directory brute force (filter 404s)\nffuf -u [https://target.com/FUZZ](https://target.com/FUZZ) -w /path/to/wordlist.txt -fc 404\n\n# Fuzzing a POST parameter\nffuf -u [https://target.com/login](https://target.com/login) -X POST -d \"user=admin&pass=FUZZ\" -w passlist.txt -mr \"Welcome\"\n\n# VHost discovery\nffuf -u [https://target.com](https://target.com) -H \"Host: FUZZ.target.com\" -w subdomains.txt -fs [size_of_default_response]\n```\n\n## Alternatives\n- **gobuster**\n- **dirsearch**",
+    "details": "## Description\nFfuf (Fuzz Faster U Fool) is a fast web fuzzer written in Go. It allows you to discover directories, files, or fuzz parameters.\n\n## Setup\n```bash\ngo install [github.com/ffuf/ffuf/v2@latest](https://github.com/ffuf/ffuf/v2@latest)\n```\n\n## Usage\nUse wordlists to brute-force URLs or parameters. Replace the fuzzing point with the keyword `FUZZ`.\n\n## Useful Commands\n```bash\n# Directory brute force (filter 404s)\nffuf -u https://target.com/FUZZ -w /path/to/wordlist.txt -fc 404\n\n# Fuzzing a POST parameter\nffuf -u https://target.com/login -X POST -d \"user=admin&pass=FUZZ\" -w passlist.txt -mr \"Welcome\"\n\n# VHost discovery\nffuf -u https://target.com -H \"Host: FUZZ.target.com\" -w subdomains.txt -fs [size_of_default_response]\n```\n\n## Alternatives\n- **gobuster**\n- **dirsearch**",
     "source": "https://github.com/ffuf/ffuf",
     "binaries": "https://github.com/ffuf/ffuf/releases"
   },
@@ -96,7 +96,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Directory/DNS/VHost brute forcing",
-    "details": "## Description\nGobuster is a tool used to brute-force URIs (directories and files) in web sites, DNS subdomains, and Virtual Host names.\n\n## Setup\n```bash\ngo install [github.com/OJ/gobuster/v3@latest](https://github.com/OJ/gobuster/v3@latest)\n```\n\n## Usage\nSelect a mode (dir, dns, vhost) and provide a wordlist to start enumerating.\n\n## Useful Commands\n```bash\n# Directory scan\ngobuster dir -u [https://example.com](https://example.com) -w wordlist.txt -t 50\n\n# DNS scan\ngobuster dns -d example.com -w subdomains.txt\n\n# VHost scan\ngobuster vhost -u [https://example.com](https://example.com) -w subdomains.txt\n```\n\n## Alternatives\n- **ffuf**\n- **feroxbuster**",
+    "details": "## Description\nGobuster is a tool used to brute-force URIs (directories and files) in web sites, DNS subdomains, and Virtual Host names.\n\n## Setup\n```bash\ngo install [github.com/OJ/gobuster/v3@latest](https://github.com/OJ/gobuster/v3@latest)\n```\n\n## Usage\nSelect a mode (dir, dns, vhost) and provide a wordlist to start enumerating.\n\n## Useful Commands\n```bash\n# Directory scan\ngobuster dir -u https://example.com -w wordlist.txt -t 50\n\n# DNS scan\ngobuster dns -d example.com -w subdomains.txt\n\n# VHost scan\ngobuster vhost -u https://example.com -w subdomains.txt\n```\n\n## Alternatives\n- **ffuf**\n- **feroxbuster**",
     "source": "https://github.com/OJ/gobuster",
     "binaries": "https://github.com/OJ/gobuster/releases"
   },
@@ -106,7 +106,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Recursive content discovery",
-    "details": "## Description\nFeroxbuster is a fast, simple, recursive content discovery tool written in Rust. It automatically handles recursion (finding a directory and scanning inside it).\n\n## Setup\nDownload binary from releases or install via zip.\n\n## Usage\nRun against a target URL. It will automatically crawl found directories based on your wordlist.\n\n## Useful Commands\n```bash\n# Standard recursive scan looking for specific extensions\nferoxbuster -u [https://example.com](https://example.com) -w wordlist.txt -x php,html,txt\n\n# No recursion, specific depth\nferoxbuster -u [https://example.com](https://example.com) --depth 1\n```\n\n## Alternatives\n- **gobuster**\n- **dirsearch**",
+    "details": "## Description\nFeroxbuster is a fast, simple, recursive content discovery tool written in Rust. It automatically handles recursion (finding a directory and scanning inside it).\n\n## Setup\nDownload binary from releases or install via zip.\n\n## Usage\nRun against a target URL. It will automatically crawl found directories based on your wordlist.\n\n## Useful Commands\n```bash\n# Standard recursive scan looking for specific extensions\nferoxbuster -u https://example.com -w wordlist.txt -x php,html,txt\n\n# No recursion, specific depth\nferoxbuster -u https://example.com --depth 1\n```\n\n## Alternatives\n- **gobuster**\n- **dirsearch**",
     "source": "https://github.com/epi052/feroxbuster",
     "binaries": "https://github.com/epi052/feroxbuster/releases"
   },
@@ -116,7 +116,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Web path brute forcing",
-    "details": "## Description\nDirsearch is a mature, feature-rich command-line tool designed to brute force directories and files in webservers.\n\n## Setup\n```bash\ngit clone [https://github.com/maurosoria/dirsearch.git](https://github.com/maurosoria/dirsearch.git)\npip install -r requirements.txt\n```\n\n## Usage\nA python based web path scanner. Useful for its extensive default wordlist and ease of use.\n\n## Useful Commands\n```bash\n# Simple scan with extensions\npython3 dirsearch.py -u [https://target.com](https://target.com) -e php,txt,zip\n\n# High speed with threads\npython3 dirsearch.py -u [https://target.com](https://target.com) -t 50 --random-agent\n```\n\n## Alternatives\n- **ffuf**\n- **gobuster**",
+    "details": "## Description\nDirsearch is a mature, feature-rich command-line tool designed to brute force directories and files in webservers.\n\n## Setup\n```bash\ngit clone https://github.com/maurosoria/dirsearch.git\npip install -r requirements.txt\n```\n\n## Usage\nA python based web path scanner. Useful for its extensive default wordlist and ease of use.\n\n## Useful Commands\n```bash\n# Simple scan with extensions\npython3 dirsearch.py -u https://target.com -e php,txt,zip\n\n# High speed with threads\npython3 dirsearch.py -u https://target.com -t 50 --random-agent\n```\n\n## Alternatives\n- **ffuf**\n- **gobuster**",
     "source": "https://github.com/maurosoria/dirsearch",
     "binaries": null
   },
@@ -156,7 +156,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "SQL injection testing automation",
-    "details": "## Description\nSQLMap is an open source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws and taking over of database servers.\n\n## Setup\n```bash\ngit clone --depth 1 [https://github.com/sqlmapproject/sqlmap.git](https://github.com/sqlmapproject/sqlmap.git) sqlmap-dev\n```\n\n## Usage\nProvide it with a URL or a saved request file, and it will attempt to identify the injection point and dump data.\n\n## Useful Commands\n```bash\n# GET request injection\npython sqlmap.py -u \"[http://target.com/vuln.php?id=1](http://target.com/vuln.php?id=1)\" --batch\n\n# Capture a request in Burp, save to file, and run:\npython sqlmap.py -r request.txt --level 5 --risk 3\n\n# Dump database data\npython sqlmap.py -u \"...\" --dump\n```\n\n## Alternatives\n- **Ghauri**\n- **Manual Injection**",
+    "details": "## Description\nSQLMap is an open source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws and taking over of database servers.\n\n## Setup\n```bash\ngit clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev\n```\n\n## Usage\nProvide it with a URL or a saved request file, and it will attempt to identify the injection point and dump data.\n\n## Useful Commands\n```bash\n# GET request injection\npython sqlmap.py -u \"http://target.com/vuln.php?id=1\" --batch\n\n# Capture a request in Burp, save to file, and run:\npython sqlmap.py -r request.txt --level 5 --risk 3\n\n# Dump database data\npython sqlmap.py -u \"...\" --dump\n```\n\n## Alternatives\n- **Ghauri**\n- **Manual Injection**",
     "source": "https://github.com/sqlmapproject/sqlmap",
     "binaries": "https://github.com/sqlmapproject/sqlmap/releases"
   },
@@ -166,7 +166,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Web server scanner (misconfigurations)",
-    "details": "## Description\nNikto is an Open Source (GPL) web server scanner which performs comprehensive tests against web servers for multiple items, including over 6700 potentially dangerous files/programs.\n\n## Setup\n```bash\nsudo apt install nikto\n# Or clone from GitHub\n```\n\n## Usage\nRun against a target to identify outdated server software and configuration problems.\n\n## Useful Commands\n```bash\n# Basic scan\nnikto -h [http://example.com](http://example.com)\n\n# Scan with SSL and specific port\nnikto -h [https://example.com](https://example.com) -p 443\n```\n\n## Alternatives\n- **nuclei**\n- **nessus**",
+    "details": "## Description\nNikto is an Open Source (GPL) web server scanner which performs comprehensive tests against web servers for multiple items, including over 6700 potentially dangerous files/programs.\n\n## Setup\n```bash\nsudo apt install nikto\n# Or clone from GitHub\n```\n\n## Usage\nRun against a target to identify outdated server software and configuration problems.\n\n## Useful Commands\n```bash\n# Basic scan\nnikto -h http://example.com\n\n# Scan with SSL and specific port\nnikto -h https://example.com -p 443\n```\n\n## Alternatives\n- **nuclei**\n- **nessus**",
     "source": "https://github.com/sullo/nikto",
     "binaries": "https://github.com/sullo/nikto/releases"
   },
@@ -176,7 +176,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Exploit framework ",
-    "details": "## Description\nThe Metasploit Framework is the world's most used penetration testing framework. It aids in discovering, exploiting, and validating vulnerabilities.\n\n## Setup\nDownload the installer from Rapid7 or use the nightly script:\n```bash\ncurl [https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb](https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb) > msfinstall && chmod 755 msfinstall && ./msfinstall\n```\n\n## Usage\nLaunch `msfconsole` to access the interactive shell where you can search for and use exploits, auxiliary modules, and payloads.\n\n## Useful Commands\n```bash\n# Start console\nmsfconsole\n\n# Inside console:\nsearch ms17-010\nuse 0\nset RHOSTS 10.10.10.10\nrun\n```\n\n## Alternatives\n- **Sliver**\n- **Cobalt Strike**",
+    "details": "## Description\nThe Metasploit Framework is the world's most used penetration testing framework. It aids in discovering, exploiting, and validating vulnerabilities.\n\n## Setup\nDownload the installer from Rapid7 or use the nightly script:\n```bash\ncurl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall\n```\n\n## Usage\nLaunch `msfconsole` to access the interactive shell where you can search for and use exploits, auxiliary modules, and payloads.\n\n## Useful Commands\n```bash\n# Start console\nmsfconsole\n\n# Inside console:\nsearch ms17-010\nuse 0\nset RHOSTS 10.10.10.10\nrun\n```\n\n## Alternatives\n- **Sliver**\n- **Cobalt Strike**",
     "source": "https://github.com/rapid7/metasploit-framework",
     "binaries": "https://github.com/rapid7/metasploit-framework/wiki/Nightly-Installers"
   },
@@ -206,7 +206,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "LLMNR/NBT-NS/mDNS poisoning (lab/authorized)",
-    "details": "## Description\nResponder is a LLMNR, NBT-NS and MDNS poisoner. It answers specific NetBIOS queries based on their name suffix to spoof the server and capture credentials.\n\n## Setup\n```bash\ngit clone [https://github.com/lgandx/Responder.git](https://github.com/lgandx/Responder.git)\n```\n\n## Usage\nRun on a local network segment to listen for multicast requests. Best used to capture NTLMv2 hashes from Windows clients.\n\n## Useful Commands\n```bash\n# Start poisoning on interface eth0\nsudo python3 Responder.py -I eth0 -dDw\n\n# Analyze mode (no poisoning)\nsudo python3 Responder.py -I eth0 -A\n```\n\n## Alternatives\n- **Inveigh** (PowerShell/Windows)",
+    "details": "## Description\nResponder is a LLMNR, NBT-NS and MDNS poisoner. It answers specific NetBIOS queries based on their name suffix to spoof the server and capture credentials.\n\n## Setup\n```bash\ngit clone https://github.com/lgandx/Responder.git\n```\n\n## Usage\nRun on a local network segment to listen for multicast requests. Best used to capture NTLMv2 hashes from Windows clients.\n\n## Useful Commands\n```bash\n# Start poisoning on interface eth0\nsudo python3 Responder.py -I eth0 -dDw\n\n# Analyze mode (no poisoning)\nsudo python3 Responder.py -I eth0 -A\n```\n\n## Alternatives\n- **Inveigh** (PowerShell/Windows)",
     "source": "https://github.com/lgandx/Responder",
     "binaries": null
   },
@@ -256,7 +256,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Secret scanning for repos and files",
-    "details": "## Description\nTruffleHog searches through git repositories for secrets, digging deep into commit history and branches.\n\n## Setup\n```bash\n# Docker\ndocker run -it trufflesecurity/trufflehog:latest github --repo [https://github.com/trufflesecurity/test_keys](https://github.com/trufflesecurity/test_keys)\n# Binary\ncurl -sSfL [https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh](https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh) | sh -s -- -b /usr/local/bin\n```\n\n## Usage\nFinds credentials, keys, and secrets in git repositories, filesystems, and S3 buckets.\n\n## Useful Commands\n```bash\n# Scan a remote repo\ntrufflehog git [https://github.com/user/repo](https://github.com/user/repo)\n\n# Scan filesystem\ntrufflehog filesystem ./path/to/source\n```\n\n## Alternatives\n- **Gitleaks**",
+    "details": "## Description\nTruffleHog searches through git repositories for secrets, digging deep into commit history and branches.\n\n## Setup\n```bash\n# Docker\ndocker run -it trufflesecurity/trufflehog:latest github --repo https://github.com/trufflesecurity/test_keys\n# Binary\ncurl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin\n```\n\n## Usage\nFinds credentials, keys, and secrets in git repositories, filesystems, and S3 buckets.\n\n## Useful Commands\n```bash\n# Scan a remote repo\ntrufflehog git https://github.com/user/repo\n\n# Scan filesystem\ntrufflehog filesystem ./path/to/source\n```\n\n## Alternatives\n- **Gitleaks**",
     "source": "https://github.com/trufflesecurity/trufflehog",
     "binaries": "https://github.com/trufflesecurity/trufflehog/releases"
   },
@@ -296,7 +296,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Email/subdomain/OSINT collection",
-    "details": "## Description\ntheHarvester is a simple to use, yet effective tool for gathering emails, subdomains, hostnames, open ports and banners from different public sources.\n\n## Setup\n```bash\ngit clone [https://github.com/laramies/theHarvester.git](https://github.com/laramies/theHarvester.git)\ncd theHarvester\npip install -r requirements.txt\n```\n\n## Usage\nRun the tool against a domain to collect OSINT data from search engines like Google, Bing, and PGP servers.\n\n## Useful Commands\n```bash\n# Search all sources, limit 500 results\ntheHarvester -d example.com -l 500 -b all\n```\n\n## Alternatives\n- **SpiderFoot**\n- **Recon-ng**",
+    "details": "## Description\ntheHarvester is a simple to use, yet effective tool for gathering emails, subdomains, hostnames, open ports and banners from different public sources.\n\n## Setup\n```bash\ngit clone https://github.com/laramies/theHarvester.git\ncd theHarvester\npip install -r requirements.txt\n```\n\n## Usage\nRun the tool against a domain to collect OSINT data from search engines like Google, Bing, and PGP servers.\n\n## Useful Commands\n```bash\n# Search all sources, limit 500 results\ntheHarvester -d example.com -l 500 -b all\n```\n\n## Alternatives\n- **SpiderFoot**\n- **Recon-ng**",
     "source": "https://github.com/laramies/theHarvester",
     "binaries": null
   },
@@ -306,7 +306,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Automated OSINT collection",
-    "details": "## Description\nSpiderFoot is an open source intelligence (OSINT) automation tool. It integrates with over 200 modules to gather intelligence about a given target.\n\n## Setup\n```bash\ngit clone [https://github.com/smicallef/spiderfoot.git](https://github.com/smicallef/spiderfoot.git)\npip install -r requirements.txt\n```\n\n## Usage\nBest used via its web interface to visualize data. It scans IP addresses, domain names, e-mail addresses, and names.\n\n## Useful Commands\n```bash\n# Start the Web UI (easiest way to use)\npython3 sf.py -l 127.0.0.1:5001\n```\n\n## Alternatives\n- **Maltego**\n- **theHarvester**",
+    "details": "## Description\nSpiderFoot is an open source intelligence (OSINT) automation tool. It integrates with over 200 modules to gather intelligence about a given target.\n\n## Setup\n```bash\ngit clone https://github.com/smicallef/spiderfoot.git\npip install -r requirements.txt\n```\n\n## Usage\nBest used via its web interface to visualize data. It scans IP addresses, domain names, e-mail addresses, and names.\n\n## Useful Commands\n```bash\n# Start the Web UI (easiest way to use)\npython3 sf.py -l 127.0.0.1:5001\n```\n\n## Alternatives\n- **Maltego**\n- **theHarvester**",
     "source": "https://github.com/smicallef/spiderfoot",
     "binaries": "https://github.com/smicallef/spiderfoot/releases"
   },
@@ -326,7 +326,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Privilege escalation audit scripts",
-    "details": "## Description\nPEASS-ng (Privilege Escalation Awesome Scripts Suite) are scripts that search for possible paths to escalate privileges on Linux/Windows/Mac hosts.\n\n## Setup\nDownload the script (sh/bat/exe) directly from releases to the target machine.\n\n## Usage\nRun the script on a compromised host to get a colored output highlighting vulnerabilities (red/yellow).\n\n## Useful Commands\n```bash\n# Linux (curl piping)\ncurl -L [https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh](https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh) | sh\n\n# Windows\n.\\winpeas.exe cmd fast\n```\n\n## Alternatives\n- **LinEnum**\n- **Seatbelt**",
+    "details": "## Description\nPEASS-ng (Privilege Escalation Awesome Scripts Suite) are scripts that search for possible paths to escalate privileges on Linux/Windows/Mac hosts.\n\n## Setup\nDownload the script (sh/bat/exe) directly from releases to the target machine.\n\n## Usage\nRun the script on a compromised host to get a colored output highlighting vulnerabilities (red/yellow).\n\n## Useful Commands\n```bash\n# Linux (curl piping)\ncurl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh | sh\n\n# Windows\n.\\winpeas.exe cmd fast\n```\n\n## Alternatives\n- **LinEnum**\n- **Seatbelt**",
     "source": "https://github.com/peass-ng/PEASS-ng",
     "binaries": "https://github.com/peass-ng/PEASS-ng/releases"
   },
@@ -336,7 +336,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Monitor processes without root (Linux)",
-    "details": "## Description\npspy is a command-line tool designed to snoop on processes without need for root permissions. It allows you to see commands run by other users, cron jobs, etc. as they happen.\n\n## Setup\nDownload the static binary (`pspy32` or `pspy64`) to the target machine.\n```bash\nwget [https://github.com/DominicBreuker/pspy/releases/latest/download/pspy64](https://github.com/DominicBreuker/pspy/releases/latest/download/pspy64)\nchmod +x pspy64\n```\n\n## Usage\nExecute on a Linux host to monitor real-time process creation events.\n\n## Useful Commands\n```bash\n# Run and watch for events\n./pspy64\n\n# Watch specific directories\n./pspy64 -f -r /var/www/html\n```\n\n## Alternatives\n- **auditd** (requires root)",
+    "details": "## Description\npspy is a command-line tool designed to snoop on processes without need for root permissions. It allows you to see commands run by other users, cron jobs, etc. as they happen.\n\n## Setup\nDownload the static binary (`pspy32` or `pspy64`) to the target machine.\n```bash\nwget https://github.com/DominicBreuker/pspy/releases/latest/download/pspy64\nchmod +x pspy64\n```\n\n## Usage\nExecute on a Linux host to monitor real-time process creation events.\n\n## Useful Commands\n```bash\n# Run and watch for events\n./pspy64\n\n# Watch specific directories\n./pspy64 -f -r /var/www/html\n```\n\n## Alternatives\n- **auditd** (requires root)",
     "source": "https://github.com/DominicBreuker/pspy",
     "binaries": "https://github.com/DominicBreuker/pspy/releases"
   },
@@ -366,7 +366,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "SMB enumeration helper",
-    "details": "## Description\nEnum4linux-ng is a rewrite of the legacy enum4linux tool. It automates SMB enumeration (users, shares, policies) using tools like smbclient, rpcclient, and net.\n\n## Setup\n```bash\ngit clone [https://github.com/cddmp/enum4linux-ng.git](https://github.com/cddmp/enum4linux-ng.git)\npip install -r requirements.txt\n```\n\n## Usage\nTarget a Windows or Samba host to extract information via SMB/RPC.\n\n## Useful Commands\n```bash\n# Standard scan\n./enum4linux-ng.py 10.10.10.10 -A\n\n# Export to YAML/JSON\n./enum4linux-ng.py 10.10.10.10 -oJ output.json\n```\n\n## Alternatives\n- **NetExec**\n- **WalkSMB**",
+    "details": "## Description\nEnum4linux-ng is a rewrite of the legacy enum4linux tool. It automates SMB enumeration (users, shares, policies) using tools like smbclient, rpcclient, and net.\n\n## Setup\n```bash\ngit clone https://github.com/cddmp/enum4linux-ng.git\npip install -r requirements.txt\n```\n\n## Usage\nTarget a Windows or Samba host to extract information via SMB/RPC.\n\n## Useful Commands\n```bash\n# Standard scan\n./enum4linux-ng.py 10.10.10.10 -A\n\n# Export to YAML/JSON\n./enum4linux-ng.py 10.10.10.10 -oJ output.json\n```\n\n## Alternatives\n- **NetExec**\n- **WalkSMB**",
     "source": "https://github.com/cddmp/enum4linux-ng",
     "binaries": null
   },
@@ -406,7 +406,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Reverse engineering framework",
-    "details": "## Description\nradare2 is a portable reversing framework. It is CLI-based, scriptable, and supports many architectures.\n\n## Setup\n```bash\ngit clone [https://github.com/radareorg/radare2](https://github.com/radareorg/radare2)\nradare2/sys/install.sh\n```\n\n## Usage\nUse it to open binaries, analyze code structures, patch bytes, and debug applications.\n\n## Useful Commands\n```bash\n# Open binary\nr2 ./binary\n\n# Inside r2:\naaa       # Analyze all\npdf       # Print disassembly function\niz        # List strings\n```\n\n## Alternatives\n- **Ghidra**\n- **Cutter** (GUI for r2)",
+    "details": "## Description\nradare2 is a portable reversing framework. It is CLI-based, scriptable, and supports many architectures.\n\n## Setup\n```bash\ngit clone https://github.com/radareorg/radare2\nradare2/sys/install.sh\n```\n\n## Usage\nUse it to open binaries, analyze code structures, patch bytes, and debug applications.\n\n## Useful Commands\n```bash\n# Open binary\nr2 ./binary\n\n# Inside r2:\naaa       # Analyze all\npdf       # Print disassembly function\niz        # List strings\n```\n\n## Alternatives\n- **Ghidra**\n- **Cutter** (GUI for r2)",
     "source": "https://github.com/radareorg/radare2",
     "binaries": "https://github.com/radareorg/radare2/releases"
   },
@@ -436,7 +436,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Screenshot and report web targets",
-    "details": "## Description\ngowitness is a golang, web screenshot utility using Chrome Headless. It is useful for visual reconnaissance of large lists of URLs.\n\n## Setup\n```bash\ngo install [github.com/sensepost/gowitness@latest](https://github.com/sensepost/gowitness@latest)\n```\n\n## Usage\nFeed it a list of URLs, and it will save screenshots and header information to a database and generate a report.\n\n## Useful Commands\n```bash\n# Screenshot a single URL\ngowitness single --url [https://example.com](https://example.com)\n\n# Screenshot a list of URLs\ngowitness file -f urls.txt\n\n# Start report server\ngowitness report serve\n```\n\n## Alternatives\n- **EyeWitness**\n- **Aquatone**",
+    "details": "## Description\ngowitness is a golang, web screenshot utility using Chrome Headless. It is useful for visual reconnaissance of large lists of URLs.\n\n## Setup\n```bash\ngo install [github.com/sensepost/gowitness@latest](https://github.com/sensepost/gowitness@latest)\n```\n\n## Usage\nFeed it a list of URLs, and it will save screenshots and header information to a database and generate a report.\n\n## Useful Commands\n```bash\n# Screenshot a single URL\ngowitness single --url https://example.com\n\n# Screenshot a list of URLs\ngowitness file -f urls.txt\n\n# Start report server\ngowitness report serve\n```\n\n## Alternatives\n- **EyeWitness**\n- **Aquatone**",
     "source": "https://github.com/sensepost/gowitness",
     "binaries": "https://github.com/sensepost/gowitness/releases"
   },
@@ -446,7 +446,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Web target screenshotting and reporting",
-    "details": "## Description\nEyeWitness is designed to take screenshots of websites, provide some server header info, and identify default credentials if known.\n\n## Setup\n```bash\ngit clone [https://github.com/FortyNorthSecurity/EyeWitness.git](https://github.com/FortyNorthSecurity/EyeWitness.git)\ncd EyeWitness/Python/setup && ./setup.sh\n```\n\n## Usage\nIt is used to triage a large number of web services to determine which ones are worth further investigation.\n\n## Useful Commands\n```bash\n# Scan list of URLs\n./EyeWitness.py -f urls.txt --web\n```\n\n## Alternatives\n- **gowitness**",
+    "details": "## Description\nEyeWitness is designed to take screenshots of websites, provide some server header info, and identify default credentials if known.\n\n## Setup\n```bash\ngit clone https://github.com/FortyNorthSecurity/EyeWitness.git\ncd EyeWitness/Python/setup && ./setup.sh\n```\n\n## Usage\nIt is used to triage a large number of web services to determine which ones are worth further investigation.\n\n## Useful Commands\n```bash\n# Scan list of URLs\n./EyeWitness.py -f urls.txt --web\n```\n\n## Alternatives\n- **gowitness**",
     "source": "https://github.com/FortyNorthSecurity/EyeWitness",
     "binaries": null
   },
@@ -466,7 +466,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "TLS/SSL configuration tester",
-    "details": "## Description\ntestssl.sh is a free command line tool which checks a server's service on any port for the support of TLS/SSL ciphers, protocols as well as some cryptographic flaws.\n\n## Setup\n```bash\ngit clone --depth 1 [https://github.com/drwetter/testssl.sh.git](https://github.com/drwetter/testssl.sh.git)\ncd testssl.sh\nchmod +x testssl.sh\n```\n\n## Usage\nIt does not rely on third-party libraries (only bash and openssl) to perform deep analysis of SSL/TLS configurations.\n\n## Useful Commands\n```bash\n# Test a site and output HTML\n./testssl.sh --htmlfile report.html [https://example.com](https://example.com)\n```\n\n## Alternatives\n- **sslyze**\n- **SSL Labs**",
+    "details": "## Description\ntestssl.sh is a free command line tool which checks a server's service on any port for the support of TLS/SSL ciphers, protocols as well as some cryptographic flaws.\n\n## Setup\n```bash\ngit clone --depth 1 https://github.com/drwetter/testssl.sh.git\ncd testssl.sh\nchmod +x testssl.sh\n```\n\n## Usage\nIt does not rely on third-party libraries (only bash and openssl) to perform deep analysis of SSL/TLS configurations.\n\n## Useful Commands\n```bash\n# Test a site and output HTML\n./testssl.sh --htmlfile report.html https://example.com\n```\n\n## Alternatives\n- **sslyze**\n- **SSL Labs**",
     "source": "https://github.com/drwetter/testssl.sh",
     "binaries": "https://github.com/drwetter/testssl.sh/releases"
   },
@@ -496,7 +496,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Adversary emulation (use for purple teaming)",
-    "details": "## Description\nMITRE Caldera is a cyber security framework designed to easily automate adversary emulation, assist manual red teams, and automate incident response.\n\n## Setup\n```bash\ngit clone [https://github.com/mitre/caldera.git](https://github.com/mitre/caldera.git) --recursive\npip install -r requirements.txt\npython3 server.py\n```\n\n## Usage\nUse the web interface to deploy agents and run 'Operations' which are chains of attack steps (Abilities) mapped to the ATT&CK framework.\n\n## Workflow\n1. Login to Web Interface.\n2. Deploy an Agent.\n3. Create an Operation (Adversary Profile).\n\n## Alternatives\n- **Atomic Red Team**\n- **Prelude Operator**",
+    "details": "## Description\nMITRE Caldera is a cyber security framework designed to easily automate adversary emulation, assist manual red teams, and automate incident response.\n\n## Setup\n```bash\ngit clone https://github.com/mitre/caldera.git --recursive\npip install -r requirements.txt\npython3 server.py\n```\n\n## Usage\nUse the web interface to deploy agents and run 'Operations' which are chains of attack steps (Abilities) mapped to the ATT&CK framework.\n\n## Workflow\n1. Login to Web Interface.\n2. Deploy an Agent.\n3. Create an Operation (Adversary Profile).\n\n## Alternatives\n- **Atomic Red Team**\n- **Prelude Operator**",
     "source": "https://github.com/mitre/caldera",
     "binaries": "https://github.com/mitre/caldera/releases"
   },
@@ -506,7 +506,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "SMB/AD assessment framework",
-    "details": "## Description\nNetExec (nxc) is a network exploitation tool that automates assessing the security of large Active Directory networks. It is the maintained successor to CrackMapExec.\n\n## Setup\n```bash\npipx install git+[https://github.com/Pennyw0rth/NetExec](https://github.com/Pennyw0rth/NetExec)\n```\n\n## Usage\nUse it to perform password spraying, enumerate users/shares, and execute commands across multiple hosts simultaneously.\n\n## Useful Commands\n```bash\n# Spray passwords\nnxc smb 10.10.10.0/24 -u users.txt -p Password123\n\n# Execute command\nnxc smb 10.10.10.10 -u user -p pass -x \"whoami\"\n```\n\n## Alternatives\n- **Impacket**",
+    "details": "## Description\nNetExec (nxc) is a network exploitation tool that automates assessing the security of large Active Directory networks. It is the maintained successor to CrackMapExec.\n\n## Setup\n```bash\npipx install git+https://github.com/Pennyw0rth/NetExec\n```\n\n## Usage\nUse it to perform password spraying, enumerate users/shares, and execute commands across multiple hosts simultaneously.\n\n## Useful Commands\n```bash\n# Spray passwords\nnxc smb 10.10.10.0/24 -u users.txt -p Password123\n\n# Execute command\nnxc smb 10.10.10.10 -u user -p pass -x \"whoami\"\n```\n\n## Alternatives\n- **Impacket**",
     "source": "https://github.com/Pennyw0rth/NetExec",
     "binaries": "https://github.com/Pennyw0rth/NetExec/releases"
   },
@@ -576,7 +576,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Dynamic pentesting cheatsheets that turn Markdown notes into an interactive workspace",
-    "details": "## Description\nPwnsheet turns static markdown notes into a dynamic workspace. It allows you to define variables (like Target IP) which automatically update all commands in the cheatsheet.\n\n## Setup\n```bash\ngit clone [https://github.com/0x8e5afe/pwnsheet.git](https://github.com/0x8e5afe/pwnsheet.git)\ncd pwnsheet\npython3 -m http.server 8000\n# Open localhost:8000 in browser\n```\n\n## Usage\nEdit the underlying markdown files to add your own notes. Use the web interface to toggle checkboxes and copy pre-filled commands.\n\n## Alternatives\n- **PayloadsAllTheThings**",
+    "details": "## Description\nPwnsheet turns static markdown notes into a dynamic workspace. It allows you to define variables (like Target IP) which automatically update all commands in the cheatsheet.\n\n## Setup\n```bash\ngit clone https://github.com/0x8e5afe/pwnsheet.git\ncd pwnsheet\npython3 -m http.server 8000\n# Open localhost:8000 in browser\n```\n\n## Usage\nEdit the underlying markdown files to add your own notes. Use the web interface to toggle checkboxes and copy pre-filled commands.\n\n## Alternatives\n- **PayloadsAllTheThings**",
     "source": "https://github.com/0x8e5afe/pwnsheet",
     "binaries": null
   },
@@ -606,7 +606,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Shellshock vulnerability checker",
-    "details": "## Description\nshcheck is a script to detect Shellshock vulnerabilities in CGI scripts and web-exposed Bash environments.\n\n## Setup\n```bash\ngit clone [https://github.com/santoru/shcheck.git](https://github.com/santoru/shcheck.git)\n```\n\n## Usage\nPass a URL to the script. It sends crafted HTTP headers to check if the server is vulnerable to arbitrary command execution.\n\n## Useful Commands\n```bash\n# Check a URL\npython shcheck.py [http://target.com/cgi-bin/test.cgi](http://target.com/cgi-bin/test.cgi)\n```\n\n## Alternatives\n- **nmap** (--script http-shellshock)",
+    "details": "## Description\nshcheck is a script to detect Shellshock vulnerabilities in CGI scripts and web-exposed Bash environments.\n\n## Setup\n```bash\ngit clone https://github.com/santoru/shcheck.git\n```\n\n## Usage\nPass a URL to the script. It sends crafted HTTP headers to check if the server is vulnerable to arbitrary command execution.\n\n## Useful Commands\n```bash\n# Check a URL\npython shcheck.py http://target.com/cgi-bin/test.cgi\n```\n\n## Alternatives\n- **nmap** (--script http-shellshock)",
     "source": "https://github.com/santoru/shcheck",
     "binaries": null
   },
@@ -616,7 +616,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Monitor processes without root (Linux)",
-    "details": "## Description\npspy is a command-line tool designed to snoop on processes without need for root permissions. It allows you to see commands run by other users, cron jobs, etc. as they happen.\n\n## Setup\n```bash\n# Download the static binary (upload to target)\nwget [https://github.com/DominicBreuker/pspy/releases/latest/download/pspy64](https://github.com/DominicBreuker/pspy/releases/latest/download/pspy64)\nchmod +x pspy64\n```\n\n## Usage\nExecute on a Linux host to monitor real-time process creation events.\n\n## Useful Commands\n```bash\n./pspy64\n```\n\n## Alternatives\n- **auditd**",
+    "details": "## Description\npspy is a command-line tool designed to snoop on processes without need for root permissions. It allows you to see commands run by other users, cron jobs, etc. as they happen.\n\n## Setup\n```bash\n# Download the static binary (upload to target)\nwget https://github.com/DominicBreuker/pspy/releases/latest/download/pspy64\nchmod +x pspy64\n```\n\n## Usage\nExecute on a Linux host to monitor real-time process creation events.\n\n## Useful Commands\n```bash\n./pspy64\n```\n\n## Alternatives\n- **auditd**",
     "source": "https://github.com/DominicBreuker/pspy",
     "binaries": "https://github.com/DominicBreuker/pspy/releases"
   },
@@ -626,7 +626,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Linux local enumeration script",
-    "details": "## Description\nLinEnum is a shell script that enumerates system information, users, network info, and potential privilege escalation vectors on Linux.\n\n## Setup\n```bash\nwget [https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh](https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh)\nchmod +x LinEnum.sh\n```\n\n## Usage\nRun the script on the target machine. It performs a wide range of checks and outputs the results to stdout.\n\n## Useful Commands\n```bash\n./LinEnum.sh -t\n```\n\n## Alternatives\n- **LinPEAS**",
+    "details": "## Description\nLinEnum is a shell script that enumerates system information, users, network info, and potential privilege escalation vectors on Linux.\n\n## Setup\n```bash\nwget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh\nchmod +x LinEnum.sh\n```\n\n## Usage\nRun the script on the target machine. It performs a wide range of checks and outputs the results to stdout.\n\n## Useful Commands\n```bash\n./LinEnum.sh -t\n```\n\n## Alternatives\n- **LinPEAS**",
     "source": "https://github.com/rebootuser/LinEnum",
     "binaries": null
   },
@@ -636,7 +636,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Suggest kernel exploits based on version",
-    "details": "## Description\nLinux Exploit Suggester is a script that assesses the kernel version and running processes to suggest possible public exploits.\n\n## Setup\n```bash\nwget [https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh](https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh) -O les.sh\nchmod +x les.sh\n```\n\n## Usage\nRun it directly on the target or feed it the output of `uname -a` locally.\n\n## Useful Commands\n```bash\n# Run on target\n./les.sh\n\n# Run locally with 'uname -a' input\n./les.sh --uname \"Linux target 4.4.0...\"\n```\n\n## Alternatives\n- **Searchsploit**",
+    "details": "## Description\nLinux Exploit Suggester is a script that assesses the kernel version and running processes to suggest possible public exploits.\n\n## Setup\n```bash\nwget https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh -O les.sh\nchmod +x les.sh\n```\n\n## Usage\nRun it directly on the target or feed it the output of `uname -a` locally.\n\n## Useful Commands\n```bash\n# Run on target\n./les.sh\n\n# Run locally with 'uname -a' input\n./les.sh --uname \"Linux target 4.4.0...\"\n```\n\n## Alternatives\n- **Searchsploit**",
     "source": "https://github.com/mzet-/linux-exploit-suggester",
     "binaries": null
   },
@@ -686,7 +686,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Small, focused ATT&CK technique tests",
-    "details": "## Description\nAtomic Red Team is a library of simple tests that every security team can execute to test their controls. Each test is mapped to MITRE ATT&CK.\n\n## Setup\n```powershell\nIEX (IWR '[https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1](https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1)' -UseBasicParsing); \nInstall-AtomicRedTeam\n```\n\n## Usage\nExecute specific techniques to see if your security tools detect or block the behavior.\n\n## Useful Commands\n```powershell\n# Run a specific technique (e.g., T1003)\nInvoke-AtomicTest T1003\n```\n\n## Alternatives\n- **Caldera**",
+    "details": "## Description\nAtomic Red Team is a library of simple tests that every security team can execute to test their controls. Each test is mapped to MITRE ATT&CK.\n\n## Setup\n```powershell\nIEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1' -UseBasicParsing); \nInstall-AtomicRedTeam\n```\n\n## Usage\nExecute specific techniques to see if your security tools detect or block the behavior.\n\n## Useful Commands\n```powershell\n# Run a specific technique (e.g., T1003)\nInvoke-AtomicTest T1003\n```\n\n## Alternatives\n- **Caldera**",
     "source": "https://github.com/redcanaryco/atomic-red-team",
     "binaries": null
   },
@@ -706,7 +706,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Open-source red team C2 framework",
-    "details": "## Description\nSliver is an open source cross-platform adversary emulation/red team framework. It supports C2 over Mutual-TLS, HTTP(S), and DNS.\n\n## Setup\n```bash\n# Linux Installer\ncurl [https://sliver.sh/install](https://sliver.sh/install)|sudo bash\n```\n\n## Usage\nGenerate implants for targets and manage them via the Sliver console. It offers robust features comparable to commercial tools.\n\n## Useful Commands\n```bash\n# Start server\nsliver-server\n\n# Generate implant\ngenerate --mtls 10.10.10.10 --save /tmp/implant\n```\n\n## Alternatives\n- **Mythic**\n- **Cobalt Strike**",
+    "details": "## Description\nSliver is an open source cross-platform adversary emulation/red team framework. It supports C2 over Mutual-TLS, HTTP(S), and DNS.\n\n## Setup\n```bash\n# Linux Installer\ncurl https://sliver.sh/install|sudo bash\n```\n\n## Usage\nGenerate implants for targets and manage them via the Sliver console. It offers robust features comparable to commercial tools.\n\n## Useful Commands\n```bash\n# Start server\nsliver-server\n\n# Generate implant\ngenerate --mtls 10.10.10.10 --save /tmp/implant\n```\n\n## Alternatives\n- **Mythic**\n- **Cobalt Strike**",
     "source": "https://github.com/BishopFox/sliver",
     "binaries": "https://github.com/BishopFox/sliver/releases"
   },
@@ -716,7 +716,7 @@ window.CYBER_RESOURCES_RED.push(
     "cat": "red",
     "type": "tool",
     "desc": "Pluggable C2 framework",
-    "details": "## Description\nMythic is a collaborative, multi-platform, red teaming framework. It uses a web interface and docker containers for different agents (Payload Types).\n\n## Setup\n```bash\ngit clone [https://github.com/its-a-feature/Mythic](https://github.com/its-a-feature/Mythic)\ncd Mythic\n./install_docker_ubuntu.sh\nmake\n```\n\n## Usage\nInstall specific agents (like Apollo, Poseidon) into Mythic and control them via the web UI.\n\n## Alternatives\n- **Sliver**",
+    "details": "## Description\nMythic is a collaborative, multi-platform, red teaming framework. It uses a web interface and docker containers for different agents (Payload Types).\n\n## Setup\n```bash\ngit clone https://github.com/its-a-feature/Mythic\ncd Mythic\n./install_docker_ubuntu.sh\nmake\n```\n\n## Usage\nInstall specific agents (like Apollo, Poseidon) into Mythic and control them via the web UI.\n\n## Alternatives\n- **Sliver**",
     "source": "https://github.com/its-a-feature/Mythic",
     "binaries": null
   }
