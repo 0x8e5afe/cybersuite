@@ -369,6 +369,23 @@ body {
     transform: translateY(0) scale(1);
 }
 
+#detailsModal .modal-card {
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#detailsModal #detailsContent {
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 0.75rem;
+    scrollbar-gutter: stable;
+}
+
+#detailsModal #detailsContent::-webkit-scrollbar-track {
+    margin-left: 0.5rem;
+}
+
 .markdown h1,
 .markdown h2,
 .markdown h3 {

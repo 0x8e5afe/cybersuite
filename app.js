@@ -319,17 +319,23 @@ async function renderCards(filter = 'all', searchQuery = '') {
 
         const iconClass = TYPE_ICONS[item.type] || TYPE_ICONS.tool;
         const hasSource = Boolean(item.source);
-        const sameLink = hasSource && item.source === item.url;
-        const showWebsite = true;
-        const showSource = hasSource && !sameLink;
-        const buttonCount = (showWebsite ? 1 : 0) + (showSource ? 1 : 0);
+        const websiteUrl = item.website || item.url;
+        const sameLink = hasSource && item.source === websiteUrl;
+        const showWebsite = !sameLink;
+        const showSource = hasSource;
+        const showBinaries = Boolean(item.binaries);
+        const buttonCount = (showWebsite ? 1 : 0) + (showSource ? 1 : 0) + (showBinaries ? 1 : 0);
+        const buttonColumns = buttonCount >= 3 ? 'grid-cols-3' : (buttonCount === 2 ? 'grid-cols-2' : 'grid-cols-1');
         const actionButtons = `
-            <div class="mt-4 grid gap-2 ${buttonCount > 1 ? 'grid-cols-2' : 'grid-cols-1'}">
-                ${showWebsite ? `<a href="${item.url}" target="_blank" rel="noopener" data-action="open" class="inline-flex items-center justify-center w-full py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm font-medium text-white transition-colors border border-white/5">
+            <div class="mt-4 grid gap-2 ${buttonColumns}">
+                ${showWebsite ? `<a href="${websiteUrl}" target="_blank" rel="noopener" data-action="open" class="inline-flex items-center justify-center w-full py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm font-medium text-white transition-colors border border-white/5">
                     Website <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-xs opacity-70"></i>
                 </a>` : ''}
                 ${showSource ? `<a href="${item.source}" target="_blank" rel="noopener" data-action="open" class="inline-flex items-center justify-center w-full py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm font-medium text-white transition-colors border border-white/5">
-                    Source Code <i class="fa-brands fa-github ml-2 text-xs opacity-70"></i>
+                    Code <i class="fa-brands fa-github ml-2 text-xs opacity-70"></i>
+                </a>` : ''}
+                ${showBinaries ? `<a href="${item.binaries}" target="_blank" rel="noopener" data-action="open" class="inline-flex items-center justify-center w-full py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm font-medium text-white transition-colors border border-white/5" aria-label="Download binaries">
+                    Binaries <i class="fa-solid fa-box-archive ml-2 text-xs opacity-70"></i>
                 </a>` : ''}
             </div>
         `;
@@ -531,7 +537,18 @@ function launchConfetti() {
     }, 1600);
 }
 
+function clearUserInputs() {
+    if (elements.searchInput) {
+        elements.searchInput.value = '';
+    }
+    if (elements.requestForm) {
+        elements.requestForm.reset();
+    }
+}
+
 function init() {
+    clearUserInputs();
+
     elements.searchInput.addEventListener('input', (e) => {
         renderCards(currentFilter, e.target.value);
     });

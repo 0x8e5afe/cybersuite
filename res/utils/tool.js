@@ -1,4 +1,16 @@
-window.CYBER_RESOURCES_UTILS = [
+window.CYBER_RESOURCES_UTILS = window.CYBER_RESOURCES_UTILS || [];
+window.CYBER_RESOURCES_UTILS.push(
+  {
+    "name": "Regex101",
+    "url": "https://regex101.com/",
+    "website": "https://regex101.com/",
+    "source": null,
+    "binaries": null,
+    "cat": "utils",
+    "type": "tool",
+    "desc": "Regex tester/debugger",
+    "details": "## Setup\nWeb app (no install). Use offline/unit tests for production-grade validation.\n\n## Use\nHandy for building detection regexes, WAF rules, and log parsers.\n\n## Interesting options\nExplain mode, unit tests, named groups, different regex flavors, and sharing patterns with your team for review."
+  },
   {
     "name": "CyberChef",
     "url": "https://gchq.github.io/CyberChef/",
@@ -108,14 +120,6 @@ window.CYBER_RESOURCES_UTILS = [
     "details": "## Overview\nIPinfo provides ASN/org/geolocation data useful for enrichment (validate accuracy).\n\n## Alternatives\n- MaxMind GeoIP\n- Team Cymru WHOIS"
   },
   {
-    "name": "Team Cymru IP to ASN",
-    "url": "https://www.team-cymru.com/ip-asn-mapping",
-    "cat": "utils",
-    "type": "reference",
-    "desc": "ASN mapping references",
-    "details": "## Overview\nTeam Cymru provides IP-to-ASN mapping services and references often used in threat intel enrichment.\n\n## Alternatives\n- RIPEstat\n- IPinfo"
-  },
-  {
     "name": "RIPEstat",
     "url": "https://stat.ripe.net/",
     "cat": "utils",
@@ -138,14 +142,6 @@ window.CYBER_RESOURCES_UTILS = [
     "type": "tool",
     "desc": "Domain/IP registration lookup",
     "details": "## Overview\n`whois` provides registration data; note that GDPR/redaction can limit results.\n\n## Alternatives\n- RDAP queries\n- Registrar portals"
-  },
-  {
-    "name": "RDAP",
-    "url": "https://www.icann.org/rdap",
-    "cat": "utils",
-    "type": "reference",
-    "desc": "Modern replacement for WHOIS",
-    "details": "## Overview\nRDAP is the standardized protocol replacing WHOIS, with structured responses and authentication support.\n\n## Alternatives\n- WHOIS (legacy)\n- Registrar APIs"
   },
   {
     "name": "VirusTotal",
@@ -197,37 +193,12 @@ window.CYBER_RESOURCES_UTILS = [
     "details": "## Overview\nExplainshell helps decode unfamiliar shell commands during incident response reviews and post-mortems.\n\n## Alternatives\n- `man` pages\n- tldr pages"
   },
   {
-    "name": "tldr pages",
-    "url": "https://tldr.sh/",
-    "cat": "utils",
-    "type": "reference",
-    "desc": "Concise command examples",
-    "details": "## Overview\nCommunity-maintained short examples for common CLI tools (useful under pressure).\n\n## Alternatives\n- `man`\n- cheat.sh"
-  },
-  {
     "name": "cheat.sh",
     "url": "https://cheat.sh/",
     "cat": "utils",
     "type": "tool",
     "desc": "Command-line cheat sheets",
     "details": "## Overview\nQuery cheat sheets from your terminal (languages, commands). Useful when building quick IR scripts.\n\n## Alternatives\n- tldr\n- local notes/wiki"
-  },
-  {
-    "name": "Cybersecurity Map (Awesome lists index)",
-    "url": "https://github.com/sbilly/awesome-security",
-    "cat": "utils",
-    "type": "archive",
-    "desc": "Large curated security list",
-    "details": "## Overview\nAwesome Security is a broad curated list of security resources across domains.\n\n## Tip\nUse it as a discovery index, then curate your own “golden set” for your team.\n\n## Alternatives\n- Awesome Incident Response\n- Awesome Threat Detection",
-    "source": "https://github.com/sbilly/awesome-security"
-  },
-  {
-    "name": "Wayback Machine",
-    "url": "https://archive.org/web/",
-    "cat": "utils",
-    "type": "archive",
-    "desc": "Historical web snapshots",
-    "details": "## Overview\nArchive.org snapshots are useful for investigating removed content, old JS, and verifying claims about past site states.\n\n## Alternatives\n- Common Crawl\n- Cached copies (limited)"
   },
   {
     "name": "curl",
@@ -284,15 +255,6 @@ window.CYBER_RESOURCES_UTILS = [
     "type": "tool",
     "desc": "DNS/MX/blacklist diagnostics",
     "details": "## Overview\nMXToolbox helps diagnose mail/DNS issues and check common blacklists, useful during phishing incidents and mail delivery issues.\n\n## Alternatives\n- dig + manual checks\n- Vendor email security portals"
-  },
-  {
-    "name": "CyberChef Recipes (community)",
-    "url": "https://github.com/mattnotmax/cyberchef-recipes",
-    "cat": "utils",
-    "type": "reference",
-    "desc": "Reusable CyberChef recipes",
-    "details": "## Overview\nCommunity recipe collections to speed up decoding common formats and malware triage transformations.\n\n## Alternatives\n- Your internal recipe library\n- Python notebooks",
-    "source": "https://github.com/mattnotmax/cyberchef-recipes"
   },
   {
     "name": "ExifTool",
@@ -386,4 +348,4 @@ window.CYBER_RESOURCES_UTILS = [
     "details": "## Overview\nFLOSS (FLARE) extracts and deobfuscates strings from binaries; useful in malware triage.\n\n## Alternatives\n- capa (capabilities)\n- Ghidra (manual analysis)",
     "source": "https://github.com/mandiant/flare-floss"
   }
-];
+);
