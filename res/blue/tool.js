@@ -9,7 +9,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Network IDS/IPS and NSM engine",
-    "details": "High-performance Network IDS, IPS, and Network Security Monitoring engine used to detect intrusions and log network traffic.\n\n## Setup\n```bash\n# Ubuntu PPA\nsudo add-apt-repository ppa:oisf/suricata-stable\nsudo apt install suricata\n# Update rules\nsuricata-update\n```\n\n## Use\nDetect known threats via signatures and log protocol metadata. \n\n## Example\n```bash\n# Offline mode (pcap analysis)\nsuricata -r traffic.pcap -k none -l ./logs\n\n# Inspect fast.log for alerts\ncat ./logs/fast.log\n```\n\n## Alternatives\n- **Snort**: The original NIDS.\n- **Zeek**: Better for protocol deep-dive/hunting."
+    "details": "High-performance Network IDS, IPS, and Network Security Monitoring engine used to detect intrusions and log network traffic.\n\n## Setup\n```bash\n# Ubuntu PPA\nsudo add-apt-repository ppa:oisf/suricata-stable\nsudo apt install suricata\n# Update rules\nsuricata-update\n```\n\n## Use\nDetect known threats via signatures and log protocol metadata. \n\n## Example\n```bash\n# Offline mode (pcap analysis)\nsuricata -r traffic.pcap -k none -l ./logs\n\n# Inspect fast.log for alerts\ncat ./logs/fast.log\n```\n\n## Alternatives\n- **Snort**: The original NIDS.\n- **Zeek**: Better for protocol deep-dive/hunting.",
+    "tags": [
+      "network",
+      "detection",
+      "search"
+    ]
   },
   {
     "name": "Zeek",
@@ -20,7 +25,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Network security monitoring framework",
-    "details": "A passive, open-source network traffic analyzer that focuses on high-fidelity transaction logging rather than signature-based alerts.\n\n## Setup\nLinux is the primary supported platform (via OBS repos).\n```bash\n# Post-install, deploy standard scripts\nzeekctl deploy\n```\n\n## Use\nGenerates transaction logs (DNS, HTTP, SSL) rather than just alerts. \n\n## Example\n```bash\n# Analyze pcap\nzeek -r suspicious.pcap\n# Check DNS queries\ncat dns.log | zeek-cut query answers\n```\n\n## Alternatives\n- **Suricata**: Better for signature-based blocking.\n- **Brim**: Zeek+Suricata GUI."
+    "details": "A passive, open-source network traffic analyzer that focuses on high-fidelity transaction logging rather than signature-based alerts.\n\n## Setup\nLinux is the primary supported platform (via OBS repos).\n```bash\n# Post-install, deploy standard scripts\nzeekctl deploy\n```\n\n## Use\nGenerates transaction logs (DNS, HTTP, SSL) rather than just alerts. \n\n## Example\n```bash\n# Analyze pcap\nzeek -r suspicious.pcap\n# Check DNS queries\ncat dns.log | zeek-cut query answers\n```\n\n## Alternatives\n- **Suricata**: Better for signature-based blocking.\n- **Brim**: Zeek+Suricata GUI.",
+    "tags": [
+      "web",
+      "network",
+      "dns"
+    ]
   },
   {
     "name": "Wireshark",
@@ -31,7 +41,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Packet capture and protocol analysis",
-    "details": "The industry-standard network protocol analyzer that allows you to capture and interactively browse traffic running on a computer network.\n\n## Setup\nInstall via OS package manager or installer. Ensure you have capture privileges.\n\n## Use\nMicroscopic traffic analysis. \n\n## Example Filters\n- `tcp.flags.syn == 1 && tcp.flags.ack == 0` (SYN scanning)\n- `http.request.method == \"POST\"`\n- `tls.handshake.type == 1` (Client Hello)\n\n## Alternatives\n- **tshark**: CLI version for scripts.\n- **Tcpdump**: Lightweight capture."
+    "details": "The industry-standard network protocol analyzer that allows you to capture and interactively browse traffic running on a computer network.\n\n## Setup\nInstall via OS package manager or installer. Ensure you have capture privileges.\n\n## Use\nMicroscopic traffic analysis. \n\n## Example Filters\n- `tcp.flags.syn == 1 && tcp.flags.ack == 0` (SYN scanning)\n- `http.request.method == \"POST\"`\n- `tls.handshake.type == 1` (Client Hello)\n\n## Alternatives\n- **tshark**: CLI version for scripts.\n- **Tcpdump**: Lightweight capture.",
+    "tags": [
+      "scanning",
+      "web",
+      "network"
+    ]
   },
   {
     "name": "Security Onion",
@@ -42,7 +57,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "NSM + SOC platform (Zeek/Suricata/etc.)",
-    "details": "A free and open Linux distribution for intrusion detection, enterprise security monitoring, and log management.\n\n## Setup\nDownload the ISO to install on bare metal or a VM (requires significant RAM/CPU). Follow the setup wizard to choose \"Import\" (pcap analysis) or \"Evaluation\" (live sniffing) mode.\n\n## Use\nAll-in-one SOC platform: captures traffic (Zeek/Suricata), logs it (Elastic), and provides analysis tools (CyberChef, Playbook). \n\n## Alternatives\n- **RockNSM**: CentOS based sensor.\n- **SELKS**: Suricata/ELK stack."
+    "details": "A free and open Linux distribution for intrusion detection, enterprise security monitoring, and log management.\n\n## Setup\nDownload the ISO to install on bare metal or a VM (requires significant RAM/CPU). Follow the setup wizard to choose \"Import\" (pcap analysis) or \"Evaluation\" (live sniffing) mode.\n\n## Use\nAll-in-one SOC platform: captures traffic (Zeek/Suricata), logs it (Elastic), and provides analysis tools (CyberChef, Playbook). \n\n## Alternatives\n- **RockNSM**: CentOS based sensor.\n- **SELKS**: Suricata/ELK stack.",
+    "tags": [
+      "network",
+      "detection",
+      "guide"
+    ]
   },
   {
     "name": "Wazuh",
@@ -53,7 +73,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Open-source XDR/SIEM",
-    "details": "A unified XDR and SIEM protection platform that provides endpoint security, threat detection, and incident response.\n\n## Setup\nDeploy Manager (Server) via Docker or scripted install. Deploy Agents to endpoints.\n```bash\n# Agent install (Linux)\nwget -O wazuh-agent.deb https://packages.wazuh.com/4.x/wazuh-agent_4.7.2-1_amd64.deb\nsudo dpkg -i wazuh-agent.deb\n```\n\n## Use\nEndpoint monitoring, file integrity monitoring (FIM), and log aggregation. \n\n## Interesting Options\n- **FIM**: Detects changes to critical system files.\n- **Vulnerability Detector**: Scans installed apps against CVE databases.\n\n## Alternatives\n- **OSSEC**: The ancestor project.\n- **Elastic Security**: Similar agent-based capabilities."
+    "details": "A unified XDR and SIEM protection platform that provides endpoint security, threat detection, and incident response.\n\n## Setup\nDeploy Manager (Server) via Docker or scripted install. Deploy Agents to endpoints.\n```bash\n# Agent install (Linux)\nwget -O wazuh-agent.deb https://packages.wazuh.com/4.x/wazuh-agent_4.7.2-1_amd64.deb\nsudo dpkg -i wazuh-agent.deb\n```\n\n## Use\nEndpoint monitoring, file integrity monitoring (FIM), and log aggregation. \n\n## Interesting Options\n- **FIM**: Detects changes to critical system files.\n- **Vulnerability Detector**: Scans installed apps against CVE databases.\n\n## Alternatives\n- **OSSEC**: The ancestor project.\n- **Elastic Security**: Similar agent-based capabilities.",
+    "tags": [
+      "web",
+      "incident response",
+      "detection"
+    ]
   },
   {
     "name": "osquery",
@@ -64,7 +89,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "SQL interface for endpoint telemetry",
-    "details": "An instrumentation framework that exposes the operating system as a high-performance relational database.\n\n## Setup\nInstall the package for your OS.\n```bash\n# Start interactive shell\nosqueryi\n```\n\n## Use\nQuery operating system state (processes, users, network connections) as if it were a database. \n\n## Example\n```sql\nSELECT pid, name, path FROM processes WHERE name = 'malware.exe';\nSELECT * FROM listening_ports WHERE port = 4444;\n```\n\n## Alternatives\n- **Velociraptor**: VQL is more powerful for forensics.\n- **Sysmon**: Event-log based."
+    "details": "An instrumentation framework that exposes the operating system as a high-performance relational database.\n\n## Setup\nInstall the package for your OS.\n```bash\n# Start interactive shell\nosqueryi\n```\n\n## Use\nQuery operating system state (processes, users, network connections) as if it were a database. \n\n## Example\n```sql\nSELECT pid, name, path FROM processes WHERE name = 'malware.exe';\nSELECT * FROM listening_ports WHERE port = 4444;\n```\n\n## Alternatives\n- **Velociraptor**: VQL is more powerful for forensics.\n- **Sysmon**: Event-log based.",
+    "tags": [
+      "scanning",
+      "network",
+      "malware analysis"
+    ]
   },
   {
     "name": "FleetDM",
@@ -75,7 +105,11 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "osquery fleet management",
-    "details": "The open-source standard for managing osquery fleets, allowing you to query thousands of devices in real-time.\n\n## Setup\nDeploy via Docker or Kubernetes. Requires a MySQL and Redis backend.\n\n## Use\nManage thousands of osquery agents, run live queries across the fleet, and enforce policies. \n\n## Interesting Options\n- **Live Query**: Ask \"Who has this vulnerable package version?\" across 10k hosts instantly.\n- **Software Inventory**: Automated SBOM-like visibility.\n\n## Alternatives\n- **Kolide**: Commercial SaaS (creators of Fleet).\n- **Uptycs**: Commercial osquery platform."
+    "details": "The open-source standard for managing osquery fleets, allowing you to query thousands of devices in real-time.\n\n## Setup\nDeploy via Docker or Kubernetes. Requires a MySQL and Redis backend.\n\n## Use\nManage thousands of osquery agents, run live queries across the fleet, and enforce policies. \n\n## Interesting Options\n- **Live Query**: Ask \"Who has this vulnerable package version?\" across 10k hosts instantly.\n- **Software Inventory**: Automated SBOM-like visibility.\n\n## Alternatives\n- **Kolide**: Commercial SaaS (creators of Fleet).\n- **Uptycs**: Commercial osquery platform.",
+    "tags": [
+      "containers",
+      "framework"
+    ]
   },
   {
     "name": "TheHive",
@@ -86,7 +120,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Incident response case management",
-    "details": "A scalable, open-source Security Incident Response Platform (SIRP) tightly integrated with MISP and Cortex.\n\n## Setup\nRequires Java and Cassandra/Elasticsearch (older versions) or specialized DBs. Docker is recommended for testing.\n\n## Use\nCollaborative platform for SOCs to track incidents, tasks, and evidence. \n\n## Alternatives\n- **FIR**: Fast Incident Response.\n- **ServiceNow SecOps**: Commercial enterprise alternative."
+    "details": "A scalable, open-source Security Incident Response Platform (SIRP) tightly integrated with MISP and Cortex.\n\n## Setup\nRequires Java and Cassandra/Elasticsearch (older versions) or specialized DBs. Docker is recommended for testing.\n\n## Use\nCollaborative platform for SOCs to track incidents, tasks, and evidence. \n\n## Alternatives\n- **FIR**: Fast Incident Response.\n- **ServiceNow SecOps**: Commercial enterprise alternative.",
+    "tags": [
+      "incident response",
+      "threat intel",
+      "containers"
+    ]
   },
   {
     "name": "Cortex",
@@ -97,7 +136,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Observable analysis and response automation",
-    "details": "A powerful engine to analyze observables (IPs, URLs, hashes) and automate actions, often serving as the backend for TheHive.\n\n## Setup\nUsually deployed alongside TheHive.\n\n## Use\n\"Analyzers\" enrich data (e.g., look up IP in VirusTotal). \"Responders\" take action (e.g., block IP in firewall).\n\n## Example\nPaste an IP into TheHive -> Cortex Analyzer runs -> Returns GeoIP, ASN, and Reputation score.\n\n## Alternatives\n- **Shuffle**: Open source SOAR.\n- **n8n**: Workflow automation."
+    "details": "A powerful engine to analyze observables (IPs, URLs, hashes) and automate actions, often serving as the backend for TheHive.\n\n## Setup\nUsually deployed alongside TheHive.\n\n## Use\n\"Analyzers\" enrich data (e.g., look up IP in VirusTotal). \"Responders\" take action (e.g., block IP in firewall).\n\n## Example\nPaste an IP into TheHive -> Cortex Analyzer runs -> Returns GeoIP, ASN, and Reputation score.\n\n## Alternatives\n- **Shuffle**: Open source SOAR.\n- **n8n**: Workflow automation.",
+    "tags": [
+      "credential access",
+      "network",
+      "search"
+    ]
   },
   {
     "name": "MISP",
@@ -108,7 +152,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Threat intel sharing platform",
-    "details": "An open source threat intelligence platform for gathering, sharing, storing and correlating Indicators of Compromise.\n\n## Setup\nInstall script for Ubuntu is the standard method. VM images available.\n```bash\n# Standard install script\nwget -O /tmp/INSTALL.sh https://raw.githubusercontent.com/MISP/MISP/2.4/INSTALL/INSTALL.sh\nbash /tmp/INSTALL.sh\n```\n\n## Use\nStore, correlate, and share IoCs (Indicators of Compromise). Feeds into SIEM/Firewalls. \n\n## Alternatives\n- **OpenCTI**: More visualization focused.\n- **ThreatConnect**: Commercial."
+    "details": "An open source threat intelligence platform for gathering, sharing, storing and correlating Indicators of Compromise.\n\n## Setup\nInstall script for Ubuntu is the standard method. VM images available.\n```bash\n# Standard install script\nwget -O /tmp/INSTALL.sh https://raw.githubusercontent.com/MISP/MISP/2.4/INSTALL/INSTALL.sh\nbash /tmp/INSTALL.sh\n```\n\n## Use\nStore, correlate, and share IoCs (Indicators of Compromise). Feeds into SIEM/Firewalls. \n\n## Alternatives\n- **OpenCTI**: More visualization focused.\n- **ThreatConnect**: Commercial.",
+    "tags": [
+      "web",
+      "threat intel",
+      "detection"
+    ]
   },
   {
     "name": "OpenCTI",
@@ -119,7 +168,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Graph-based threat intel platform",
-    "details": "A unified platform to manage and operationalize cyber threat intelligence, capable of visualizing complex relationships between threats.\n\n## Setup\nComplex stack (NodeJS, Elastic, Redis, MinIO, RabbitMQ). Docker Compose is highly recommended.\n\n## Use\nKnowledge graph for Threat Intel. Visualize relationships between Actors, Malware, and TTPs. \n\n## Alternatives\n- **MISP**: Simpler, list-based.\n- **Yeti**: Lighter weight."
+    "details": "A unified platform to manage and operationalize cyber threat intelligence, capable of visualizing complex relationships between threats.\n\n## Setup\nComplex stack (NodeJS, Elastic, Redis, MinIO, RabbitMQ). Docker Compose is highly recommended.\n\n## Use\nKnowledge graph for Threat Intel. Visualize relationships between Actors, Malware, and TTPs. \n\n## Alternatives\n- **MISP**: Simpler, list-based.\n- **Yeti**: Lighter weight.",
+    "tags": [
+      "malware analysis",
+      "threat intel",
+      "containers"
+    ]
   },
   {
     "name": "YARA",
@@ -130,7 +184,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Pattern matching for malware",
-    "details": "A pattern matching swiss-army knife for malware researchers, allowing you to classify and identify malware samples based on textual or binary patterns.\n\n## Setup\n```bash\n# Linux\nsudo apt install yara\n\n# Mac\nbrew install yara\n```\n\n## Use\nCreate rules to detect text/binary patterns in files. Essential for malware hunting.\n\n## Example\n```bash\n# Scan directory with rule file\nyara -r my_rules.yar /path/to/suspicious/files\n```\n\n## Alternatives\n- **ClamAV**: Signature based AV.\n- **Loki**: Simple IOC scanner using YARA."
+    "details": "A pattern matching swiss-army knife for malware researchers, allowing you to classify and identify malware samples based on textual or binary patterns.\n\n## Setup\n```bash\n# Linux\nsudo apt install yara\n\n# Mac\nbrew install yara\n```\n\n## Use\nCreate rules to detect text/binary patterns in files. Essential for malware hunting.\n\n## Example\n```bash\n# Scan directory with rule file\nyara -r my_rules.yar /path/to/suspicious/files\n```\n\n## Alternatives\n- **ClamAV**: Signature based AV.\n- **Loki**: Simple IOC scanner using YARA.",
+    "tags": [
+      "scanning",
+      "malware analysis",
+      "threat intel"
+    ]
   },
   {
     "name": "capa",
@@ -141,7 +200,10 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Identify capabilities in binaries",
-    "details": "The FLARE team's open-source tool that detects capabilities in executable files (like \"schedules task\" or \"logs keystrokes\") using a rule-based approach.\n\n## Setup\nDownload the standalone binary.\n\n## Use\nDetects what a program *can* do without running it.\n\n## Example\n```bash\ncapa suspicious.exe\n```\n\n## Alternatives\n- **PEStudio**: Static analysis GUI.\n- **Manalyze**: Static analyzer."
+    "details": "The FLARE team's open-source tool that detects capabilities in executable files (like \"schedules task\" or \"logs keystrokes\") using a rule-based approach.\n\n## Setup\nDownload the standalone binary.\n\n## Use\nDetects what a program *can* do without running it.\n\n## Example\n```bash\ncapa suspicious.exe\n```\n\n## Alternatives\n- **PEStudio**: Static analysis GUI.\n- **Manalyze**: Static analyzer.",
+    "tags": [
+      "malware analysis"
+    ]
   },
   {
     "name": "Volatility 3",
@@ -152,7 +214,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Memory forensics framework",
-    "details": "The advanced memory forensics framework for extracting digital artifacts (processes, network connections, injected code) from volatile memory samples.\n\n## Setup\nRequires Python 3. Install via git or pip.\n```bash\ngit clone https://github.com/volatilityfoundation/volatility3.git\npip install -r requirements.txt\n```\n\n## Use\nAnalyze RAM dumps to find hidden processes, network connections, and injected code.\n\n## Example\n```bash\npython3 vol.py -f memory.dmp windows.pslist\npython3 vol.py -f memory.dmp windows.malfind\n```\n\n## Alternatives\n- **Rekall**: Fork of Volatility 2.\n- **MemProcFS**: Mount memory as a file system."
+    "details": "The advanced memory forensics framework for extracting digital artifacts (processes, network connections, injected code) from volatile memory samples.\n\n## Setup\nRequires Python 3. Install via git or pip.\n```bash\ngit clone https://github.com/volatilityfoundation/volatility3.git\npip install -r requirements.txt\n```\n\n## Use\nAnalyze RAM dumps to find hidden processes, network connections, and injected code.\n\n## Example\n```bash\npython3 vol.py -f memory.dmp windows.pslist\npython3 vol.py -f memory.dmp windows.malfind\n```\n\n## Alternatives\n- **Rekall**: Fork of Volatility 2.\n- **MemProcFS**: Mount memory as a file system.",
+    "tags": [
+      "web",
+      "network",
+      "forensics"
+    ]
   },
   {
     "name": "KAPE",
@@ -163,7 +230,10 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Targeted forensic collection",
-    "details": "Kroll Artifact Parser and Extractor is a triage tool that parses and extracts the most forensically relevant artifacts from a Windows system.\n\n## Setup\nDownload from Kroll (requires form). Windows only.\n\n## Use\nFast acquisition of triage data (Prefetch, ShimCache, Event Logs). Handles locked files via Raw access.\n\n## Example\n```cmd\n# Collect Basic Forensic artifacts to a VHDX container\nkape.exe --tsource C: --tdest D:\\Case --tflush --target BasicCollection --vhd Case.vhdx\n```\n\n## Alternatives\n- **Velociraptor**: Remote collection.\n- **CyLR**: Live Response tool."
+    "details": "Kroll Artifact Parser and Extractor is a triage tool that parses and extracts the most forensically relevant artifacts from a Windows system.\n\n## Setup\nDownload from Kroll (requires form). Windows only.\n\n## Use\nFast acquisition of triage data (Prefetch, ShimCache, Event Logs). Handles locked files via Raw access.\n\n## Example\n```cmd\n# Collect Basic Forensic artifacts to a VHDX container\nkape.exe --tsource C: --tdest D:\\Case --tflush --target BasicCollection --vhd Case.vhdx\n```\n\n## Alternatives\n- **Velociraptor**: Remote collection.\n- **CyLR**: Live Response tool.",
+    "tags": [
+      "containers"
+    ]
   },
   {
     "name": "GRR Rapid Response",
@@ -174,7 +244,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Remote live forensics",
-    "details": "An incident response framework focused on remote live forensics, capable of scaling to large fleets for finding and managing artifacts.\n\n## Setup\nServer installs via Docker or deb packages. Agents (Python-based) deploy to endpoints.\n\n## Use\nEnterprise-scale remote live forensics. Pull memory, search files, and timeline systems remotely.\n\n## Alternatives\n- **Velociraptor**: More modern, faster query language.\n- **F-Response**: Commercial remote connector."
+    "details": "An incident response framework focused on remote live forensics, capable of scaling to large fleets for finding and managing artifacts.\n\n## Setup\nServer installs via Docker or deb packages. Agents (Python-based) deploy to endpoints.\n\n## Use\nEnterprise-scale remote live forensics. Pull memory, search files, and timeline systems remotely.\n\n## Alternatives\n- **Velociraptor**: More modern, faster query language.\n- **F-Response**: Commercial remote connector.",
+    "tags": [
+      "forensics",
+      "incident response",
+      "containers"
+    ]
   },
   {
     "name": "OpenSCAP",
@@ -185,7 +260,11 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Compliance scanning and remediation",
-    "details": "A suite of tools that implements the SCAP standard to automatically verify the presence of patches and check system security configurations.\n\n## Setup\n`yum install openscap-scanner` or `apt install libopenscap8`.\n\n## Use\nScan systems against security policies (STIG, PCI-DSS).\n\n## Example\n```bash\n# Scan RHEL 8 against CIS profile\noscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis --report report.html /usr/share/xml/scap/ssg/content/ssg-rhel8-ds.xml\n```\n\n## Alternatives\n- **Lynis**: Script-based auditing.\n- **Nessus**: Vulnerability/Compliance scanner."
+    "details": "A suite of tools that implements the SCAP standard to automatically verify the presence of patches and check system security configurations.\n\n## Setup\n`yum install openscap-scanner` or `apt install libopenscap8`.\n\n## Use\nScan systems against security policies (STIG, PCI-DSS).\n\n## Example\n```bash\n# Scan RHEL 8 against CIS profile\noscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis --report report.html /usr/share/xml/scap/ssg/content/ssg-rhel8-ds.xml\n```\n\n## Alternatives\n- **Lynis**: Script-based auditing.\n- **Nessus**: Vulnerability/Compliance scanner.",
+    "tags": [
+      "scanning",
+      "framework"
+    ]
   },
   {
     "name": "Lynis",
@@ -196,7 +275,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Unix security auditing tool",
-    "details": "A battle-tested security auditing tool for systems running Linux, macOS, or Unix-based OS, focusing on system hardening and compliance.\n\n## Setup\nClone git repo or install package.\n```bash\ngit clone https://github.com/CISOfy/lynis\n```\n\n## Use\nPerforms a deep scan of the OS configuration and suggests hardening steps.\n\n## Example\n```bash\n./lynis audit system\n```\n\n## Alternatives\n- **OpenSCAP**: Standards based.\n- **LinPEAS**: Privilege escalation checker (Offensive focus)."
+    "details": "A battle-tested security auditing tool for systems running Linux, macOS, or Unix-based OS, focusing on system hardening and compliance.\n\n## Setup\nClone git repo or install package.\n```bash\ngit clone https://github.com/CISOfy/lynis\n```\n\n## Use\nPerforms a deep scan of the OS configuration and suggests hardening steps.\n\n## Example\n```bash\n./lynis audit system\n```\n\n## Alternatives\n- **OpenSCAP**: Standards based.\n- **LinPEAS**: Privilege escalation checker (Offensive focus).",
+    "tags": [
+      "post-exploitation",
+      "privilege escalation",
+      "exploitation"
+    ]
   },
   {
     "name": "Trivy",
@@ -207,7 +291,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Comprehensive security scanner",
-    "details": "A comprehensive security scanner for containers, filesystems, and git repositories, detecting vulnerabilities and configuration issues.\n\n## Setup\n```bash\n# Install script\ncurl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin\n```\n\n## Use\nScans containers, filesystems, and git repos for vulnerabilities and config issues.\n\n## Example\n```bash\n# Scan a docker image\ntrivy image python:3.4-alpine\n```\n\n## Alternatives\n- **Grype**: Anchor's scanner.\n- **Clair**: CoreOS scanner."
+    "details": "A comprehensive security scanner for containers, filesystems, and git repositories, detecting vulnerabilities and configuration issues.\n\n## Setup\n```bash\n# Install script\ncurl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin\n```\n\n## Use\nScans containers, filesystems, and git repos for vulnerabilities and config issues.\n\n## Example\n```bash\n# Scan a docker image\ntrivy image python:3.4-alpine\n```\n\n## Alternatives\n- **Grype**: Anchor's scanner.\n- **Clair**: CoreOS scanner.",
+    "tags": [
+      "scanning",
+      "web",
+      "containers"
+    ]
   },
   {
     "name": "Grype",
@@ -218,7 +307,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Vulnerability scanner for containers",
-    "details": "A vulnerability scanner for container images and filesystems that works easily with Syft to analyze software bills of materials.\n\n## Setup\n```bash\ncurl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin\n```\n\n## Use\nScan container images and filesystems for vulnerabilities. Works well with Syft (SBOM).\n\n## Example\n```bash\ngrype alpine:latest\n```\n\n## Alternatives\n- **Trivy**\n- **Snyk**"
+    "details": "A vulnerability scanner for container images and filesystems that works easily with Syft to analyze software bills of materials.\n\n## Setup\n```bash\ncurl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin\n```\n\n## Use\nScan container images and filesystems for vulnerabilities. Works well with Syft (SBOM).\n\n## Example\n```bash\ngrype alpine:latest\n```\n\n## Alternatives\n- **Trivy**\n- **Snyk**",
+    "tags": [
+      "vulnerability scanning",
+      "scanning",
+      "web"
+    ]
   },
   {
     "name": "Syft",
@@ -229,7 +323,11 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Generate SBOMs (Software Bill of Materials)",
-    "details": "A CLI tool and library for generating a Software Bill of Materials (SBOM) from container images and filesystems.\n\n## Setup\n```bash\ncurl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin\n```\n\n## Use\nGenerates a detailed manifest of packages inside a container or filesystem.\n\n## Example\n```bash\nsyft packages alpine:latest -o json\n```\n\n## Alternatives\n- **Trivy** (can also generate SBOMs).\n- **Microsoft SBOM Tool**"
+    "details": "A CLI tool and library for generating a Software Bill of Materials (SBOM) from container images and filesystems.\n\n## Setup\n```bash\ncurl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin\n```\n\n## Use\nGenerates a detailed manifest of packages inside a container or filesystem.\n\n## Example\n```bash\nsyft packages alpine:latest -o json\n```\n\n## Alternatives\n- **Trivy** (can also generate SBOMs).\n- **Microsoft SBOM Tool**",
+    "tags": [
+      "web",
+      "containers"
+    ]
   },
   {
     "name": "OWASP Dependency-Check",
@@ -240,7 +338,10 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Find vulnerable dependencies (SCA)",
-    "details": "A Software Composition Analysis (SCA) tool that attempts to detect publicly disclosed vulnerabilities contained within a project's dependencies.\n\n## Setup\nCommand line tool (Java required) or Jenkins/Maven plugin.\n\n## Use\nScans project dependencies (node_modules, jars) against the NVD.\n\n## Example\n```bash\ndependency-check.sh --project \"My App\" --scan ./src\n```\n\n## Alternatives\n- **Snyk**: Commercial (freemium).\n- **npm audit**: Node specific."
+    "details": "A Software Composition Analysis (SCA) tool that attempts to detect publicly disclosed vulnerabilities contained within a project's dependencies.\n\n## Setup\nCommand line tool (Java required) or Jenkins/Maven plugin.\n\n## Use\nScans project dependencies (node_modules, jars) against the NVD.\n\n## Example\n```bash\ndependency-check.sh --project \"My App\" --scan ./src\n```\n\n## Alternatives\n- **Snyk**: Commercial (freemium).\n- **npm audit**: Node specific.",
+    "tags": [
+      "scanning"
+    ]
   },
   {
     "name": "Falco",
@@ -251,7 +352,11 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Runtime security for Linux/Kubernetes",
-    "details": "The cloud-native runtime security project that detects anomalous behavior in applications and containers.\n\n## Setup\nInstall as a systemd service (Linux) or DaemonSet (Kubernetes).\n```bash\nhelm install falco falcosecurity/falco\n```\n\n## Use\nDetects abnormal behavior (e.g., shell in container, sensitive file read) using syscalls. \n\n## Example Rule\n\"Terminal shell in container\" -> alerts when `/bin/bash` is spawned.\n\n## Alternatives\n- **Tetragon**: Cilium/eBPF based.\n- **Tracee**: Aqua Security eBPF tool."
+    "details": "The cloud-native runtime security project that detects anomalous behavior in applications and containers.\n\n## Setup\nInstall as a systemd service (Linux) or DaemonSet (Kubernetes).\n```bash\nhelm install falco falcosecurity/falco\n```\n\n## Use\nDetects abnormal behavior (e.g., shell in container, sensitive file read) using syscalls. \n\n## Example Rule\n\"Terminal shell in container\" -> alerts when `/bin/bash` is spawned.\n\n## Alternatives\n- **Tetragon**: Cilium/eBPF based.\n- **Tracee**: Aqua Security eBPF tool.",
+    "tags": [
+      "cloud",
+      "containers"
+    ]
   },
   {
     "name": "Kyverno",
@@ -262,7 +367,11 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Kubernetes policy management",
-    "details": "A policy engine designed for Kubernetes that can validate, mutate, and generate configurations using policies as resources.\n\n## Setup\nInstall via Helm.\n```bash\nhelm install kyverno kyverno/kyverno -n kyverno --create-namespace\n```\n\n## Use\nPolicy engine designed for K8s. Validates, mutates, and generates resources.\n\n## Example\nPolicy: \"Require labels on all pods\" or \"Disallow root user in containers\".\n\n## Alternatives\n- **OPA Gatekeeper**: General purpose policy engine.\n- **Datree**: CLI policy check."
+    "details": "A policy engine designed for Kubernetes that can validate, mutate, and generate configurations using policies as resources.\n\n## Setup\nInstall via Helm.\n```bash\nhelm install kyverno kyverno/kyverno -n kyverno --create-namespace\n```\n\n## Use\nPolicy engine designed for K8s. Validates, mutates, and generates resources.\n\n## Example\nPolicy: \"Require labels on all pods\" or \"Disallow root user in containers\".\n\n## Alternatives\n- **OPA Gatekeeper**: General purpose policy engine.\n- **Datree**: CLI policy check.",
+    "tags": [
+      "containers",
+      "search"
+    ]
   },
   {
     "name": "ELK Stack (Elastic)",
@@ -273,7 +382,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Search/analytics platform (logs, security)",
-    "details": "The Elastic Stack (Elasticsearch, Kibana, Beats/Logstash) is a powerful engine for searching, analyzing, and visualizing data in real-time.\n\n## Setup\nInstall Elasticsearch, Kibana, and Beats/Elastic Agent. Docker Compose recommended for testing.\n\n## Use\nCentralized logging and SIEM. Ingest logs from everywhere, search, and visualize. \n\n## Interesting Options\n- **Elastic Security**: Pre-built detection rules and case management.\n- **Fleet**: Central management of agents.\n\n## Alternatives\n- **Splunk**: Commercial leader.\n- **Graylog**: Log management focused."
+    "details": "The Elastic Stack (Elasticsearch, Kibana, Beats/Logstash) is a powerful engine for searching, analyzing, and visualizing data in real-time.\n\n## Setup\nInstall Elasticsearch, Kibana, and Beats/Elastic Agent. Docker Compose recommended for testing.\n\n## Use\nCentralized logging and SIEM. Ingest logs from everywhere, search, and visualize. \n\n## Interesting Options\n- **Elastic Security**: Pre-built detection rules and case management.\n- **Fleet**: Central management of agents.\n\n## Alternatives\n- **Splunk**: Commercial leader.\n- **Graylog**: Log management focused.",
+    "tags": [
+      "incident response",
+      "detection",
+      "monitoring"
+    ]
   },
   {
     "name": "OpenSearch",
@@ -284,7 +398,11 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Open-source search and analytics",
-    "details": "A community-driven, open source search and analytics suite derived from Elasticsearch, offering similar log aggregation capabilities.\n\n## Setup\nFork of Elasticsearch. Install via tarball, docker, or package.\n\n## Use\nPowerful log analytics and search. Compatible with most Elastic tools (pre-fork).\n\n## Alternatives\n- **Elasticsearch**\n- **Loki**: Grafana's log aggregation."
+    "details": "A community-driven, open source search and analytics suite derived from Elasticsearch, offering similar log aggregation capabilities.\n\n## Setup\nFork of Elasticsearch. Install via tarball, docker, or package.\n\n## Use\nPowerful log analytics and search. Compatible with most Elastic tools (pre-fork).\n\n## Alternatives\n- **Elasticsearch**\n- **Loki**: Grafana's log aggregation.",
+    "tags": [
+      "containers",
+      "search"
+    ]
   },
   {
     "name": "OSINT (Blue) - VirusTotal",
@@ -295,7 +413,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "File/URL reputation and metadata",
-    "details": "A free online service that analyzes files and URLs for viruses, worms, trojans and other kinds of malicious content.\n\n## Setup\nWeb-based or `vt-cli` tool.\n\n## Use\nTriage suspicious hashes, IPs, and URLs.\n\n## Alternatives\n- **MetaDefender**: OPSWAT.\n- **Talos Intelligence**: Cisco."
+    "details": "A free online service that analyzes files and URLs for viruses, worms, trojans and other kinds of malicious content.\n\n## Setup\nWeb-based or `vt-cli` tool.\n\n## Use\nTriage suspicious hashes, IPs, and URLs.\n\n## Alternatives\n- **MetaDefender**: OPSWAT.\n- **Talos Intelligence**: Cisco.",
+    "tags": [
+      "credential access",
+      "osint",
+      "web"
+    ]
   },
   {
     "name": "urlscan.io",
@@ -306,7 +429,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "URL scanning and passive intel",
-    "details": "A sandbox for the web that analyzes URLs and scans them for malicious content, providing screenshots and DOM data.\n\n## Setup\nWeb-based.\n\n## Use\nSandboxes a URL and records DOM, screenshots, and network requests. Great for phishing analysis.\n\n## Alternatives\n- **Browserling**: Interactive sandbox.\n- **Joe Sandbox**: Deep analysis."
+    "details": "A sandbox for the web that analyzes URLs and scans them for malicious content, providing screenshots and DOM data.\n\n## Setup\nWeb-based.\n\n## Use\nSandboxes a URL and records DOM, screenshots, and network requests. Great for phishing analysis.\n\n## Alternatives\n- **Browserling**: Interactive sandbox.\n- **Joe Sandbox**: Deep analysis.",
+    "tags": [
+      "scanning",
+      "web",
+      "network"
+    ]
   },
   {
     "name": "AbuseIPDB",
@@ -317,7 +445,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "IP abuse reporting and reputation",
-    "details": "A project dedicated to helping combat the spread of hackers, spammers, and abusive activity on the internet by reporting and verifying IPs.\n\n## Setup\nWeb-based or API.\n\n## Use\nCheck if an IP has been reported for malicious activity (SSH brute force, hacking) by the community.\n\n## Alternatives\n- **GreyNoise**: Distinguishes internet background noise from threats.\n- **Cisco Talos**"
+    "details": "A project dedicated to helping combat the spread of hackers, spammers, and abusive activity on the internet by reporting and verifying IPs.\n\n## Setup\nWeb-based or API.\n\n## Use\nCheck if an IP has been reported for malicious activity (SSH brute force, hacking) by the community.\n\n## Alternatives\n- **GreyNoise**: Distinguishes internet background noise from threats.\n- **Cisco Talos**",
+    "tags": [
+      "bruteforce",
+      "enumeration",
+      "web"
+    ]
   },
   {
     "name": "AlienVault OTX",
@@ -328,7 +461,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Open threat intel pulses",
-    "details": "The world's first truly open threat intelligence community that enables collaborative defense with actionable community-powered data.\n\n## Setup\nWeb-based. API available.\n\n## Use\nCommunity-driven threat intelligence feed. Subscribe to \"pulses\" related to specific threats.\n\n## Alternatives\n- **IBM X-Force Exchange**\n- **Anomali Limo**"
+    "details": "The world's first truly open threat intelligence community that enables collaborative defense with actionable community-powered data.\n\n## Setup\nWeb-based. API available.\n\n## Use\nCommunity-driven threat intelligence feed. Subscribe to \"pulses\" related to specific threats.\n\n## Alternatives\n- **IBM X-Force Exchange**\n- **Anomali Limo**",
+    "tags": [
+      "web",
+      "threat intel",
+      "mailing list"
+    ]
   },
   {
     "name": "CrowdSec",
@@ -339,7 +477,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Collaborative IPS/IDS",
-    "details": "An open-source, collaborative security automation tool that analyzes logs to detect attacks and shares signals with the community. \n\n## Setup\n```bash\ncurl -s https://packagecloud.io/install/repositories/crowdsec/crowdsec/script.deb.sh | sudo bash\nsudo apt install crowdsec\n```\n\n## Use\nParses logs (nginx, ssh) to detect attacks. Shares signals with the community to block aggressive IPs globally.\n\n## Alternatives\n- **Fail2ban**: Local only.\n- **WAFs** (Cloudflare, AWS WAF)."
+    "details": "An open-source, collaborative security automation tool that analyzes logs to detect attacks and shares signals with the community. \n\n## Setup\n```bash\ncurl -s https://packagecloud.io/install/repositories/crowdsec/crowdsec/script.deb.sh | sudo bash\nsudo apt install crowdsec\n```\n\n## Use\nParses logs (nginx, ssh) to detect attacks. Shares signals with the community to block aggressive IPs globally.\n\n## Alternatives\n- **Fail2ban**: Local only.\n- **WAFs** (Cloudflare, AWS WAF).",
+    "tags": [
+      "web",
+      "network",
+      "cloud"
+    ]
   },
   {
     "name": "Fail2ban",
@@ -350,7 +493,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Ban IPs based on log patterns",
-    "details": "An intrusion prevention software framework that protects computer servers from brute-force attacks by monitoring log files.\n\n## Setup\n`sudo apt install fail2ban`.\n\n## Use\nScans log files (e.g., `/var/log/auth.log`) and bans IPs that show malicious signs (too many password failures).\n\n## Example\nConfigure `jail.local` to ban SSH brute forcers for 1 hour after 5 attempts.\n\n## Alternatives\n- **CrowdSec**: Modern, collaborative alternative.\n- **SSHGuard**: Similar, lighter weight."
+    "details": "An intrusion prevention software framework that protects computer servers from brute-force attacks by monitoring log files.\n\n## Setup\n`sudo apt install fail2ban`.\n\n## Use\nScans log files (e.g., `/var/log/auth.log`) and bans IPs that show malicious signs (too many password failures).\n\n## Example\nConfigure `jail.local` to ban SSH brute forcers for 1 hour after 5 attempts.\n\n## Alternatives\n- **CrowdSec**: Modern, collaborative alternative.\n- **SSHGuard**: Similar, lighter weight.",
+    "tags": [
+      "credential access",
+      "bruteforce",
+      "enumeration"
+    ]
   },
   {
     "name": "OpenVAS / Greenbone",
@@ -361,7 +509,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Vulnerability scanning platform",
-    "details": "A full-featured open source vulnerability scanner allowing you to scan for thousands of known vulnerabilities and misconfigurations.\n\n## Setup\nBest installed via Greenbone Community Containers (Docker).\n\n## Use\nFull-featured vulnerability scanner. Scans networks for outdated software and misconfigurations.\n\n## Alternatives\n- **Nessus Essentials**: Commercial (free for 16 IPs).\n- **Nuclei**: Fast, template-based scanner."
+    "details": "A full-featured open source vulnerability scanner allowing you to scan for thousands of known vulnerabilities and misconfigurations.\n\n## Setup\nBest installed via Greenbone Community Containers (Docker).\n\n## Use\nFull-featured vulnerability scanner. Scans networks for outdated software and misconfigurations.\n\n## Alternatives\n- **Nessus Essentials**: Commercial (free for 16 IPs).\n- **Nuclei**: Fast, template-based scanner.",
+    "tags": [
+      "vulnerability scanning",
+      "scanning",
+      "network"
+    ]
   },
   {
     "name": "Microsoft Threat Modeling Tool",
@@ -372,7 +525,10 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Threat modeling with STRIDE",
-    "details": "A tool to help find threats in the design phase of software projects using the Microsoft STRIDE methodology. \n\n## Setup\nWindows only application. Download MSI.\n\n## Use\nDraw data flow diagrams and automatically generate threat lists based on STRIDE (Spoofing, Tampering, etc.).\n\n## Alternatives\n- **OWASP Threat Dragon**\n- **IriusRisk**"
+    "details": "A tool to help find threats in the design phase of software projects using the Microsoft STRIDE methodology. \n\n## Setup\nWindows only application. Download MSI.\n\n## Use\nDraw data flow diagrams and automatically generate threat lists based on STRIDE (Spoofing, Tampering, etc.).\n\n## Alternatives\n- **OWASP Threat Dragon**\n- **IriusRisk**",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "OWASP Threat Dragon",
@@ -383,7 +539,10 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Open-source threat modeling tool",
-    "details": "An open source, online threat modeling tool from OWASP that is powerful, easy to use, and accessible.\n\n## Setup\nDesktop app (Electron) or Web version.\n\n## Use\nCreate threat model diagrams and record threats/mitigations. Stored as JSON.\n\n## Alternatives\n- **Microsoft Threat Modeling Tool**\n- **Threagile**: Agile threat modeling (code based)."
+    "details": "An open source, online threat modeling tool from OWASP that is powerful, easy to use, and accessible.\n\n## Setup\nDesktop app (Electron) or Web version.\n\n## Use\nCreate threat model diagrams and record threats/mitigations. Stored as JSON.\n\n## Alternatives\n- **Microsoft Threat Modeling Tool**\n- **Threagile**: Agile threat modeling (code based).",
+    "tags": [
+      "web"
+    ]
   },
   {
     "name": "Snort",
@@ -394,7 +553,11 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Network IDS/IPS",
-    "details": "An open source network intrusion prevention system, capable of performing real-time traffic analysis and packet logging.\n\n## Setup\nInstall from source or package manager. Snort 3 is the modern version.\n\n## Use\nPacket sniffing and logging. Uses rules to detect malicious network activity.\n\n## Example\n```bash\nsnort -c /etc/snort/snort.lua -r traffic.pcap\n```\n\n## Alternatives\n- **Suricata**: Multi-threaded, often faster.\n- **Zeek**: Log focused."
+    "details": "An open source network intrusion prevention system, capable of performing real-time traffic analysis and packet logging.\n\n## Setup\nInstall from source or package manager. Snort 3 is the modern version.\n\n## Use\nPacket sniffing and logging. Uses rules to detect malicious network activity.\n\n## Example\n```bash\nsnort -c /etc/snort/snort.lua -r traffic.pcap\n```\n\n## Alternatives\n- **Suricata**: Multi-threaded, often faster.\n- **Zeek**: Log focused.",
+    "tags": [
+      "network",
+      "monitoring"
+    ]
   },
   {
     "name": "ClamAV",
@@ -405,7 +568,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Open-source antivirus engine",
-    "details": "An open source antivirus engine for detecting trojans, viruses, malware & other malicious threats, commonly used on mail gateways.\n\n## Setup\n`apt install clamav`.\n\n## Use\nCommand line virus scanner. Often used on mail servers.\n\n## Example\n```bash\n# Update definitions\nfreshclam\n# Scan directory\nclamscan -r /home/user\n```\n\n## Alternatives\n- **Sophos for Linux**\n- **Bitdefender**"
+    "details": "An open source antivirus engine for detecting trojans, viruses, malware & other malicious threats, commonly used on mail gateways.\n\n## Setup\n`apt install clamav`.\n\n## Use\nCommand line virus scanner. Often used on mail servers.\n\n## Example\n```bash\n# Update definitions\nfreshclam\n# Scan directory\nclamscan -r /home/user\n```\n\n## Alternatives\n- **Sophos for Linux**\n- **Bitdefender**",
+    "tags": [
+      "scanning",
+      "malware analysis",
+      "search"
+    ]
   },
   {
     "name": "Loki (Simple IOC Scanner)",
@@ -416,7 +584,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "IOC scanner for file systems",
-    "details": "A free and simple IOC scanner to scan your systems for known Indicators of Compromise like typical breach characteristics.\n\n## Setup\nDownload the release zip (includes rules). No install needed on Windows.\n\n## Use\nPortable scanner for simple Indicators of Compromise (filenames, YARA rules, C2 IOCs).\n\n## Example\n```bash\nloki.exe -p C:\\Windows\\System32\n```\n\n## Alternatives\n- **Thor Lite**: Faster, written in Go (same author).\n- **Fenrir**: Bash script version."
+    "details": "A free and simple IOC scanner to scan your systems for known Indicators of Compromise like typical breach characteristics.\n\n## Setup\nDownload the release zip (includes rules). No install needed on Windows.\n\n## Use\nPortable scanner for simple Indicators of Compromise (filenames, YARA rules, C2 IOCs).\n\n## Example\n```bash\nloki.exe -p C:\\Windows\\System32\n```\n\n## Alternatives\n- **Thor Lite**: Faster, written in Go (same author).\n- **Fenrir**: Bash script version.",
+    "tags": [
+      "post-exploitation",
+      "scanning",
+      "malware analysis"
+    ]
   },
   {
     "name": "Chainsaw",
@@ -427,7 +600,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Fast Windows EVTX hunting",
-    "details": "A command-line tool to rapidly search and hunt through Windows Event Logs using Sigma detection rules.\n\n## Setup\nDownload binary. Requires Sigma rules (often included or submoduled).\n\n## Use\nRapidly hunt through Windows Event Logs using Sigma rules.\n\n## Example\n```bash\nchainsaw hunt target_logs/ -s sigma_rules/ --mapping mapping.yml\n```\n\n## Alternatives\n- **Hayabusa**: Similar tool, written in Rust.\n- **Zircolite**: Standalone Sigma tool."
+    "details": "A command-line tool to rapidly search and hunt through Windows Event Logs using Sigma detection rules.\n\n## Setup\nDownload binary. Requires Sigma rules (often included or submoduled).\n\n## Use\nRapidly hunt through Windows Event Logs using Sigma rules.\n\n## Example\n```bash\nchainsaw hunt target_logs/ -s sigma_rules/ --mapping mapping.yml\n```\n\n## Alternatives\n- **Hayabusa**: Similar tool, written in Rust.\n- **Zircolite**: Standalone Sigma tool.",
+    "tags": [
+      "malware analysis",
+      "detection",
+      "search"
+    ]
   },
   {
     "name": "Hayabusa",
@@ -438,7 +616,11 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Windows event log analysis",
-    "details": "A Windows event log fast forensics timeline generator and threat hunting tool written in Rust.\n\n## Setup\nDownload binary. It will auto-update rules on first run.\n\n## Use\nFast forensics timeline generator and threat hunting tool for Windows Event Logs.\n\n## Example\n```bash\nhayabusa csv-timeline -d ../logs -o timeline.csv\n```\n\n## Alternatives\n- **Chainsaw**\n- **Timeline Explorer** (GUI for viewing CSVs)."
+    "details": "A Windows event log fast forensics timeline generator and threat hunting tool written in Rust.\n\n## Setup\nDownload binary. It will auto-update rules on first run.\n\n## Use\nFast forensics timeline generator and threat hunting tool for Windows Event Logs.\n\n## Example\n```bash\nhayabusa csv-timeline -d ../logs -o timeline.csv\n```\n\n## Alternatives\n- **Chainsaw**\n- **Timeline Explorer** (GUI for viewing CSVs).",
+    "tags": [
+      "malware analysis",
+      "forensics"
+    ]
   },
   {
     "name": "Sysinternals Suite",
@@ -449,7 +631,10 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Windows diagnostic utilities bundle",
-    "details": "A suite of highly regarded troubleshooting utilities for Windows, essential for advanced diagnostics and forensics.\n\n## Setup\nDownload ZIP or install via Winget: `winget install sysinternals`.\n\n## Use\nEssential troubleshooting and forensic tools (Process Explorer, Procmon, Autoruns).\n\n## Alternatives\n- **NirSoft**: Large collection of similar utilities.\n- **MiTeC**: System tools."
+    "details": "A suite of highly regarded troubleshooting utilities for Windows, essential for advanced diagnostics and forensics.\n\n## Setup\nDownload ZIP or install via Winget: `winget install sysinternals`.\n\n## Use\nEssential troubleshooting and forensic tools (Process Explorer, Procmon, Autoruns).\n\n## Alternatives\n- **NirSoft**: Large collection of similar utilities.\n- **MiTeC**: System tools.",
+    "tags": [
+      "forensics"
+    ]
   },
   {
     "name": "Autoruns",
@@ -460,7 +645,12 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Startup/persistence inspection",
-    "details": "A utility to see what programs are configured to startup automatically when your system boots or you login.\n\n## Setup\nPart of Sysinternals. Run as Administrator.\n\n## Use\nView every program configured to start automatically (Registry Run keys, Services, Scheduled Tasks). Critical for finding persistence.\n\n## Interesting Options\n- **Hide Microsoft Entries**: Filter out signed MS binaries to focus on third-party.\n- **Scan with VirusTotal**: Check hashes of startup items automatically.\n\n## Alternatives\n- **Silent's Autoruns**\n- **RegRipper** (offline analysis)."
+    "details": "A utility to see what programs are configured to startup automatically when your system boots or you login.\n\n## Setup\nPart of Sysinternals. Run as Administrator.\n\n## Use\nView every program configured to start automatically (Registry Run keys, Services, Scheduled Tasks). Critical for finding persistence.\n\n## Interesting Options\n- **Hide Microsoft Entries**: Filter out signed MS binaries to focus on third-party.\n- **Scan with VirusTotal**: Check hashes of startup items automatically.\n\n## Alternatives\n- **Silent's Autoruns**\n- **RegRipper** (offline analysis).",
+    "tags": [
+      "post-exploitation",
+      "credential access",
+      "scanning"
+    ]
   },
   {
     "name": "Procmon",
@@ -471,9 +661,13 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Process and file/registry activity monitor",
-    "details": "An advanced monitoring tool for Windows that shows real-time file system, Registry and process/thread activity.\n\n## Setup\nPart of Sysinternals. Run as Administrator.\n\n## Use\nReal-time monitoring of File System, Registry, and Process activity. Debug malware behavior dynamically.\n\n## Example Filter\n`Process Name is malicious.exe` AND `Operation contains Write`.\n\n## Alternatives\n- **API Monitor**: Deeper API call inspection.\n- **Spy++**"
+    "details": "An advanced monitoring tool for Windows that shows real-time file system, Registry and process/thread activity.\n\n## Setup\nPart of Sysinternals. Run as Administrator.\n\n## Use\nReal-time monitoring of File System, Registry, and Process activity. Debug malware behavior dynamically.\n\n## Example Filter\n`Process Name is malicious.exe` AND `Operation contains Write`.\n\n## Alternatives\n- **API Monitor**: Deeper API call inspection.\n- **Spy++**",
+    "tags": [
+      "malware analysis",
+      "detection"
+    ]
   },
-{
+  {
     "name": "YARA Forge",
     "url": "https://yarahq.github.io/",
     "website": "https://yarahq.github.io/",
@@ -482,6 +676,11 @@ window.CYBER_RESOURCES_BLUE.push(
     "cat": "blue",
     "type": "tool",
     "desc": "Automated YARA rule curation pipeline",
-    "details": "A robust pipeline tool that automates the sourcing, standardization, and quality assurance of YARA rules, ensuring that blue teams have access to clean, high-performance rule sets for production environments. \n\n## Setup\nYARA Forge is Python-based. A clean install pattern:\n```bash\ngit clone https://github.com/YARAHQ/yara-forge.git\ncd yara-forge\npython3 -m venv .venv\nsource .venv/bin/activate\npip install -U pip\npip install -r requirements.txt\n```\n\n## Use\nRun the main script to fetch upstream sources, run QA (syntax, compile checks, performance heuristics), and output curated sets.\n\n## Integration\n- **Production**: Deploy curated rule sets to endpoints or file analysis pipelines.\n- **Hunting**: Use the curated sets as a baseline, then layer environment-specific rules.\n\n## Tips\n- **Governance**: Track rule provenance and keep a changelog per release.\n- **Testing**: Run QA against benign corpora (admin tools, software installers) to control false positives.\n\n## Alternatives\n- **Valhalla**: Commercial YARA feed and curation.\n- **Manual Curation**: Custom scripts/repositories."
+    "details": "A robust pipeline tool that automates the sourcing, standardization, and quality assurance of YARA rules, ensuring that blue teams have access to clean, high-performance rule sets for production environments. \n\n## Setup\nYARA Forge is Python-based. A clean install pattern:\n```bash\ngit clone https://github.com/YARAHQ/yara-forge.git\ncd yara-forge\npython3 -m venv .venv\nsource .venv/bin/activate\npip install -U pip\npip install -r requirements.txt\n```\n\n## Use\nRun the main script to fetch upstream sources, run QA (syntax, compile checks, performance heuristics), and output curated sets.\n\n## Integration\n- **Production**: Deploy curated rule sets to endpoints or file analysis pipelines.\n- **Hunting**: Use the curated sets as a baseline, then layer environment-specific rules.\n\n## Tips\n- **Governance**: Track rule provenance and keep a changelog per release.\n- **Testing**: Run QA against benign corpora (admin tools, software installers) to control false positives.\n\n## Alternatives\n- **Valhalla**: Commercial YARA feed and curation.\n- **Manual Curation**: Custom scripts/repositories.",
+    "tags": [
+      "web",
+      "malware analysis",
+      "framework"
+    ]
   }
 );

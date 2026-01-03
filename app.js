@@ -3,6 +3,18 @@ const COUNTER_BASE_URL = 'https://countapi.mileshilliard.com/api/v1';
 const TYPE_ICONS = window.CYBER_TYPE_ICONS || {
     tool: 'fa-screwdriver-wrench'
 };
+const SEARCH_MIN_CHARS = 3;
+const EMPTY_STATE_DEFAULT_MESSAGE = 'No resources found.';
+
+resources.forEach((item) => {
+    const name = (item.name || '').toLowerCase();
+    const desc = (item.desc || '').toLowerCase();
+    const details = (item.details || '').toLowerCase();
+    const tags = Array.isArray(item.tags)
+        ? item.tags.join(' ').toLowerCase()
+        : '';
+    item._searchText = `${name}\n${desc}\n${details}\n${tags}`;
+});
 
 
 let currentFilter = 'all';
@@ -13,6 +25,7 @@ const likeCounts = {};
 const elements = {
     grid: document.getElementById('gridContainer'),
     emptyState: document.getElementById('emptyState'),
+    emptyStateMessage: document.getElementById('emptyStateMessage'),
     searchInput: document.getElementById('searchInput'),
     filterNav: document.getElementById('filterNav'),
     detailsModal: document.getElementById('detailsModal'),
@@ -167,6 +180,8 @@ function openDetails(item) {
     elements.detailsTitle.textContent = item.name;
     const markdown = item.details ? normalizeDetailsMarkdown(item.details, item.name) : buildDetailsMarkdown(item);
     elements.detailsContent.innerHTML = renderMarkdown(markdown);
+    const activeQuery = elements.searchInput ? elements.searchInput.value.trim() : '';
+    highlightInElement(elements.detailsContent, activeQuery);
     openModal(elements.detailsModal);
 }
 
@@ -181,6 +196,106 @@ function normalizeDetailsMarkdown(markdown, title) {
 
 function escapeRegExp(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightMatch(text, query) {
+    const rawText = text || '';
+    if (!query || query.length < SEARCH_MIN_CHARS) {
+        return escapeHtml(rawText);
+    }
+    const lowerText = rawText.toLowerCase();
+    const lowerQuery = query.toLowerCase();
+    let startIndex = 0;
+    let matchIndex = lowerText.indexOf(lowerQuery, startIndex);
+    if (matchIndex === -1) {
+        return escapeHtml(rawText);
+    }
+    let output = '';
+    while (matchIndex !== -1) {
+        output += escapeHtml(rawText.slice(startIndex, matchIndex));
+        output += `<span class="search-highlight">${escapeHtml(rawText.slice(matchIndex, matchIndex + lowerQuery.length))}</span>`;
+        startIndex = matchIndex + lowerQuery.length;
+        matchIndex = lowerText.indexOf(lowerQuery, startIndex);
+    }
+    output += escapeHtml(rawText.slice(startIndex));
+    return output;
+}
+
+function highlightInElement(container, query) {
+    if (!container || !query || query.length < SEARCH_MIN_CHARS) {
+        return;
+    }
+    const lowerQuery = query.toLowerCase();
+    const nodes = [];
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+        acceptNode: (node) => {
+            if (!node.nodeValue || !node.nodeValue.trim()) {
+                return NodeFilter.FILTER_REJECT;
+            }
+            const parent = node.parentNode;
+            if (!parent || !parent.nodeName) {
+                return NodeFilter.FILTER_REJECT;
+            }
+            const tag = parent.nodeName;
+            if (tag === 'CODE' || tag === 'PRE' || tag === 'SCRIPT' || tag === 'STYLE') {
+                return NodeFilter.FILTER_REJECT;
+            }
+            return node.nodeValue.toLowerCase().includes(lowerQuery)
+                ? NodeFilter.FILTER_ACCEPT
+                : NodeFilter.FILTER_REJECT;
+        }
+    });
+
+    let currentNode = walker.nextNode();
+    while (currentNode) {
+        nodes.push(currentNode);
+        currentNode = walker.nextNode();
+    }
+
+    nodes.forEach((node) => {
+        const text = node.nodeValue;
+        const lowerText = text.toLowerCase();
+        let startIndex = 0;
+        let matchIndex = lowerText.indexOf(lowerQuery, startIndex);
+        if (matchIndex === -1) return;
+
+        const fragment = document.createDocumentFragment();
+        while (matchIndex !== -1) {
+            if (matchIndex > startIndex) {
+                fragment.appendChild(document.createTextNode(text.slice(startIndex, matchIndex)));
+            }
+            const mark = document.createElement('span');
+            mark.className = 'search-highlight';
+            mark.textContent = text.slice(matchIndex, matchIndex + lowerQuery.length);
+            fragment.appendChild(mark);
+            startIndex = matchIndex + lowerQuery.length;
+            matchIndex = lowerText.indexOf(lowerQuery, startIndex);
+        }
+        if (startIndex < text.length) {
+            fragment.appendChild(document.createTextNode(text.slice(startIndex)));
+        }
+        if (node.parentNode) {
+            node.parentNode.replaceChild(fragment, node);
+        }
+    });
+}
+
+function showEmptyState(message = EMPTY_STATE_DEFAULT_MESSAGE) {
+    if (elements.emptyStateMessage) {
+        elements.emptyStateMessage.textContent = message;
+    }
+    elements.grid.classList.add('hidden');
+    elements.emptyState.classList.remove('hidden');
+    elements.emptyState.style.display = 'flex';
+}
+
+function hideEmptyState() {
+    elements.grid.classList.remove('hidden');
+    elements.emptyState.classList.add('hidden');
+    elements.emptyState.style.display = 'none';
+    if (elements.emptyStateMessage && elements.emptyStateMessage.textContent !== EMPTY_STATE_DEFAULT_MESSAGE) {
+        elements.emptyStateMessage.textContent = EMPTY_STATE_DEFAULT_MESSAGE;
+    }
 }
 
 function ensureCardObserver() {
@@ -268,6 +383,8 @@ function togglePin(itemName) {
 async function renderCards(filter = 'all', searchQuery = '') {
     elements.grid.innerHTML = '';
     const token = ++renderToken;
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+    const shouldSearch = normalizedQuery.length >= SEARCH_MIN_CHARS;
     if (cardObserver) {
         cardObserver.disconnect();
         cardObserver = null;
@@ -277,11 +394,15 @@ async function renderCards(filter = 'all', searchQuery = '') {
         loadMoreObserver = null;
     }
 
-    const filtered = resources.filter(item => {
-        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.desc.toLowerCase().includes(searchQuery.toLowerCase());
+    if (normalizedQuery.length > 0 && !shouldSearch) {
+        showEmptyState(`Type at least ${SEARCH_MIN_CHARS} characters to search.`);
+        return;
+    }
 
-        if (!matchesSearch) return false;
+    const filtered = resources.filter(item => {
+        if (shouldSearch && !item._searchText.includes(normalizedQuery)) {
+            return false;
+        }
 
         if (filter === 'all') return true;
         if (filter === 'pinned') return pinned.includes(item.name);
@@ -299,15 +420,11 @@ async function renderCards(filter = 'all', searchQuery = '') {
     });
 
     if (filtered.length === 0) {
-        elements.grid.classList.add('hidden');
-        elements.emptyState.classList.remove('hidden');
-        elements.emptyState.style.display = 'flex';
+        showEmptyState();
         return;
     }
 
-    elements.grid.classList.remove('hidden');
-    elements.emptyState.classList.add('hidden');
-    elements.emptyState.style.display = 'none';
+    hideEmptyState();
 
     const buildCardHTML = (item) => {
         const isPinned = pinned.includes(item.name);
@@ -316,6 +433,12 @@ async function renderCards(filter = 'all', searchQuery = '') {
         const categoryColor = item.cat === 'red'
             ? 'text-red-400'
             : (item.cat === 'blue' ? 'text-blue-400' : (item.cat === 'purple' ? 'text-purple-400' : 'text-gray-400'));
+        const titleText = shouldSearch
+            ? highlightMatch(item.name, normalizedQuery)
+            : escapeHtml(item.name || '');
+        const descText = shouldSearch
+            ? highlightMatch(item.desc, normalizedQuery)
+            : escapeHtml(item.desc || '');
 
         const iconClass = TYPE_ICONS[item.type] || TYPE_ICONS.tool;
         const hasSource = Boolean(item.source);
@@ -325,20 +448,29 @@ async function renderCards(filter = 'all', searchQuery = '') {
         const showSource = hasSource;
         const showBinaries = Boolean(item.binaries);
         const buttonCount = (showWebsite ? 1 : 0) + (showSource ? 1 : 0) + (showBinaries ? 1 : 0);
-        const buttonColumns = buttonCount >= 3 ? 'grid-cols-3' : (buttonCount === 2 ? 'grid-cols-2' : 'grid-cols-1');
-        const actionButtons = `
-            <div class="mt-4 grid gap-2 ${buttonColumns}">
-                ${showWebsite ? `<a href="${websiteUrl}" target="_blank" rel="noopener" data-action="open" class="inline-flex items-center justify-center w-full py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm font-medium text-white transition-colors border border-white/5">
+        const tagList = Array.isArray(item.tags)
+            ? item.tags.map((tag) => String(tag || '').trim()).filter(Boolean)
+            : [];
+        const tagsMarkup = tagList.length
+            ? `<div class="mt-3 flex flex-wrap gap-2">
+                ${tagList.map((tag) => `<span class="resource-tag">${shouldSearch ? highlightMatch(tag, normalizedQuery) : escapeHtml(tag)}</span>`).join('')}
+            </div>`
+            : '';
+        const actionButtons = buttonCount
+            ? `
+            <div class="mt-4 grid gap-2 grid-cols-3">
+                ${showWebsite ? `<a href="${websiteUrl}" target="_blank" rel="noopener" data-action="open" class="resource-action-btn">
                     Website <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-xs opacity-70"></i>
                 </a>` : ''}
-                ${showSource ? `<a href="${item.source}" target="_blank" rel="noopener" data-action="open" class="inline-flex items-center justify-center w-full py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm font-medium text-white transition-colors border border-white/5">
+                ${showSource ? `<a href="${item.source}" target="_blank" rel="noopener" data-action="open" class="resource-action-btn">
                     Code <i class="fa-brands fa-github ml-2 text-xs opacity-70"></i>
                 </a>` : ''}
-                ${showBinaries ? `<a href="${item.binaries}" target="_blank" rel="noopener" data-action="open" class="inline-flex items-center justify-center w-full py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm font-medium text-white transition-colors border border-white/5" aria-label="Download binaries">
+                ${showBinaries ? `<a href="${item.binaries}" target="_blank" rel="noopener" data-action="open" class="resource-action-btn" aria-label="Download binaries">
                     Binaries <i class="fa-solid fa-box-archive ml-2 text-xs opacity-70"></i>
                 </a>` : ''}
             </div>
-        `;
+        `
+            : '';
         return `
             <article class="glass-card card-reveal cat-${item.cat} relative rounded-2xl p-5 flex flex-col justify-between group cursor-pointer" data-card="${item.name}">
                 <div class="flex justify-between items-start mb-4">
@@ -347,7 +479,7 @@ async function renderCards(filter = 'all', searchQuery = '') {
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="text-xl p-2 focus:outline-none" data-action="pin" data-name="${item.name}" aria-label="Pin ${item.name}">
-                            <i class="fa-solid fa-thumbtack ${isPinned ? 'text-blue-400' : 'text-gray-600'}"></i>
+                            <i class="fa-solid fa-thumbtack ${isPinned ? 'text-green-400' : 'text-gray-600'}"></i>
                         </button>
                         <button class="text-xl p-2 focus:outline-none" data-action="like" data-name="${item.name}" aria-label="Like ${item.name}">
                             <i class="fa-solid fa-heart heart-icon ${isLiked ? 'active' : 'text-gray-600'}"></i>
@@ -360,8 +492,9 @@ async function renderCards(filter = 'all', searchQuery = '') {
                     <span class="text-xs font-semibold uppercase tracking-wider ${categoryColor} mb-1 block opacity-80">
                         ${item.cat === 'red' ? 'Red' : (item.cat === 'blue' ? 'Blue' : (item.cat === 'purple' ? 'Purple' : 'Utility'))}
                     </span>
-                    <h3 class="text-lg font-semibold text-white mb-1">${item.name}</h3>
-                    <p class="text-sm text-gray-400 line-clamp-2">${item.desc}</p>
+                    <h3 class="text-lg font-semibold text-white mb-1">${titleText}</h3>
+                    <p class="text-sm text-gray-400 line-clamp-2">${descText}</p>
+                    ${tagsMarkup}
                 </div>
 
                 ${actionButtons}

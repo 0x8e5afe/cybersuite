@@ -9,7 +9,11 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Regex tester/debugger",
-    "details": "## Setup\nWeb app (no install). Use offline/unit tests for production-grade validation.\n\n## Use\nHandy for building detection regexes, WAF rules, and log parsers.\n\n## Interesting options\nExplain mode, unit tests, named groups, different regex flavors, and sharing patterns with your team for review."
+    "details": "## Setup\nWeb app (no install). Use offline/unit tests for production-grade validation.\n\n## Use\nHandy for building detection regexes, WAF rules, and log parsers.\n\n## Interesting options\nExplain mode, unit tests, named groups, different regex flavors, and sharing patterns with your team for review.",
+    "tags": [
+      "web",
+      "detection"
+    ]
   },
   {
     "name": "CyberChef",
@@ -18,7 +22,11 @@ window.CYBER_RESOURCES_UTILS.push(
     "type": "tool",
     "desc": "Data transformation and decoding toolbox",
     "details": "## Overview\nCyberChef helps decode/encode/transform data (base64, JWT, hashes, compression, crypto primitives) using “recipes”. Great for IR and CTF-style triage.\n\n## Example (recipe idea)\nChain operations: From Base64 → Gunzip → Extract URLs → Defang → Export indicators.\n\n## Alternatives\n- `jq`/`python` one-liners (more reproducible in code)\n- Online decoders (less flexible)",
-    "source": "https://github.com/gchq/CyberChef"
+    "source": "https://github.com/gchq/CyberChef",
+    "tags": [
+      "credential access",
+      "threat intel"
+    ]
   },
   {
     "name": "jq",
@@ -26,7 +34,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "JSON processor for CLI pipelines",
-    "details": "## Overview\n`jq` is essential for manipulating JSON logs and API outputs during investigations.\n\n## Example\n```bash\n# Extract fields from JSON lines\ncat events.jsonl | jq -r '.timestamp, .event_type, .user'\n```\n\n## Alternatives\n- Python (`json` module)\n- Miller (`mlr`) for structured text"
+    "details": "## Overview\n`jq` is essential for manipulating JSON logs and API outputs during investigations.\n\n## Example\n```bash\n# Extract fields from JSON lines\ncat events.jsonl | jq -r '.timestamp, .event_type, .user'\n```\n\n## Alternatives\n- Python (`json` module)\n- Miller (`mlr`) for structured text",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "yq",
@@ -35,7 +46,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "type": "tool",
     "desc": "YAML processor (like jq for YAML)",
     "details": "## Overview\n`yq` transforms YAML (Kubernetes manifests, CI configs) reliably in pipelines.\n\n## Example\n```bash\nyq '.spec.template.spec.containers[].image' deployment.yaml\n```\n\n## Alternatives\n- `python -c` with PyYAML\n- `kubectl` jsonpath (K8s specific)",
-    "source": "https://github.com/mikefarah/yq"
+    "source": "https://github.com/mikefarah/yq",
+    "tags": [
+      "containers"
+    ]
   },
   {
     "name": "ripgrep (rg)",
@@ -44,7 +58,11 @@ window.CYBER_RESOURCES_UTILS.push(
     "type": "tool",
     "desc": "Fast recursive search",
     "details": "## Overview\n`rg` is a fast search tool for codebases and forensic triage directories.\n\n## Example\n```bash\nrg -n \"AKIA[0-9A-Z]{16}\" .  # AWS access key pattern (tune for false positives)\n```\n\n## Alternatives\n- `grep -R` (slower)\n- `ag` (the_silver_searcher)",
-    "source": "https://github.com/BurntSushi/ripgrep"
+    "source": "https://github.com/BurntSushi/ripgrep",
+    "tags": [
+      "cloud",
+      "search"
+    ]
   },
   {
     "name": "fzf",
@@ -53,7 +71,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "type": "tool",
     "desc": "Fuzzy finder for CLI workflows",
     "details": "## Overview\n`fzf` speeds up navigation through logs, command history, and file lists during investigations.\n\n## Example\n```bash\n# Pick a file interactively\nfind . -type f | fzf\n```\n\n## Alternatives\n- `peco`\n- Shell completion + `ripgrep`",
-    "source": "https://github.com/junegunn/fzf"
+    "source": "https://github.com/junegunn/fzf",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "Wireshark",
@@ -61,7 +82,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Packet analysis GUI",
-    "details": "## Overview\nInspect PCAPs, follow streams, and export objects to understand network behaviors.\n\n## Alternatives\n- tshark\n- tcpdump"
+    "details": "## Overview\nInspect PCAPs, follow streams, and export objects to understand network behaviors.\n\n## Alternatives\n- tshark\n- tcpdump",
+    "tags": [
+      "network"
+    ]
   },
   {
     "name": "tshark",
@@ -69,7 +93,11 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Wireshark CLI",
-    "details": "## Overview\ntshark provides scripted packet analysis for automation and pipelines.\n\n## Example\n```bash\ntshark -r traffic.pcap -Y \"http.request\" -T fields -e ip.src -e http.host -e http.request.uri\n```\n\n## Alternatives\n- Zeek (higher-level logs)\n- tcpdump (capture focused)"
+    "details": "## Overview\ntshark provides scripted packet analysis for automation and pipelines.\n\n## Example\n```bash\ntshark -r traffic.pcap -Y \"http.request\" -T fields -e ip.src -e http.host -e http.request.uri\n```\n\n## Alternatives\n- Zeek (higher-level logs)\n- tcpdump (capture focused)",
+    "tags": [
+      "web",
+      "network"
+    ]
   },
   {
     "name": "tcpdump",
@@ -77,7 +105,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Packet capture CLI",
-    "details": "## Overview\ntcpdump is lightweight and ideal for quick captures on servers and network troubleshooting.\n\n## Example\n```bash\nsudo tcpdump -i eth0 -nn -s0 -w capture.pcap 'host 10.0.0.5 and tcp'\n```\n\n## Alternatives\n- Wireshark (GUI)\n- tshark"
+    "details": "## Overview\ntcpdump is lightweight and ideal for quick captures on servers and network troubleshooting.\n\n## Example\n```bash\nsudo tcpdump -i eth0 -nn -s0 -w capture.pcap 'host 10.0.0.5 and tcp'\n```\n\n## Alternatives\n- Wireshark (GUI)\n- tshark",
+    "tags": [
+      "network"
+    ]
   },
   {
     "name": "OpenSSL",
@@ -85,7 +116,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "TLS/crypto swiss army knife",
-    "details": "## Overview\nOpenSSL is used for certificate inspection, key operations, TLS troubleshooting, and crypto primitives.\n\n## Example (inspect a certificate chain)\n```bash\nopenssl s_client -connect example.com:443 -servername example.com </dev/null\n```\n\n## Alternatives\n- `step` (Smallstep)\n- `cfssl`"
+    "details": "## Overview\nOpenSSL is used for certificate inspection, key operations, TLS troubleshooting, and crypto primitives.\n\n## Example (inspect a certificate chain)\n```bash\nopenssl s_client -connect example.com:443 -servername example.com </dev/null\n```\n\n## Alternatives\n- `step` (Smallstep)\n- `cfssl`",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "JWT.io Debugger",
@@ -93,7 +127,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "JWT inspection and decoding",
-    "details": "## Overview\nJWT.io helps decode and inspect JWT headers/payloads (do not paste real secrets in public tools).\n\n## Alternatives\n- CyberChef JWT decode\n- Local scripts (`python-jose`)"
+    "details": "## Overview\nJWT.io helps decode and inspect JWT headers/payloads (do not paste real secrets in public tools).\n\n## Alternatives\n- CyberChef JWT decode\n- Local scripts (`python-jose`)",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "Regex101",
@@ -101,7 +138,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Regex builder and debugger",
-    "details": "## Overview\nBuild and test regex patterns with explanations; handy for log parsing, detections, and data sanitization.\n\n## Alternatives\n- RegExr\n- Unit tests in your language"
+    "details": "## Overview\nBuild and test regex patterns with explanations; handy for log parsing, detections, and data sanitization.\n\n## Alternatives\n- RegExr\n- Unit tests in your language",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "crontab.guru",
@@ -109,7 +149,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Cron schedule translator",
-    "details": "## Overview\nQuickly understand and generate cron expressions when building scheduled jobs (backups, scans, report automation).\n\n## Alternatives\n- `systemd` timers\n- Quartz schedulers"
+    "details": "## Overview\nQuickly understand and generate cron expressions when building scheduled jobs (backups, scans, report automation).\n\n## Alternatives\n- `systemd` timers\n- Quartz schedulers",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "IPinfo",
@@ -117,7 +160,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "IP/ASN enrichment",
-    "details": "## Overview\nIPinfo provides ASN/org/geolocation data useful for enrichment (validate accuracy).\n\n## Alternatives\n- MaxMind GeoIP\n- Team Cymru WHOIS"
+    "details": "## Overview\nIPinfo provides ASN/org/geolocation data useful for enrichment (validate accuracy).\n\n## Alternatives\n- MaxMind GeoIP\n- Team Cymru WHOIS",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "RIPEstat",
@@ -125,7 +171,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Internet resource analysis (BGP, whois, ASNs)",
-    "details": "## Overview\nRIPEstat provides BGP routing, whois, and network resource analysis for IPs/ASNs/prefixes.\n\n## Alternatives\n- bgp.he.net\n- Team Cymru mapping"
+    "details": "## Overview\nRIPEstat provides BGP routing, whois, and network resource analysis for IPs/ASNs/prefixes.\n\n## Alternatives\n- bgp.he.net\n- Team Cymru mapping",
+    "tags": [
+      "network"
+    ]
   },
   {
     "name": "bgp.he.net",
@@ -133,7 +182,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "BGP prefix/ASN lookup",
-    "details": "## Overview\nHurricane Electric’s BGP toolkit provides ASN/prefix exploration useful for attribution and network investigations.\n\n## Alternatives\n- RIPEstat\n- RouteViews"
+    "details": "## Overview\nHurricane Electric’s BGP toolkit provides ASN/prefix exploration useful for attribution and network investigations.\n\n## Alternatives\n- RIPEstat\n- RouteViews",
+    "tags": [
+      "network"
+    ]
   },
   {
     "name": "whois",
@@ -141,7 +193,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Domain/IP registration lookup",
-    "details": "## Overview\n`whois` provides registration data; note that GDPR/redaction can limit results.\n\n## Alternatives\n- RDAP queries\n- Registrar portals"
+    "details": "## Overview\n`whois` provides registration data; note that GDPR/redaction can limit results.\n\n## Alternatives\n- RDAP queries\n- Registrar portals",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "VirusTotal",
@@ -149,7 +204,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Reputation and metadata enrichment",
-    "details": "## Overview\nUse VirusTotal to enrich suspicious files/URLs/domains (avoid uploading sensitive data without policy).\n\n## Alternatives\n- urlscan.io\n- Hybrid Analysis"
+    "details": "## Overview\nUse VirusTotal to enrich suspicious files/URLs/domains (avoid uploading sensitive data without policy).\n\n## Alternatives\n- urlscan.io\n- Hybrid Analysis",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "Hybrid Analysis",
@@ -157,7 +215,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Malware sandbox and reports",
-    "details": "## Overview\nHybrid Analysis executes samples in sandboxes and provides behavioral reports. Handle samples safely.\n\n## Alternatives\n- Any.Run\n- Cuckoo sandbox (self-hosted)"
+    "details": "## Overview\nHybrid Analysis executes samples in sandboxes and provides behavioral reports. Handle samples safely.\n\n## Alternatives\n- Any.Run\n- Cuckoo sandbox (self-hosted)",
+    "tags": [
+      "malware analysis"
+    ]
   },
   {
     "name": "Any.Run",
@@ -165,7 +226,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Interactive malware sandbox",
-    "details": "## Overview\nInteractive sandbox useful for quick triage and observing behaviors. Be mindful of data sensitivity and terms.\n\n## Alternatives\n- Hybrid Analysis\n- Self-hosted sandboxes"
+    "details": "## Overview\nInteractive sandbox useful for quick triage and observing behaviors. Be mindful of data sensitivity and terms.\n\n## Alternatives\n- Hybrid Analysis\n- Self-hosted sandboxes",
+    "tags": [
+      "malware analysis"
+    ]
   },
   {
     "name": "Cuckoo Sandbox",
@@ -174,7 +238,11 @@ window.CYBER_RESOURCES_UTILS.push(
     "type": "tool",
     "desc": "Self-hosted malware analysis sandbox",
     "details": "## Overview\nCuckoo is a framework to automate malware analysis in an isolated environment.\n\n## Notes\n- Maintain isolation, snapshots, and safe egress controls.\n\n## Alternatives\n- CAPE sandbox (Cuckoo fork for malware)\n- Commercial sandboxes",
-    "source": "https://github.com/cuckoosandbox/cuckoo"
+    "source": "https://github.com/cuckoosandbox/cuckoo",
+    "tags": [
+      "malware analysis",
+      "framework"
+    ]
   },
   {
     "name": "CyberGordon (Quick IOC report)",
@@ -182,7 +250,12 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Quick IOC report generation",
-    "details": "## Overview\nPaste IOCs (hashes/domains/IPs) to generate enriched reports (avoid sensitive data).\n\n## Alternatives\n- MISP enrichment\n- Local enrichment scripts"
+    "details": "## Overview\nPaste IOCs (hashes/domains/IPs) to generate enriched reports (avoid sensitive data).\n\n## Alternatives\n- MISP enrichment\n- Local enrichment scripts",
+    "tags": [
+      "credential access",
+      "network",
+      "threat intel"
+    ]
   },
   {
     "name": "Explainshell",
@@ -190,7 +263,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Explain shell commands",
-    "details": "## Overview\nExplainshell helps decode unfamiliar shell commands during incident response reviews and post-mortems.\n\n## Alternatives\n- `man` pages\n- tldr pages"
+    "details": "## Overview\nExplainshell helps decode unfamiliar shell commands during incident response reviews and post-mortems.\n\n## Alternatives\n- `man` pages\n- tldr pages",
+    "tags": [
+      "incident response"
+    ]
   },
   {
     "name": "cheat.sh",
@@ -198,7 +274,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Command-line cheat sheets",
-    "details": "## Overview\nQuery cheat sheets from your terminal (languages, commands). Useful when building quick IR scripts.\n\n## Alternatives\n- tldr\n- local notes/wiki"
+    "details": "## Overview\nQuery cheat sheets from your terminal (languages, commands). Useful when building quick IR scripts.\n\n## Alternatives\n- tldr\n- local notes/wiki",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "curl",
@@ -206,7 +285,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "HTTP client and data transfer",
-    "details": "## Overview\n`curl` is ubiquitous for interacting with APIs, reproducing requests, and downloading artifacts during investigations.\n\n## Example\n```bash\ncurl -sS https://api.example.com/status | jq .\n```\n\n## Alternatives\n- httpie (friendlier output)\n- wget (downloads)"
+    "details": "## Overview\n`curl` is ubiquitous for interacting with APIs, reproducing requests, and downloading artifacts during investigations.\n\n## Example\n```bash\ncurl -sS https://api.example.com/status | jq .\n```\n\n## Alternatives\n- httpie (friendlier output)\n- wget (downloads)",
+    "tags": [
+      "web"
+    ]
   },
   {
     "name": "httpie",
@@ -214,7 +296,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Human-friendly HTTP client",
-    "details": "## Overview\nhttpie makes API calls readable and is convenient in IR automation scripts.\n\n## Example\n```bash\nhttp GET https://api.example.com/status\n```\n\n## Alternatives\n- curl\n- Postman/Insomnia (GUI)"
+    "details": "## Overview\nhttpie makes API calls readable and is convenient in IR automation scripts.\n\n## Example\n```bash\nhttp GET https://api.example.com/status\n```\n\n## Alternatives\n- curl\n- Postman/Insomnia (GUI)",
+    "tags": [
+      "web"
+    ]
   },
   {
     "name": "wget",
@@ -222,7 +307,11 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Downloader for scripts and artifacts",
-    "details": "## Overview\n`wget` is useful for mirroring content and fetching resources. Prefer `-O` to control filenames and keep artifacts organized.\n\n## Example\n```bash\nwget -O artifact.bin https://example.com/download.bin\n```\n\n## Alternatives\n- curl -L -o\n- aria2c (parallel)"
+    "details": "## Overview\n`wget` is useful for mirroring content and fetching resources. Prefer `-O` to control filenames and keep artifacts organized.\n\n## Example\n```bash\nwget -O artifact.bin https://example.com/download.bin\n```\n\n## Alternatives\n- curl -L -o\n- aria2c (parallel)",
+    "tags": [
+      "web",
+      "framework"
+    ]
   },
   {
     "name": "Wappalyzer",
@@ -230,7 +319,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Technology fingerprinting",
-    "details": "## Overview\nWappalyzer identifies technologies used by a website; useful for asset inventory and risk triage (verify accuracy).\n\n## Alternatives\n- BuiltWith\n- WhatWeb"
+    "details": "## Overview\nWappalyzer identifies technologies used by a website; useful for asset inventory and risk triage (verify accuracy).\n\n## Alternatives\n- BuiltWith\n- WhatWeb",
+    "tags": [
+      "enumeration"
+    ]
   },
   {
     "name": "BuiltWith",
@@ -238,7 +330,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Website technology profiling",
-    "details": "## Overview\nBuiltWith provides technology profiling and historical changes for websites.\n\n## Alternatives\n- Wappalyzer\n- httpx tech-detect"
+    "details": "## Overview\nBuiltWith provides technology profiling and historical changes for websites.\n\n## Alternatives\n- Wappalyzer\n- httpx tech-detect",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "DNSDumpster",
@@ -246,7 +341,12 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "DNS recon visualization (authorized)",
-    "details": "## Overview\nDNSDumpster provides DNS records and basic mapping. Use for your own domains/monitoring and respect privacy policies.\n\n## Alternatives\n- SecurityTrails\n- Amass (CLI)"
+    "details": "## Overview\nDNSDumpster provides DNS records and basic mapping. Use for your own domains/monitoring and respect privacy policies.\n\n## Alternatives\n- SecurityTrails\n- Amass (CLI)",
+    "tags": [
+      "enumeration",
+      "dns",
+      "detection"
+    ]
   },
   {
     "name": "MXToolbox",
@@ -254,7 +354,11 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "DNS/MX/blacklist diagnostics",
-    "details": "## Overview\nMXToolbox helps diagnose mail/DNS issues and check common blacklists, useful during phishing incidents and mail delivery issues.\n\n## Alternatives\n- dig + manual checks\n- Vendor email security portals"
+    "details": "## Overview\nMXToolbox helps diagnose mail/DNS issues and check common blacklists, useful during phishing incidents and mail delivery issues.\n\n## Alternatives\n- dig + manual checks\n- Vendor email security portals",
+    "tags": [
+      "dns",
+      "social engineering"
+    ]
   },
   {
     "name": "ExifTool",
@@ -262,7 +366,11 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Metadata extraction and editing",
-    "details": "## Overview\nExifTool reads metadata from many file types (images, documents). Useful for OSINT and DFIR triage.\n\n## Example\n```bash\nexiftool suspicious.jpg\n```\n\n## Alternatives\n- `file` + `strings` (limited)\n- GUI metadata viewers"
+    "details": "## Overview\nExifTool reads metadata from many file types (images, documents). Useful for OSINT and DFIR triage.\n\n## Example\n```bash\nexiftool suspicious.jpg\n```\n\n## Alternatives\n- `file` + `strings` (limited)\n- GUI metadata viewers",
+    "tags": [
+      "osint",
+      "forensics"
+    ]
   },
   {
     "name": "oletools",
@@ -271,7 +379,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "type": "tool",
     "desc": "Analyze suspicious Office documents",
     "details": "## Overview\noletools helps analyze OLE/Office files for macros and embedded objects in phishing triage.\n\n## Example\n```bash\nolevba document.doc\n```\n\n## Alternatives\n- Office sandboxing\n- Commercial email security tooling",
-    "source": "https://github.com/decalage2/oletools"
+    "source": "https://github.com/decalage2/oletools",
+    "tags": [
+      "social engineering"
+    ]
   },
   {
     "name": "pdfid",
@@ -279,7 +390,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Quick PDF structure inspection",
-    "details": "## Overview\npdfid (Didier Stevens) provides a quick look at PDF elements (JS, actions) helpful for triage.\n\n## Alternatives\n- peepdf\n- pdf-parser"
+    "details": "## Overview\npdfid (Didier Stevens) provides a quick look at PDF elements (JS, actions) helpful for triage.\n\n## Alternatives\n- peepdf\n- pdf-parser",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "7-Zip",
@@ -287,7 +401,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Archive handling (7z/zip/rar)",
-    "details": "## Overview\n7-Zip is useful for handling incident artifacts packaged in archives, including encrypted archives (follow policy).\n\n## Alternatives\n- unzip/tar (built-in)\n- p7zip (Linux)"
+    "details": "## Overview\n7-Zip is useful for handling incident artifacts packaged in archives, including encrypted archives (follow policy).\n\n## Alternatives\n- unzip/tar (built-in)\n- p7zip (Linux)",
+    "tags": [
+      "archive"
+    ]
   },
   {
     "name": "age",
@@ -296,7 +413,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "type": "tool",
     "desc": "Simple file encryption for sharing artifacts",
     "details": "## Overview\n`age` provides modern, simple file encryption—useful for securely sharing incident artifacts internally.\n\n## Example\n```bash\nage -r <RECIPIENT> -o artifact.txt.age artifact.txt\n```\n\n## Alternatives\n- GPG (more complex)\n- S/MIME encrypted email",
-    "source": "https://github.com/FiloSottile/age"
+    "source": "https://github.com/FiloSottile/age",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "GnuPG (GPG)",
@@ -304,7 +424,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Encryption and signing",
-    "details": "## Overview\nGPG supports encryption and signing for secure artifact sharing and integrity verification.\n\n## Alternatives\n- age (simpler)\n- OS-native keychains"
+    "details": "## Overview\nGPG supports encryption and signing for secure artifact sharing and integrity verification.\n\n## Alternatives\n- age (simpler)\n- OS-native keychains",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "Postman",
@@ -312,7 +435,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "API testing and collections",
-    "details": "## Overview\nPostman helps build repeatable API requests and collections—useful for reproducing security findings or IR enrichment calls.\n\n## Alternatives\n- Insomnia\n- httpie/curl + scripts"
+    "details": "## Overview\nPostman helps build repeatable API requests and collections—useful for reproducing security findings or IR enrichment calls.\n\n## Alternatives\n- Insomnia\n- httpie/curl + scripts",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "Insomnia",
@@ -320,7 +446,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "API client",
-    "details": "## Overview\nInsomnia is a lightweight API client; useful for reproducing HTTP workflows and documenting requests.\n\n## Alternatives\n- Postman\n- httpie/curl"
+    "details": "## Overview\nInsomnia is a lightweight API client; useful for reproducing HTTP workflows and documenting requests.\n\n## Alternatives\n- Postman\n- httpie/curl",
+    "tags": [
+      "web"
+    ]
   },
   {
     "name": "binwalk",
@@ -329,7 +458,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "type": "tool",
     "desc": "Firmware analysis tool",
     "details": "## Overview\nbinwalk analyzes firmware images for embedded files and signatures; useful in IoT/embedded investigations.\n\n## Alternatives\n- firmware-mod-kit (legacy)\n- manual extraction tools",
-    "source": "https://github.com/ReFirmLabs/binwalk"
+    "source": "https://github.com/ReFirmLabs/binwalk",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "strings",
@@ -337,7 +469,10 @@ window.CYBER_RESOURCES_UTILS.push(
     "cat": "utils",
     "type": "tool",
     "desc": "Extract printable strings from binaries",
-    "details": "## Overview\n`strings` is a simple but powerful triage tool to spot URLs, paths, and suspicious markers in binaries and documents.\n\n## Example\n```bash\nstrings -n 8 suspicious.bin | head\n```\n\n## Alternatives\n- `floss` for decoded strings\n- Reverse engineering tools (Ghidra)"
+    "details": "## Overview\n`strings` is a simple but powerful triage tool to spot URLs, paths, and suspicious markers in binaries and documents.\n\n## Example\n```bash\nstrings -n 8 suspicious.bin | head\n```\n\n## Alternatives\n- `floss` for decoded strings\n- Reverse engineering tools (Ghidra)",
+    "tags": [
+      "malware analysis"
+    ]
   },
   {
     "name": "FLOSS",
@@ -346,6 +481,9 @@ window.CYBER_RESOURCES_UTILS.push(
     "type": "tool",
     "desc": "Extract obfuscated strings from malware",
     "details": "## Overview\nFLOSS (FLARE) extracts and deobfuscates strings from binaries; useful in malware triage.\n\n## Alternatives\n- capa (capabilities)\n- Ghidra (manual analysis)",
-    "source": "https://github.com/mandiant/flare-floss"
+    "source": "https://github.com/mandiant/flare-floss",
+    "tags": [
+      "malware analysis"
+    ]
   }
 );

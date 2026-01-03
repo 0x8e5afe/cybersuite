@@ -9,7 +9,11 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Plan and visualize coverage",
-    "details": "## Overview\nBuild ATT&CK heatmaps for emulation plans, detection coverage, and hunt priorities.\n\n## Example workflow\nCreate a layer for a planned exercise: pick techniques → assign expected telemetry → track outcomes.\n\n## Alternatives\n- ATT&CK Workbench\n- Custom matrix tools"
+    "details": "## Overview\nBuild ATT&CK heatmaps for emulation plans, detection coverage, and hunt priorities.\n\n## Example workflow\nCreate a layer for a planned exercise: pick techniques → assign expected telemetry → track outcomes.\n\n## Alternatives\n- ATT&CK Workbench\n- Custom matrix tools",
+    "tags": [
+      "detection",
+      "monitoring"
+    ]
   },
   {
     "name": "Atomic Red Team",
@@ -20,7 +24,12 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Portable ATT&CK-mapped tests",
-    "details": "## Overview\nAtomic Red Team is a library of small tests mapped to ATT&CK techniques, designed to produce repeatable telemetry for defenders.\n\n## Typical workflow\nSelect a technique, run the associated atomic test in a controlled environment, then validate that logs/alerts and response playbooks behave as expected.\n\n## Notes\n- Run first in a lab or staging environment.\n- Document prerequisites and cleanup steps for each test.\n\n## Alternatives\n- Caldera (campaign-style emulation)\n- Infection Monkey (lateral movement simulation)"
+    "details": "## Overview\nAtomic Red Team is a library of small tests mapped to ATT&CK techniques, designed to produce repeatable telemetry for defenders.\n\n## Typical workflow\nSelect a technique, run the associated atomic test in a controlled environment, then validate that logs/alerts and response playbooks behave as expected.\n\n## Notes\n- Run first in a lab or staging environment.\n- Document prerequisites and cleanup steps for each test.\n\n## Alternatives\n- Caldera (campaign-style emulation)\n- Infection Monkey (lateral movement simulation)",
+    "tags": [
+      "post-exploitation",
+      "monitoring",
+      "training"
+    ]
   },
   {
     "name": "Invoke-AtomicRedTeam",
@@ -31,7 +40,11 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Run Atomic tests (PowerShell)",
-    "details": "## Overview\nPowerShell module to execute Atomic Red Team tests and manage prerequisites and cleanup on Windows.\n\n## Example (conceptual)\nInstall the module, select a technique (T####), run a test, then review Defender/SIEM telemetry to confirm detection and response steps.\n\n## Alternatives\n- Manual execution of atomic test steps\n- Caldera operations"
+    "details": "## Overview\nPowerShell module to execute Atomic Red Team tests and manage prerequisites and cleanup on Windows.\n\n## Example (conceptual)\nInstall the module, select a technique (T####), run a test, then review Defender/SIEM telemetry to confirm detection and response steps.\n\n## Alternatives\n- Manual execution of atomic test steps\n- Caldera operations",
+    "tags": [
+      "detection",
+      "monitoring"
+    ]
   },
   {
     "name": "MITRE Caldera",
@@ -42,7 +55,12 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Adversary emulation platform",
-    "details": "## Overview\nCaldera runs ATT&CK-aligned operations to validate detection and response in controlled environments. \n\n## Purple team workflow\nDefine an objective (e.g., credential access), run an operation, then measure: telemetry quality, alert fidelity, and response time.\n\n## Alternatives\n- Atomic Red Team (unit tests)\n- Commercial BAS tools"
+    "details": "## Overview\nCaldera runs ATT&CK-aligned operations to validate detection and response in controlled environments. \n\n## Purple team workflow\nDefine an objective (e.g., credential access), run an operation, then measure: telemetry quality, alert fidelity, and response time.\n\n## Alternatives\n- Atomic Red Team (unit tests)\n- Commercial BAS tools",
+    "tags": [
+      "credential access",
+      "detection",
+      "monitoring"
+    ]
   },
   {
     "name": "Infection Monkey",
@@ -53,7 +71,12 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Breach and attack simulation",
-    "details": "## Overview\nInfection Monkey simulates lateral movement and common techniques to help validate segmentation and detection in lab/authorized environments.\n\n## Alternatives\n- Caldera\n- Atomic Red Team"
+    "details": "## Overview\nInfection Monkey simulates lateral movement and common techniques to help validate segmentation and detection in lab/authorized environments.\n\n## Alternatives\n- Caldera\n- Atomic Red Team",
+    "tags": [
+      "post-exploitation",
+      "detection",
+      "training"
+    ]
   },
   {
     "name": "PurpleSharp",
@@ -64,7 +87,12 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "ATT&CK simulation tool (Windows)",
-    "details": "## Overview\nPurpleSharp simulates multiple ATT&CK techniques to generate telemetry for detection validation in authorized environments.\n\n## Notes\n- Run with change control; confirm cleanup and endpoint stability.\n\n## Alternatives\n- Atomic Red Team\n- Caldera"
+    "details": "## Overview\nPurpleSharp simulates multiple ATT&CK techniques to generate telemetry for detection validation in authorized environments.\n\n## Notes\n- Run with change control; confirm cleanup and endpoint stability.\n\n## Alternatives\n- Atomic Red Team\n- Caldera",
+    "tags": [
+      "detection",
+      "monitoring",
+      "framework"
+    ]
   },
   {
     "name": "ATT&CK Workbench",
@@ -75,7 +103,10 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Local ATT&CK knowledge base management",
-    "details": "## Overview\nWorkbench allows managing ATT&CK data locally; useful for custom technique notes, internal mappings, and offline environments.\n\n## Alternatives\n- Navigator (visual focus)\n- Direct STIX ingestion pipelines"
+    "details": "## Overview\nWorkbench allows managing ATT&CK data locally; useful for custom technique notes, internal mappings, and offline environments.\n\n## Alternatives\n- Navigator (visual focus)\n- Direct STIX ingestion pipelines",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "DeTT&CT",
@@ -86,7 +117,11 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "ATT&CK-based detection maturity assessment",
-    "details": "## Overview\nDeTT&CT helps assess detection and data source coverage mapped to ATT&CK and supports planning improvements.\n\n## Purple use\nUse it to plan which telemetry to collect and which detections to prioritize before running emulations.\n\n## Alternatives\n- Navigator layers\n- Custom coverage scoring"
+    "details": "## Overview\nDeTT&CT helps assess detection and data source coverage mapped to ATT&CK and supports planning improvements.\n\n## Purple use\nUse it to plan which telemetry to collect and which detections to prioritize before running emulations.\n\n## Alternatives\n- Navigator layers\n- Custom coverage scoring",
+    "tags": [
+      "detection",
+      "monitoring"
+    ]
   },
   {
     "name": "OpenBAS",
@@ -97,7 +132,10 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Open Breach and Attack Simulation platform",
-    "details": "## Overview\nOpenBAS provides BAS capabilities to run simulations and measure defensive controls. Use in authorized environments. \n\n## Alternatives\n- Caldera\n- Infection Monkey"
+    "details": "## Overview\nOpenBAS provides BAS capabilities to run simulations and measure defensive controls. Use in authorized environments. \n\n## Alternatives\n- Caldera\n- Infection Monkey",
+    "tags": [
+      "framework"
+    ]
   },
   {
     "name": "RITA",
@@ -108,7 +146,12 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Network beaconing detection",
-    "details": "## Overview\nRITA analyzes network logs to identify beacons and suspicious communications; helpful for validating detections against simulated C2.\n\n## Alternatives\n- Zeek scripts + custom analytics\n- SIEM behavioral detections"
+    "details": "## Overview\nRITA analyzes network logs to identify beacons and suspicious communications; helpful for validating detections against simulated C2.\n\n## Alternatives\n- Zeek scripts + custom analytics\n- SIEM behavioral detections",
+    "tags": [
+      "post-exploitation",
+      "network",
+      "detection"
+    ]
   },
   {
     "name": "Sysmon",
@@ -119,7 +162,11 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "High-fidelity Windows telemetry",
-    "details": "## Overview\nSysmon provides detailed Windows events; purple teams rely on it to validate that simulations generate expected telemetry.\n\n## Alternatives\n- Windows Security Auditing\n- EDR telemetry"
+    "details": "## Overview\nSysmon provides detailed Windows events; purple teams rely on it to validate that simulations generate expected telemetry.\n\n## Alternatives\n- Windows Security Auditing\n- EDR telemetry",
+    "tags": [
+      "detection",
+      "monitoring"
+    ]
   },
   {
     "name": "Velociraptor",
@@ -130,7 +177,10 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Endpoint hunting and collections",
-    "details": "## Overview\nUse Velociraptor to hunt for artifacts created during simulations and to validate response steps at scale.\n\n## Alternatives\n- osquery + Fleet\n- GRR"
+    "details": "## Overview\nUse Velociraptor to hunt for artifacts created during simulations and to validate response steps at scale.\n\n## Alternatives\n- osquery + Fleet\n- GRR",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "Timesketch",
@@ -141,7 +191,10 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Timeline analysis and collaboration",
-    "details": "## Overview\nTimesketch helps analyze event timelines. Purple teams can use it to compare “expected” vs “observed” activity during exercises.\n\n## Alternatives\n- Plaso directly\n- SIEM timelines"
+    "details": "## Overview\nTimesketch helps analyze event timelines. Purple teams can use it to compare “expected” vs “observed” activity during exercises.\n\n## Alternatives\n- Plaso directly\n- SIEM timelines",
+    "tags": [
+      "detection"
+    ]
   },
   {
     "name": "Plaso (log2timeline)",
@@ -152,7 +205,10 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Super timeline generation",
-    "details": "## Overview\nPlaso builds forensic timelines from diverse artifacts; useful for post-exercise analysis.\n\n## Alternatives\n- Velociraptor collections\n- Commercial DFIR suites"
+    "details": "## Overview\nPlaso builds forensic timelines from diverse artifacts; useful for post-exercise analysis.\n\n## Alternatives\n- Velociraptor collections\n- Commercial DFIR suites",
+    "tags": [
+      "forensics"
+    ]
   },
   {
     "name": "Prelude Operator (community)",
@@ -163,7 +219,10 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "ATT&CK automation and simulation",
-    "details": "## Overview\nPrelude Operator helps run ATT&CK-aligned actions to validate detections and response in controlled environments.\n\n## Alternatives\n- Caldera\n- Atomic Red Team"
+    "details": "## Overview\nPrelude Operator helps run ATT&CK-aligned actions to validate detections and response in controlled environments.\n\n## Alternatives\n- Caldera\n- Atomic Red Team",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "VECTR",
@@ -174,7 +233,10 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Purple team metrics & tracking platform",
-    "details": "## Overview\nVECTR is a tool to plan and track adversary emulation, detection validation results, and improvements over time. \n\n## Purple workflow\nModel an exercise, record which steps were detected, where response failed, and assign remediation actions.\n\n## Alternatives\n- Spreadsheets (lighter)\n- Commercial BAS platforms"
+    "details": "## Overview\nVECTR is a tool to plan and track adversary emulation, detection validation results, and improvements over time. \n\n## Purple workflow\nModel an exercise, record which steps were detected, where response failed, and assign remediation actions.\n\n## Alternatives\n- Spreadsheets (lighter)\n- Commercial BAS platforms",
+    "tags": [
+      "detection"
+    ]
   },
   {
     "name": "Stratus Red Team",
@@ -185,7 +247,10 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Cloud attack emulation (AWS/Azure/GCP)",
-    "details": "## Overview\nStratus Red Team emulates cloud attack techniques in controlled environments to validate cloud detections and guardrails.\n\n## Notes\n- Always use dedicated test accounts/projects; cloud actions can have cost and risk implications.\n\n## Alternatives\n- Caldera cloud plugins (if used)\n- Cloud provider simulation tools"
+    "details": "## Overview\nStratus Red Team emulates cloud attack techniques in controlled environments to validate cloud detections and guardrails.\n\n## Notes\n- Always use dedicated test accounts/projects; cloud actions can have cost and risk implications.\n\n## Alternatives\n- Caldera cloud plugins (if used)\n- Cloud provider simulation tools",
+    "tags": [
+      "cloud"
+    ]
   },
   {
     "name": "pySigma",
@@ -196,7 +261,10 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Sigma rule processing library",
-    "details": "## Overview\npySigma parses and transforms Sigma rules and supports backend conversions through plugins.\n\n## Purple use\nAutomate: rule linting → conversion → test execution → report on hits and false positives.\n\n## Alternatives\n- sigmac (legacy)\n- Uncoder.io (UI)"
+    "details": "## Overview\npySigma parses and transforms Sigma rules and supports backend conversions through plugins.\n\n## Purple use\nAutomate: rule linting → conversion → test execution → report on hits and false positives.\n\n## Alternatives\n- sigmac (legacy)\n- Uncoder.io (UI)",
+    "tags": [
+      "tool"
+    ]
   },
   {
     "name": "Uncoder.io",
@@ -207,6 +275,9 @@ window.CYBER_RESOURCES_PURPLE.push(
     "cat": "purple",
     "type": "tool",
     "desc": "Sigma rule translation UI",
-    "details": "## Overview\nUncoder.io helps translate Sigma rules to multiple query languages (use as a helper; always validate semantics).\n\n## Alternatives\n- pySigma toolchain\n- Vendor converters"
+    "details": "## Overview\nUncoder.io helps translate Sigma rules to multiple query languages (use as a helper; always validate semantics).\n\n## Alternatives\n- pySigma toolchain\n- Vendor converters",
+    "tags": [
+      "tool"
+    ]
   }
 );

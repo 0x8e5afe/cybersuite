@@ -113,9 +113,10 @@ body {
 }
 
 .nav-btn.active {
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    font-weight: 500;
+    background: rgba(55, 255, 139, 0.12);
+    color: #37ff8b;
+    font-weight: 600;
+    box-shadow: 0 0 0 1px rgba(55, 255, 139, 0.35);
 }
 
 .heart-icon {
@@ -128,6 +129,48 @@ body {
 
 .heart-icon.active {
     color: #FF375F;
+}
+
+.resource-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #c2c5cc;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.resource-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.55rem 0.9rem;
+    border-radius: 12px;
+    background: rgba(16, 56, 33, 0.65);
+    color: #37ff8b;
+    border: 1px solid rgba(55, 255, 139, 0.45);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+    box-shadow: inset 0 0 0 1px rgba(55, 255, 139, 0.12);
+}
+
+.resource-action-btn:hover {
+    background: rgba(26, 78, 46, 0.75);
+    border-color: rgba(55, 255, 139, 0.7);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(55, 255, 139, 0.18);
+}
+
+.resource-action-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(55, 255, 139, 0.35), inset 0 0 0 1px rgba(55, 255, 139, 0.18);
 }
 
 .hero-header {
@@ -455,6 +498,14 @@ body {
 .markdown p:first-of-type {
     font-size: 1.02rem;
     color: #e2e2e7;
+}
+
+.search-highlight {
+    background: rgba(55, 255, 139, 0.16);
+    color: #c7ffe2;
+    border-radius: 6px;
+    padding: 0 0.2em;
+    box-shadow: 0 0 0 1px rgba(55, 255, 139, 0.2);
 }
 
 .form-field {
