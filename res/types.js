@@ -16,6 +16,7 @@ window.CYBER_TYPE_ICONS = {
     standard: 'fa-file-contract',
     checklist: 'fa-list-check',
     service: 'fa-cloud',
+    certification: 'fa-award',
     repo: 'fa-code-branch',
     script: 'fa-code',
     plugin: 'fa-puzzle-piece',

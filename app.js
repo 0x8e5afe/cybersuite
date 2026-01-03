@@ -411,12 +411,14 @@ async function renderCards(filter = 'all', searchQuery = '') {
 
     await hydrateLikeCounts(filtered);
     filtered.sort((a, b) => {
-        const aPinned = pinned.includes(a.name);
-        const bPinned = pinned.includes(b.name);
+        const aName = a.name || '';
+        const bName = b.name || '';
+        const aPinned = pinned.includes(aName);
+        const bPinned = pinned.includes(bName);
         if (aPinned !== bPinned) return aPinned ? -1 : 1;
-        const likeDiff = (likeCounts[b.name] || 0) - (likeCounts[a.name] || 0);
+        const likeDiff = (likeCounts[bName] || 0) - (likeCounts[aName] || 0);
         if (likeDiff !== 0) return likeDiff;
-        return a.name.localeCompare(b.name);
+        return aName.localeCompare(bName);
     });
 
     if (filtered.length === 0) {
