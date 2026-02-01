@@ -279,5 +279,24 @@ window.CYBER_RESOURCES_PURPLE.push(
     "tags": [
       "tool"
     ]
-  }
+  },
+  {
+  "name": "OSV (Open Source Vulnerabilities)",
+  "url": "https://osv.dev/",
+  "website": "https://osv.dev/",
+  "source": "https://github.com/google/osv.dev",
+  "binaries": null,
+  "cat": "intel",
+  "type": "tool",
+  "desc": "Open-source vulnerability database + API for precise package/commit matching",
+  "details": "## Overview\nOSV is an open-source vulnerability database and API that focuses on accurate matching of vulnerabilities to *exact* affected package versions and git commits. Records are expressed in the OpenSSF OSV Schema, which models affected ranges using explicit introduced/fixed/last_affected events rather than vague version statements.\n\n## Typical workflow\nQuery OSV for your dependency set (ideally via PURL or ecosystem+package+version), retrieve vulnerability IDs (and modified timestamps) with querybatch for scale, then pull full records only when needed to enrich triage and drive remediation.\n\n## Notes\n- Query methods: (ecosystem, package name, version), PURL, or git commit hash.\n- Main endpoints: POST /v1/query, POST /v1/querybatch, GET /v1/vulns/{id}.\n- Prefer querybatch + caching by the returned modified timestamp to keep CI fast and avoid redundant lookups.\n- Watch batching rules: don’t include both a standalone version and a versioned PURL in the same query item.\n- For large responses, use HTTP/2 (HTTP/1.1 responses have a documented size limit).\n- Handle withdrawn advisories as a first-class state in your pipeline logic.\n\n## Alternatives\n- NVD (CVE-centric, less precise for package matching)\n- GitHub Security Advisories (strong ecosystem coverage, but OSV unifies across ecosystems via one schema/API)\n- Commercial SCA platforms (typically wrap OSV/NVD/GHSA with additional analytics and workflow features)",
+  "tags": [
+    "vulnerability-management",
+    "dependency-scanning",
+    "sbom",
+    "supply-chain",
+    "api",
+    "openssf"
+  ]
+}
 );
