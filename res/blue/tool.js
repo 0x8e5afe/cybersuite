@@ -699,6 +699,26 @@ window.CYBER_RESOURCES_BLUE.push(
     "anonymization",
     "llm"
   ]
-}
+}, 
+
+  {
+    "name": "Azure AI Content Safety",
+    "url": "https://azure.microsoft.com/en-us/products/ai-services/ai-content-safety",
+    "website": "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/overview",
+    "source": "https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/contentsafety/azure-ai-contentsafety",
+    "binaries": "https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text",
+    "cat": "blue",
+    "type": "tool",
+    "desc": "AI content moderation + guardrails (text/image/multimodal)",
+    "details": "Azure AI Content Safety is a managed service for detecting and mitigating harmful content in applications and GenAI pipelines. It supports text and image analysis across core harm categories (Hate, SelfHarm, Sexual, Violence) with severity scoring, and includes features such as blocklists, prompt shields, and protected material detection.\n\n## Overview\nUse it as a policy-enforcement layer around user input and model output:\n- **Text/Image moderation**: score harmful content per category and decide allow/warn/block.\n- **Guardrails**: detect prompt injection/jailbreak attempts (Prompt Shields) and known protected material.\n- **Optional multimodal**: analyze an image together with associated text to preserve context.\n\n## Setup (API + CLI)\n### API (SDK)\nPrereqs: create an Azure AI Content Safety resource, then capture **endpoint** + **key**.\n\nPython (example):\n```bash\npip install azure-ai-contentsafety\n```\n\n```python\nimport os\nfrom azure.ai.contentsafety import ContentSafetyClient\nfrom azure.ai.contentsafety.models import AnalyzeTextOptions\nfrom azure.core.credentials import AzureKeyCredential\n\nendpoint = os.environ[\"AZURE_CONTENT_SAFETY_ENDPOINT\"]\nkey = os.environ[\"AZURE_CONTENT_SAFETY_KEY\"]\n\nclient = ContentSafetyClient(endpoint, AzureKeyCredential(key))\n\nresult = client.analyze_text(\n    AnalyzeTextOptions(text=\"I want to hurt you.\", categories=[\"Hate\",\"SelfHarm\",\"Sexual\",\"Violence\"])\n)\n\nfor c in result.categories_analysis:\n    print(c.category, c.severity)\n```\n\n### CLI (REST via curl)\nText analyze:\n```bash\ncurl -sS -X POST \"$AZURE_CONTENT_SAFETY_ENDPOINT/contentsafety/text:analyze?api-version=2024-09-01\" \\\n  -H \"Ocp-Apim-Subscription-Key: $AZURE_CONTENT_SAFETY_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"text\": \"I hate you.\",\n    \"categories\": [\"Hate\",\"SelfHarm\",\"Sexual\",\"Violence\"],\n    \"outputType\": \"EightSeverityLevels\"\n  }'\n```\n\nImage analyze:\n```bash\n# If you have a public image URL\ncurl -sS -X POST \"$AZURE_CONTENT_SAFETY_ENDPOINT/contentsafety/image:analyze?api-version=2024-09-01\" \\\n  -H \"Ocp-Apim-Subscription-Key: $AZURE_CONTENT_SAFETY_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"image\": { \"url\": \"https://example.com/image.jpg\" },\n    \"categories\": [\"Hate\",\"SelfHarm\",\"Sexual\",\"Violence\"],\n    \"outputType\": \"EightSeverityLevels\"\n  }'\n```\n\n## Practical use\nTypical production pattern:\n- **Inbound** (user -> app): analyze and block/route suspicious prompts or disallowed content before it hits your LLM.\n- **Outbound** (LLM -> user): analyze model output; enforce a threshold policy per category; redact or replace as needed.\n- **Telemetry**: store category+severity and policy decision for auditing/continuous tuning.\n\nConcrete policies you can implement quickly:\n- Hard block if **SelfHarm** >= threshold.\n- Soft block / require confirmation if **Sexual** or **Violence** crosses a medium threshold.\n- Use **blocklists** for org-specific forbidden terms (project names, customer identifiers, slurs, etc.).\n\n## Notes\n- **Tuning matters**: pick thresholds per category rather than one global score (your false positive/negative tradeoffs differ).\n- **Prompt Shields** helps detect direct/indirect prompt injection patterns (useful for RAG + tool-using agents).\n- **Protected material detection** is useful for compliance/IP risk workflows (e.g., prevent verbatim copyrighted output).\n- For GenAI apps, combine this with rate limiting, authz, logging, and human review for edge cases.\n\n## Alternatives\n- **OpenAI Moderation**: hosted moderation for text (and some multimodal workflows depending on platform).\n- **Google Cloud DLP / Vertex AI safety features**: managed detection and policy controls.\n- **AWS Comprehend (PII) + custom classifiers**: composable but typically more DIY for safety.\n- **Perspective API**: strong toxicity focus (not a full suite).\n- **Self-hosted**: Detoxify / transformers-based classifiers + custom rules (more control, more ops).\n",
+    "tags": [
+      "ai",
+      "moderation",
+      "safety",
+      "llm",
+      "privacy",
+      "compliance"
+    ]
+  }
 
 );
