@@ -1597,5 +1597,27 @@ window.CYBER_RESOURCES_RED.push(
       "exploitation",
       "web"
     ]
+  }, 
+  
+  {
+    "name": "AuthFinder",
+    "url": "https://github.com/KhaelK138/authfinder",
+    "website": "https://github.com/KhaelK138/authfinder",
+    "source": "https://github.com/KhaelK138/authfinder",
+    "binaries": "https://pypi.org/project/authfinder/",
+    "cat": "blue",
+    "type": "tool",
+    "desc": "Credential-based remote command execution orchestrator (wrapper over NetExec/Impacket/Evil-WinRM)",
+    "details": "AuthFinder is a wrapper tool that attempts multiple remote execution techniques against Windows (and optionally Linux) targets using provided credentials, stopping when one method succeeds (or optionally trying all). It streamlines “try the common RCE paths” workflows by orchestrating tools like NetExec, Impacket, and Evil-WinRM.\n\n## Overview\nAuthFinder’s core value is reducing friction when you already have credentials and need to quickly determine which remote execution path is available (e.g., WinRM vs SMB-based execution vs WMI). It can run commands concurrently across multiple targets and report which method worked.\n\n## Setup\nInstall the AuthFinder CLI with pipx (recommended) and then install the external tools it wraps.\n\n```bash\n# AuthFinder\npipx install authfinder\n\n# External dependencies (commonly used by AuthFinder)\n# Impacket (PSExec/AtExec/MSSQL, etc.)\npipx install impacket\n\n# NetExec (SMBExec/WMI/RDP/SSH, depending on configuration)\npipx install git+https://github.com/Pennyw0rth/NetExec\n\n# Evil-WinRM (WinRM execution)\ngem install evil-winrm\n```\n\n## Practical use\nAuthFinder is best used in authorized assessment / incident-response lab workflows where you need to validate remote management exposure and execution paths with known credentials.\n\nExample pattern:\n- Provide a target (single host or list), a username, a credential, and a command.\n- AuthFinder will try supported methods in sequence (or in a specified order) and return the first success.\n\nGeneric usage shape (placeholders):\n```bash\nauthfinder <target-or-targets> <username> <password-or-hash> \"<command>\"\n```\n\nOperational knobs that matter:\n- Increase/decrease concurrency with `--threads`.\n- Restrict which techniques are attempted with `--tools <list>`.\n- Use `--timeout <seconds>` for slow/latent environments.\n- Use `--run-all` if you want to validate every available method rather than stopping at first success.\n- Use `--linux` to switch into SSH-focused mode for Linux targets.\n\n## Notes\n- This tool can trigger endpoint/network detections; treat it as a controlled activity and expect logs/alerts.\n- Results depend heavily on target configuration (WinRM enabled, SMB signing, admin shares, WMI permissions, firewall rules, AV/EDR policy).\n- Because it wraps multiple tools, troubleshooting often involves running the underlying tool directly (NetExec/Impacket/Evil-WinRM) to see full error context.\n- Intended for systems you own or where you have explicit authorization to test.\n\n## Alternatives\n- **NetExec**: Directly run SMB/WMI/RDP/SSH execution modules without a wrapper.\n- **Impacket**: Use individual executors (psexec/wmiexec/atexec/mssqlclient) for finer control.\n- **Evil-WinRM**: Best-in-class interactive WinRM workflow.\n- **CrackMapExec** (legacy): Older predecessor to NetExec with similar goals."
+    ,
+    "tags": [
+      "windows",
+      "remote-exec",
+      "credentialed-access",
+      "lateral-movement",
+      "incident-response",
+      "pentest"
+    ]
   }
+
 );
